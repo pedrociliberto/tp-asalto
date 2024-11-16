@@ -176,6 +176,8 @@ section .bss
     casillaMovSold      resd 2 ; Fila y columna de la casilla a mover
     casillaMovOfic      resd 2 ; Fila y columna de la casilla a mover
 
+    tableroEnJuego      resb 128
+
 section .text
     global main
 
@@ -281,7 +283,8 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         call realizarMovimiento ; Realizo el movimiento
 
         ; Repetir en loop
-        
+        jmp loopMovimientos
+
     ret
 
 
@@ -328,3 +331,20 @@ setearSimbOficiales:
     errSeteoOficial:
         mPuts msgOpcionInvalida
         jmp setearSimbOficiales
+
+
+verificarFichaSold:
+    ret
+
+verificarFichaOfic:
+    ret
+
+verificarMovimientoSold:
+    ret
+
+verificarMovimientoOfic:
+    ret
+
+realizarMovimiento:
+    ret
+

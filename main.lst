@@ -371,271 +371,335 @@
    176 00000014 ????????????????            casillaMovSold      resd 2 ; Fila y columna de la casilla a mover
    177 0000001C ????????????????            casillaMovOfic      resd 2 ; Fila y columna de la casilla a mover
    178                                  
-   179                                  section .text
-   180                                      global main
-   181                                  
-   182                                  main:
-   183                                      
-   184                                      mPuts msgBienvenida
+   179 00000024 <res 80h>                   tableroEnJuego      resb 128
+   180                                  
+   181                                  section .text
+   182                                      global main
+   183                                  
+   184                                  main:
+   185                                      
+   186                                      mPuts msgBienvenida
      2 00000000 48BF-               <1>  mov rdi, %1
      2 00000002 [D001000000000000]  <1>
      3 0000000A 4883EC08            <1>  sub rsp, 8
      4 0000000E E8(00000000)        <1>  call puts
      5 00000013 4883C408            <1>  add rsp, 8
-   185                                  
-   186                                      personalizar:
-   187 00000017 C70425[00000000]00-             mov dword[eleccionRotar], ''    ; vaciar variable
-   187 0000001F 000000             
-   188                                          mPuts msgPersonalizarTablero
+   187                                  
+   188                                      personalizar:
+   189 00000017 C70425[00000000]00-             mov dword[eleccionRotar], ''    ; vaciar variable
+   189 0000001F 000000             
+   190                                          mPuts msgPersonalizarTablero
      2 00000022 48BF-               <1>  mov rdi, %1
      2 00000024 [F101000000000000]  <1>
      3 0000002C 4883EC08            <1>  sub rsp, 8
      4 00000030 E8(00000000)        <1>  call puts
      5 00000035 4883C408            <1>  add rsp, 8
-   189                                          mGets eleccionRotar
+   191                                          mGets eleccionRotar
     17 00000039 48BF-               <1>  mov rdi, %1
     17 0000003B [0000000000000000]  <1>
     18 00000043 4883EC08            <1>  sub rsp, 8
     19 00000047 E8(00000000)        <1>  call gets
     20 0000004C 4883C408            <1>  add rsp, 8
-   190                                  
-   191 00000050 833C25[00000000]6E              cmp dword[eleccionRotar], 'n' 
-   192 00000058 0F844E010000                    je comenzarPartida
-   193 0000005E 833C25[00000000]73              cmp dword[eleccionRotar], 's'
-   194 00000066 7419                            je personalizarRotacion
-   195                                  
-   196                                          mPuts msgOpcionInvalida
+   192                                  
+   193 00000050 833C25[00000000]6E              cmp dword[eleccionRotar], 'n' 
+   194 00000058 0F844E010000                    je comenzarPartida
+   195 0000005E 833C25[00000000]73              cmp dword[eleccionRotar], 's'
+   196 00000066 7419                            je personalizarRotacion
+   197                                  
+   198                                          mPuts msgOpcionInvalida
      2 00000068 48BF-               <1>  mov rdi, %1
      2 0000006A [1A02000000000000]  <1>
      3 00000072 4883EC08            <1>  sub rsp, 8
      4 00000076 E8(00000000)        <1>  call puts
      5 0000007B 4883C408            <1>  add rsp, 8
-   197 0000007F EB96                            jmp personalizar
-   198                                  
-   199                                      personalizarRotacion:
-   200                                          mPuts msgPregRotacion
+   199 0000007F EB96                            jmp personalizar
+   200                                  
+   201                                      personalizarRotacion:
+   202                                          mPuts msgPregRotacion
      2 00000081 48BF-               <1>  mov rdi, %1
      2 00000083 [3F02000000000000]  <1>
      3 0000008B 4883EC08            <1>  sub rsp, 8
      4 0000008F E8(00000000)        <1>  call puts
      5 00000094 4883C408            <1>  add rsp, 8
-   201                                          mPuts msgRotacionesPosibles
+   203                                          mPuts msgRotacionesPosibles
      2 00000098 48BF-               <1>  mov rdi, %1
      2 0000009A [7D02000000000000]  <1>
      3 000000A2 4883EC08            <1>  sub rsp, 8
      4 000000A6 E8(00000000)        <1>  call puts
      5 000000AB 4883C408            <1>  add rsp, 8
-   202                                  
-   203 000000AF C70425[04000000]00-             mov dword[rotacionElegida], '' ; limpiar variable
-   203 000000B7 000000             
-   204                                          mGets rotacionElegida
+   204                                  
+   205 000000AF C70425[04000000]00-             mov dword[rotacionElegida], '' ; limpiar variable
+   205 000000B7 000000             
+   206                                          mGets rotacionElegida
     17 000000BA 48BF-               <1>  mov rdi, %1
     17 000000BC [0400000000000000]  <1>
     18 000000C4 4883EC08            <1>  sub rsp, 8
     19 000000C8 E8(00000000)        <1>  call gets
     20 000000CD 4883C408            <1>  add rsp, 8
-   205                                  
-   206                                          ; cmp dword[rotacionElegida], 1 ; rotar antes de símbolos
-   207                                          ; je rotar1
-   208                                          ; cmp dword[rotacionElegida], 2 ; rotar antes de símbolos
-   209                                          ; je rotar2
-   210                                          ; cmp dword[rotacionElegida], 3 ; rotar antes de símbolos
-   211                                          ; je rotar3
-   212 000000D1 833C25[04000000]34              cmp dword[rotacionElegida], '4' ; no rotar
-   213 000000D9 7419                            je personalizarSimbolos
-   214                                  
-   215                                          mPuts msgOpcionInvalida
+   207                                  
+   208                                          ; cmp dword[rotacionElegida], 1 ; rotar antes de símbolos
+   209                                          ; je rotar1
+   210                                          ; cmp dword[rotacionElegida], 2 ; rotar antes de símbolos
+   211                                          ; je rotar2
+   212                                          ; cmp dword[rotacionElegida], 3 ; rotar antes de símbolos
+   213                                          ; je rotar3
+   214 000000D1 833C25[04000000]34              cmp dword[rotacionElegida], '4' ; no rotar
+   215 000000D9 7419                            je personalizarSimbolos
+   216                                  
+   217                                          mPuts msgOpcionInvalida
      2 000000DB 48BF-               <1>  mov rdi, %1
      2 000000DD [1A02000000000000]  <1>
      3 000000E5 4883EC08            <1>  sub rsp, 8
      4 000000E9 E8(00000000)        <1>  call puts
      5 000000EE 4883C408            <1>  add rsp, 8
-   216 000000F2 EB8D                            jmp personalizarRotacion
-   217                                  
-   218                                      personalizarSimbolos:
-   219                                          mPuts msgPersonalizarSimb
+   218 000000F2 EB8D                            jmp personalizarRotacion
+   219                                  
+   220                                      personalizarSimbolos:
+   221                                          mPuts msgPersonalizarSimb
      2 000000F4 48BF-               <1>  mov rdi, %1
      2 000000F6 [CE02000000000000]  <1>
      3 000000FE 4883EC08            <1>  sub rsp, 8
      4 00000102 E8(00000000)        <1>  call puts
      5 00000107 4883C408            <1>  add rsp, 8
-   220                                  
-   221 0000010B E824010000                      call setearSimbSoldados
-   222 00000110 E8AE010000                      call setearSimbOficiales
-   223                                          
-   224                                      personalizarQuienInicia:
-   225 00000115 C70425[10000000]00-             mov dword[piezaIniElegida], ''    ; vaciar variable
-   225 0000011D 000000             
-   226                                          mPuts msgQuienInicia
+   222                                  
+   223 0000010B E8BE010000                      call setearSimbSoldados
+   224 00000110 E848020000                      call setearSimbOficiales
+   225                                          
+   226                                      personalizarQuienInicia:
+   227 00000115 C70425[10000000]00-             mov dword[piezaIniElegida], ''    ; vaciar variable
+   227 0000011D 000000             
+   228                                          mPuts msgQuienInicia
      2 00000120 48BF-               <1>  mov rdi, %1
      2 00000122 [3503000000000000]  <1>
      3 0000012A 4883EC08            <1>  sub rsp, 8
      4 0000012E E8(00000000)        <1>  call puts
      5 00000133 4883C408            <1>  add rsp, 8
-   227                                          mGets piezaIniElegida
+   229                                          mGets piezaIniElegida
     17 00000137 48BF-               <1>  mov rdi, %1
     17 00000139 [1000000000000000]  <1>
     18 00000141 4883EC08            <1>  sub rsp, 8
     19 00000145 E8(00000000)        <1>  call gets
     20 0000014A 4883C408            <1>  add rsp, 8
-   228                                  
-   229 0000014E 833C25[10000000]6F              cmp dword[piezaIniElegida], 'o' 
-   230 00000156 7423                            je setearPiezaInicio
-   231 00000158 833C25[10000000]73              cmp dword[piezaIniElegida], 's'
-   232 00000160 7419                            je setearPiezaInicio
-   233                                  
-   234                                          mPuts msgOpcionInvalida
+   230                                  
+   231 0000014E 833C25[10000000]6F              cmp dword[piezaIniElegida], 'o' 
+   232 00000156 7423                            je setearPiezaInicio
+   233 00000158 833C25[10000000]73              cmp dword[piezaIniElegida], 's'
+   234 00000160 7419                            je setearPiezaInicio
+   235                                  
+   236                                          mPuts msgOpcionInvalida
      2 00000162 48BF-               <1>  mov rdi, %1
      2 00000164 [1A02000000000000]  <1>
      3 0000016C 4883EC08            <1>  sub rsp, 8
      4 00000170 E8(00000000)        <1>  call puts
      5 00000175 4883C408            <1>  add rsp, 8
-   235 00000179 EB9A                            jmp personalizarQuienInicia
-   236                                  
-   237                                          setearPiezaInicio:
-   238 0000017B B901000000                          mov rcx, 1
-   239 00000180 488D3425[10000000]                  lea rsi, [piezaIniElegida]
-   240 00000188 488D3C25[0C080000]                  lea rdi, [piezaDeInicio]
-   241 00000190 F3A4                                rep movsb
-   242                                  
-   243                                              mPuts piezaDeInicio
+   237 00000179 EB9A                            jmp personalizarQuienInicia
+   238                                  
+   239                                          setearPiezaInicio:
+   240 0000017B B901000000                          mov rcx, 1
+   241 00000180 488D3425[10000000]                  lea rsi, [piezaIniElegida]
+   242 00000188 488D3C25[0C080000]                  lea rdi, [piezaDeInicio]
+   243 00000190 F3A4                                rep movsb
+   244                                  
+   245                                              mPuts piezaDeInicio
      2 00000192 48BF-               <1>  mov rdi, %1
      2 00000194 [0C08000000000000]  <1>
      3 0000019C 4883EC08            <1>  sub rsp, 8
      4 000001A0 E8(00000000)        <1>  call puts
      5 000001A5 4883C408            <1>  add rsp, 8
-   244 000001A9 EB01                                jmp comenzarPartida
-   245                                      
-   246 000001AB C3                          ret
-   247                                  
-   248                                  comenzarPartida:
-   249                                      ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
-   250                                      ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
-   251                                          mPuts tableroOrig
-     2 000001AC 48BF-               <1>  mov rdi, %1
-     2 000001AE [0000000000000000]  <1>
-     3 000001B6 4883EC08            <1>  sub rsp, 8
-     4 000001BA E8(00000000)        <1>  call puts
-     5 000001BF 4883C408            <1>  add rsp, 8
-   252 000001C3 803C25[0C080000]73              cmp byte[piezaDeInicio], 's'
-   253 000001CB 740A                            je turnoSoldados
-   254 000001CD 803C25[0C080000]6F              cmp byte[piezaDeInicio], 'o'
-   255 000001D5 742E                            je turnoOficiales
-   256                                  
-   257                                  loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
-   258                                      turnoSoldados:
-   259                                          mPuts msgTurnoSoldados
-     2 000001D7 48BF-               <1>  mov rdi, %1
-     2 000001D9 [A606000000000000]  <1>
-     3 000001E1 4883EC08            <1>  sub rsp, 8
-     4 000001E5 E8(00000000)        <1>  call puts
-     5 000001EA 4883C408            <1>  add rsp, 8
-   260                                          mGets casillaMovSold
-    17 000001EE 48BF-               <1>  mov rdi, %1
-    17 000001F0 [1400000000000000]  <1>
-    18 000001F8 4883EC08            <1>  sub rsp, 8
-    19 000001FC E8(00000000)        <1>  call gets
-    20 00000201 4883C408            <1>  add rsp, 8
-   261                                          
-   262                                      turnoOficiales:
-   263                                          mPuts msgTurnoOficiales
-     2 00000205 48BF-               <1>  mov rdi, %1
-     2 00000207 [E906000000000000]  <1>
-     3 0000020F 4883EC08            <1>  sub rsp, 8
-     4 00000213 E8(00000000)        <1>  call puts
-     5 00000218 4883C408            <1>  add rsp, 8
-   264                                          mGets casillaMovOfic
-    17 0000021C 48BF-               <1>  mov rdi, %1
-    17 0000021E [1C00000000000000]  <1>
-    18 00000226 4883EC08            <1>  sub rsp, 8
-    19 0000022A E8(00000000)        <1>  call gets
-    20 0000022F 4883C408            <1>  add rsp, 8
+   246 000001A9 EB01                                jmp comenzarPartida
+   247                                      
+   248 000001AB C3                          ret
+   249                                  
+   250                                  comenzarPartida:
+   251                                      ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
+   252                                      ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
+   253 000001AC 803C25[0C080000]73              cmp byte[piezaDeInicio], 's'
+   254 000001B4 740E                            je turnoSoldados
+   255 000001B6 803C25[0C080000]6F              cmp byte[piezaDeInicio], 'o'
+   256 000001BE 0F8482000000                    je turnoOficiales
+   257                                  
+   258                                  loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
+   259                                      turnoSoldados:
+   260                                          mPuts tableroEnJuego ; Muestro el tablero
+     2 000001C4 48BF-               <1>  mov rdi, %1
+     2 000001C6 [2400000000000000]  <1>
+     3 000001CE 4883EC08            <1>  sub rsp, 8
+     4 000001D2 E8(00000000)        <1>  call puts
+     5 000001D7 4883C408            <1>  add rsp, 8
+   261                                  
+   262                                          mPuts msgTurnoSoldados ; Muestro el mensaje de seleccionar ficha a mover
+     2 000001DB 48BF-               <1>  mov rdi, %1
+     2 000001DD [A606000000000000]  <1>
+     3 000001E5 4883EC08            <1>  sub rsp, 8
+     4 000001E9 E8(00000000)        <1>  call puts
+     5 000001EE 4883C408            <1>  add rsp, 8
+   263                                          mGets casillaMovSold ; Obtengo la ficha a mover
+    17 000001F2 48BF-               <1>  mov rdi, %1
+    17 000001F4 [1400000000000000]  <1>
+    18 000001FC 4883EC08            <1>  sub rsp, 8
+    19 00000200 E8(00000000)        <1>  call gets
+    20 00000205 4883C408            <1>  add rsp, 8
+   264 00000209 E8DE010000                      call verificarFichaSold ; verificar si la ficha elegida es valida
    265                                  
-   266 00000233 C3                          ret
-   267                                  
-   268                                  
+   266                                          mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
+     2 0000020E 48BF-               <1>  mov rdi, %1
+     2 00000210 [2D07000000000000]  <1>
+     3 00000218 4883EC08            <1>  sub rsp, 8
+     4 0000021C E8(00000000)        <1>  call puts
+     5 00000221 4883C408            <1>  add rsp, 8
+   267                                          mGets casillaMovSold ; Obtengo la casilla a mover
+    17 00000225 48BF-               <1>  mov rdi, %1
+    17 00000227 [1400000000000000]  <1>
+    18 0000022F 4883EC08            <1>  sub rsp, 8
+    19 00000233 E8(00000000)        <1>  call gets
+    20 00000238 4883C408            <1>  add rsp, 8
+   268 0000023C E8AD010000                      call verificarMovimientoSold ; verificar si el movimiento es valido
    269                                  
-   270                                  
-   271                                  
-   272                                  setearSimbSoldados:
-   273                                      mPuts msgSimboloSoldados
-     2 00000234 48BF-               <1>  mov rdi, %1
-     2 00000236 [1903000000000000]  <1>
-     3 0000023E 4883EC08            <1>  sub rsp, 8
-     4 00000242 E8(00000000)        <1>  call puts
-     5 00000247 4883C408            <1>  add rsp, 8
-   274 0000024B C70425[0C000000]00-         mov dword[simbSoldElegido], ''
-   274 00000253 000000             
-   275                                      mGets simbSoldElegido
-    17 00000256 48BF-               <1>  mov rdi, %1
-    17 00000258 [0C00000000000000]  <1>
-    18 00000260 4883EC08            <1>  sub rsp, 8
-    19 00000264 E8(00000000)        <1>  call gets
-    20 00000269 4883C408            <1>  add rsp, 8
-   276                                  
-   277 0000026D 803C25[0C000000]20          cmp byte[simbSoldElegido], ' '
-   278 00000275 7430                        je errSeteoSoldado
-   279 00000277 803C25[0C000000]00          cmp byte[simbSoldElegido], ''
-   280 0000027F 7426                        je errSeteoSoldado
-   281                                  
-   282 00000281 8A0425[0C000000]            mov al, byte[simbSoldElegido]
-   283 00000288 880425[09080000]            mov byte[simboloSoldados], al
+   270 00000241 E8AA010000                      call realizarMovimiento ; Realizo el movimiento
+   271                                          
+   272                                      turnoOficiales:
+   273                                          mPuts tableroEnJuego ; Muestro el tablero
+     2 00000246 48BF-               <1>  mov rdi, %1
+     2 00000248 [2400000000000000]  <1>
+     3 00000250 4883EC08            <1>  sub rsp, 8
+     4 00000254 E8(00000000)        <1>  call puts
+     5 00000259 4883C408            <1>  add rsp, 8
+   274                                  
+   275                                          mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
+     2 0000025D 48BF-               <1>  mov rdi, %1
+     2 0000025F [E906000000000000]  <1>
+     3 00000267 4883EC08            <1>  sub rsp, 8
+     4 0000026B E8(00000000)        <1>  call puts
+     5 00000270 4883C408            <1>  add rsp, 8
+   276                                          mGets casillaMovOfic ; Obtengo la ficha a mover
+    17 00000274 48BF-               <1>  mov rdi, %1
+    17 00000276 [1C00000000000000]  <1>
+    18 0000027E 4883EC08            <1>  sub rsp, 8
+    19 00000282 E8(00000000)        <1>  call gets
+    20 00000287 4883C408            <1>  add rsp, 8
+   277 0000028B E85D010000                      call verificarFichaOfic ; verificar si la ficha elegida es valida
+   278                                  
+   279                                          mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
+     2 00000290 48BF-               <1>  mov rdi, %1
+     2 00000292 [2D07000000000000]  <1>
+     3 0000029A 4883EC08            <1>  sub rsp, 8
+     4 0000029E E8(00000000)        <1>  call puts
+     5 000002A3 4883C408            <1>  add rsp, 8
+   280                                          mGets casillaMovSold ; Obtengo la casilla a mover
+    17 000002A7 48BF-               <1>  mov rdi, %1
+    17 000002A9 [1400000000000000]  <1>
+    18 000002B1 4883EC08            <1>  sub rsp, 8
+    19 000002B5 E8(00000000)        <1>  call gets
+    20 000002BA 4883C408            <1>  add rsp, 8
+   281 000002BE E82C010000                      call verificarMovimientoOfic ; verificar si el movimiento es valido
+   282                                  
+   283 000002C3 E828010000                      call realizarMovimiento ; Realizo el movimiento
    284                                  
-   285                                      mPuts simboloSoldados
-     2 0000028F 48BF-               <1>  mov rdi, %1
-     2 00000291 [0908000000000000]  <1>
-     3 00000299 4883EC08            <1>  sub rsp, 8
-     4 0000029D E8(00000000)        <1>  call puts
-     5 000002A2 4883C408            <1>  add rsp, 8
-   286 000002A6 C3                          ret
+   285                                          ; Repetir en loop
+   286 000002C8 E9F7FEFFFF                      jmp loopMovimientos
    287                                  
-   288                                      errSeteoSoldado:
-   289                                          mPuts msgOpcionInvalida
-     2 000002A7 48BF-               <1>  mov rdi, %1
-     2 000002A9 [1A02000000000000]  <1>
-     3 000002B1 4883EC08            <1>  sub rsp, 8
-     4 000002B5 E8(00000000)        <1>  call puts
-     5 000002BA 4883C408            <1>  add rsp, 8
-   290 000002BE E971FFFFFF                      jmp setearSimbSoldados
+   288 000002CD C3                          ret
+   289                                  
+   290                                  
    291                                  
    292                                  
-   293                                  setearSimbOficiales:
-   294                                      mPuts msgSimboloOficiales
-     2 000002C3 48BF-               <1>  mov rdi, %1
-     2 000002C5 [FC02000000000000]  <1>
-     3 000002CD 4883EC08            <1>  sub rsp, 8
-     4 000002D1 E8(00000000)        <1>  call puts
-     5 000002D6 4883C408            <1>  add rsp, 8
-   295 000002DA C70425[08000000]00-         mov dword[simbOficElegido], ''
-   295 000002E2 000000             
-   296                                      mGets simbOficElegido
-    17 000002E5 48BF-               <1>  mov rdi, %1
-    17 000002E7 [0800000000000000]  <1>
-    18 000002EF 4883EC08            <1>  sub rsp, 8
-    19 000002F3 E8(00000000)        <1>  call gets
-    20 000002F8 4883C408            <1>  add rsp, 8
-   297                                  
-   298 000002FC 803C25[08000000]20          cmp byte[simbOficElegido], ' '
-   299 00000304 7430                        je errSeteoOficial
-   300 00000306 803C25[08000000]00          cmp byte[simbOficElegido], ''
-   301 0000030E 7426                        je errSeteoOficial
-   302                                  
-   303 00000310 8A0425[08000000]            mov al, byte[simbOficElegido]
-   304 00000317 880425[07080000]            mov byte[simboloOficiales], al
-   305                                  
-   306                                      mPuts simboloOficiales
-     2 0000031E 48BF-               <1>  mov rdi, %1
-     2 00000320 [0708000000000000]  <1>
-     3 00000328 4883EC08            <1>  sub rsp, 8
-     4 0000032C E8(00000000)        <1>  call puts
-     5 00000331 4883C408            <1>  add rsp, 8
-   307 00000335 C3                          ret
-   308                                  
-   309                                      errSeteoOficial:
-   310                                          mPuts msgOpcionInvalida
-     2 00000336 48BF-               <1>  mov rdi, %1
-     2 00000338 [1A02000000000000]  <1>
-     3 00000340 4883EC08            <1>  sub rsp, 8
-     4 00000344 E8(00000000)        <1>  call puts
-     5 00000349 4883C408            <1>  add rsp, 8
-   311 0000034D E971FFFFFF                      jmp setearSimbOficiales
+   293                                  
+   294                                  setearSimbSoldados:
+   295                                      mPuts msgSimboloSoldados
+     2 000002CE 48BF-               <1>  mov rdi, %1
+     2 000002D0 [1903000000000000]  <1>
+     3 000002D8 4883EC08            <1>  sub rsp, 8
+     4 000002DC E8(00000000)        <1>  call puts
+     5 000002E1 4883C408            <1>  add rsp, 8
+   296 000002E5 C70425[0C000000]00-         mov dword[simbSoldElegido], ''
+   296 000002ED 000000             
+   297                                      mGets simbSoldElegido
+    17 000002F0 48BF-               <1>  mov rdi, %1
+    17 000002F2 [0C00000000000000]  <1>
+    18 000002FA 4883EC08            <1>  sub rsp, 8
+    19 000002FE E8(00000000)        <1>  call gets
+    20 00000303 4883C408            <1>  add rsp, 8
+   298                                  
+   299 00000307 803C25[0C000000]20          cmp byte[simbSoldElegido], ' '
+   300 0000030F 7430                        je errSeteoSoldado
+   301 00000311 803C25[0C000000]00          cmp byte[simbSoldElegido], ''
+   302 00000319 7426                        je errSeteoSoldado
+   303                                  
+   304 0000031B 8A0425[0C000000]            mov al, byte[simbSoldElegido]
+   305 00000322 880425[09080000]            mov byte[simboloSoldados], al
+   306                                  
+   307                                      mPuts simboloSoldados
+     2 00000329 48BF-               <1>  mov rdi, %1
+     2 0000032B [0908000000000000]  <1>
+     3 00000333 4883EC08            <1>  sub rsp, 8
+     4 00000337 E8(00000000)        <1>  call puts
+     5 0000033C 4883C408            <1>  add rsp, 8
+   308 00000340 C3                          ret
+   309                                  
+   310                                      errSeteoSoldado:
+   311                                          mPuts msgOpcionInvalida
+     2 00000341 48BF-               <1>  mov rdi, %1
+     2 00000343 [1A02000000000000]  <1>
+     3 0000034B 4883EC08            <1>  sub rsp, 8
+     4 0000034F E8(00000000)        <1>  call puts
+     5 00000354 4883C408            <1>  add rsp, 8
+   312 00000358 E971FFFFFF                      jmp setearSimbSoldados
+   313                                  
+   314                                  
+   315                                  setearSimbOficiales:
+   316                                      mPuts msgSimboloOficiales
+     2 0000035D 48BF-               <1>  mov rdi, %1
+     2 0000035F [FC02000000000000]  <1>
+     3 00000367 4883EC08            <1>  sub rsp, 8
+     4 0000036B E8(00000000)        <1>  call puts
+     5 00000370 4883C408            <1>  add rsp, 8
+   317 00000374 C70425[08000000]00-         mov dword[simbOficElegido], ''
+   317 0000037C 000000             
+   318                                      mGets simbOficElegido
+    17 0000037F 48BF-               <1>  mov rdi, %1
+    17 00000381 [0800000000000000]  <1>
+    18 00000389 4883EC08            <1>  sub rsp, 8
+    19 0000038D E8(00000000)        <1>  call gets
+    20 00000392 4883C408            <1>  add rsp, 8
+   319                                  
+   320 00000396 803C25[08000000]20          cmp byte[simbOficElegido], ' '
+   321 0000039E 7430                        je errSeteoOficial
+   322 000003A0 803C25[08000000]00          cmp byte[simbOficElegido], ''
+   323 000003A8 7426                        je errSeteoOficial
+   324                                  
+   325 000003AA 8A0425[08000000]            mov al, byte[simbOficElegido]
+   326 000003B1 880425[07080000]            mov byte[simboloOficiales], al
+   327                                  
+   328                                      mPuts simboloOficiales
+     2 000003B8 48BF-               <1>  mov rdi, %1
+     2 000003BA [0708000000000000]  <1>
+     3 000003C2 4883EC08            <1>  sub rsp, 8
+     4 000003C6 E8(00000000)        <1>  call puts
+     5 000003CB 4883C408            <1>  add rsp, 8
+   329 000003CF C3                          ret
+   330                                  
+   331                                      errSeteoOficial:
+   332                                          mPuts msgOpcionInvalida
+     2 000003D0 48BF-               <1>  mov rdi, %1
+     2 000003D2 [1A02000000000000]  <1>
+     3 000003DA 4883EC08            <1>  sub rsp, 8
+     4 000003DE E8(00000000)        <1>  call puts
+     5 000003E3 4883C408            <1>  add rsp, 8
+   333 000003E7 E971FFFFFF                      jmp setearSimbOficiales
+   334                                  
+   335                                  
+   336                                  verificarFichaSold:
+   337 000003EC C3                          ret
+   338                                  
+   339                                  verificarFichaOfic:
+   340 000003ED C3                          ret
+   341                                  
+   342                                  verificarMovimientoSold:
+   343 000003EE C3                          ret
+   344                                  
+   345                                  verificarMovimientoOfic:
+   346 000003EF C3                          ret
+   347                                  
+   348                                  realizarMovimiento:
+   349 000003F0 C3                          ret
+   350                                  
