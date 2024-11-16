@@ -173,6 +173,9 @@ section .bss
 
     piezaIniElegida     resd 1
 
+    casillaMovSold      resd 2 ; Fila y columna de la casilla a mover
+    casillaMovOfic      resd 2 ; Fila y columna de la casilla a mover
+
 section .text
     global main
 
@@ -243,9 +246,46 @@ main:
     ret
 
 comenzarPartida:
-    mPuts msgJuegoTerminado
+    ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
+    ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
+        cmp byte[piezaDeInicio], 's'
+        je turnoSoldados
+        cmp byte[piezaDeInicio], 'o'
+        je turnoOficiales
 
+loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
+    turnoSoldados:
+        mPuts tableroEnJuego ; Muestro el tablero
+
+        mPuts msgTurnoSoldados ; Muestro el mensaje de seleccionar ficha a mover
+        mGets casillaMovSold ; Obtengo la ficha a mover
+        call verificarFichaSold ; verificar si la ficha elegida es valida
+
+        mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
+        mGets casillaMovSold ; Obtengo la casilla a mover
+        call verificarMovimientoSold ; verificar si el movimiento es valido
+
+        call realizarMovimiento ; Realizo el movimiento
+        
+    turnoOficiales:
+        mPuts tableroEnJuego ; Muestro el tablero
+
+        mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
+        mGets casillaMovOfic ; Obtengo la ficha a mover
+        call verificarFichaOfic ; verificar si la ficha elegida es valida
+
+        mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
+        mGets casillaMovSold ; Obtengo la casilla a mover
+        call verificarMovimientoOfic ; verificar si el movimiento es valido
+
+        call realizarMovimiento ; Realizo el movimiento
+
+        ; Repetir en loop
+        
     ret
+
+
+
 
 
 setearSimbSoldados:
