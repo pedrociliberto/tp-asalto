@@ -1,11 +1,11 @@
-%macro mPuts 1
+%macro mPuts 1 ; Imprime el string %1, hasta encontrar un 0
     mov rdi, %1
     sub rsp, 8
     call puts
     add rsp, 8
 %endmacro
 
-%macro mPrint 2
+%macro mPrint 2 ; Imprime el string %2 con formato %1
     mov rdi, %1
     mov rsi, %2
     sub rsp, 8
@@ -13,15 +13,37 @@
     add rsp, 8
 %endmacro
 
-%macro mGets 1
+%macro mGets 1 ; Obtiene un string por teclado, guardándolo en %1
     mov rdi, %1
     sub rsp, 8
     call gets
     add rsp, 8
 %endmacro
 
+%macro mCommand 1 ; Ejecuta el comando %1 de la terminal
+    mov rdi, %1
+    sub rsp, 8
+    call system
+    add rsp, 8
+%endmacro
+
+%macro mMov 3 ; Copia %3 bytes del campo de memoria %2 al campo de memoria %1
+    mov rcx, %3
+    lea rsi, [%2]
+    lea rdi, [%1]
+    rep movsb
+%endmacro
+
+%macro mErrorJump 2 ; Imprime el mensaje de error %1 y salta a la etiqueta %2
+    mPuts %1
+    jmp %2
+%endmacro
+
+
+
 extern puts, printf
 extern gets
+extern system
 
 section .data
 
@@ -49,7 +71,7 @@ section .data
                         db "7"," "," ","|","X","X","X","|"," "," ",10 
                         db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
 
-    tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
+    tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
                         db "1"," "," ","|","X","X","X","|"," "," ",10
                         db "2"," ","_","|","X","X","X","|","_"," ",10
@@ -60,7 +82,7 @@ section .data
                         db "7"," "," ","|","X","X","X","|"," "," ",10 
                         db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
 
-    tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
+    tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
                         db "1"," "," ","|","X","X","X","|"," "," ",10
                         db "2"," ","_","|","X","X","X","|","_"," ",10
@@ -85,7 +107,7 @@ section .data
                             db "3. Invertir el tablero", 10
                             db "4. No rotar", 0
     
-    msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje!", 0
+    msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba un solo caracter para cada uno (si escribe más, nos quedaremos con el primero).", 0
     msgSimboloOficiales     db "Símbolo para los oficiales:", 0
     msgSimboloSoldados      db "Símbolo para los soldados:", 0
 
@@ -159,8 +181,12 @@ section .data
 
     simboloOficiales        db 'O', 0
     simboloSoldados         db 'X', 0
-    orientacionTablero      db 4    ; 4 -> no rotar (default) 
-    piezaDeInicio           db 's'  ; soldados (s), oficiales (o)
+    orientacionTablero      db  4       ; 4 -> no rotar (default) 
+    piezaDeInicio           db 's'      ; soldados (s), oficiales (o)
+
+    ; Comandos 
+
+    cmdLimpiarPantalla      db "clear", 0
 
 
 section .bss
@@ -176,7 +202,7 @@ section .bss
     casillaMovSold      resd 2 ; Fila y columna de la casilla a mover
     casillaMovOfic      resd 2 ; Fila y columna de la casilla a mover
 
-    tableroEnJuego      resb 128
+    tableroEnJuego      resb 111 ; Tablero en juego
 
 section .text
     global main
@@ -195,8 +221,7 @@ main:
         cmp dword[eleccionRotar], 's'
         je personalizarRotacion
 
-        mPuts msgOpcionInvalida
-        jmp personalizar
+        mErrorJump msgOpcionInvalida, personalizar
 
     personalizarRotacion:
         mPuts msgPregRotacion
@@ -205,17 +230,17 @@ main:
         mov dword[rotacionElegida], '' ; limpiar variable
         mGets rotacionElegida
 
-        ; cmp dword[rotacionElegida], 1 ; rotar antes de símbolos
-        ; je rotar1
-        ; cmp dword[rotacionElegida], 2 ; rotar antes de símbolos
-        ; je rotar2
-        ; cmp dword[rotacionElegida], 3 ; rotar antes de símbolos
-        ; je rotar3
-        cmp dword[rotacionElegida], '4' ; no rotar
-        je personalizarSimbolos
+        mMov orientacionTablero, rotacionElegida, 1
+        
+        cmp dword[rotacionElegida], '1'
+        jl invalidaRotacion
+        cmp dword[rotacionElegida], '4'
+        jg invalidaRotacion
 
-        mPuts msgOpcionInvalida
-        jmp personalizarRotacion
+        jmp personalizarSimbolos
+
+    invalidaRotacion:
+        mErrorJump msgOpcionInvalida, personalizarRotacion
 
     personalizarSimbolos:
         mPuts msgPersonalizarSimb
@@ -233,16 +258,10 @@ main:
         cmp dword[piezaIniElegida], 's'
         je setearPiezaInicio
 
-        mPuts msgOpcionInvalida
-        jmp personalizarQuienInicia
+        mErrorJump msgOpcionInvalida, personalizarQuienInicia
 
         setearPiezaInicio:
-            mov rcx, 1
-            lea rsi, [piezaIniElegida]
-            lea rdi, [piezaDeInicio]
-            rep movsb
-
-            mPuts piezaDeInicio
+            mMov piezaDeInicio, piezaIniElegida, 1
             jmp comenzarPartida
     
     ret
@@ -250,13 +269,37 @@ main:
 comenzarPartida:
     ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
     ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
-        cmp byte[piezaDeInicio], 's'
-        je turnoSoldados
-        cmp byte[piezaDeInicio], 'o'
-        je turnoOficiales
+        cmp byte[orientacionTablero], '1'
+        je rotarIzquierda
+        cmp byte[orientacionTablero], '2'
+        je rotarDerecha
+        cmp byte[orientacionTablero], '3'
+        je rotarInvertir
+
+        mMov tableroEnJuego, tableroOrig, 111
+
+        comenzarPorInicio:
+            cmp byte[piezaDeInicio], 's'
+            je turnoSoldados
+            cmp byte[piezaDeInicio], 'o'
+            je turnoOficiales
+
+    rotarIzquierda:
+        mMov tableroEnJuego, tableroIzq, 111
+        jmp comenzarPorInicio
+    
+    rotarDerecha:
+        mMov tableroEnJuego, tableroDer, 111
+        jmp comenzarPorInicio
+
+    rotarInvertir:
+        mMov tableroEnJuego, tableroInv, 111
+        jmp comenzarPorInicio
 
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
     turnoSoldados:
+        mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
+
         mPuts tableroEnJuego ; Muestro el tablero
 
         mPuts msgTurnoSoldados ; Muestro el mensaje de seleccionar ficha a mover
@@ -270,6 +313,8 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         call realizarMovimiento ; Realizo el movimiento
         
     turnoOficiales:
+        mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
+
         mPuts tableroEnJuego ; Muestro el tablero
 
         mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
@@ -304,12 +349,10 @@ setearSimbSoldados:
     mov al, byte[simbSoldElegido]
     mov byte[simboloSoldados], al
 
-    mPuts simboloSoldados
     ret
 
     errSeteoSoldado:
-        mPuts msgOpcionInvalida
-        jmp setearSimbSoldados
+        mErrorJump msgOpcionInvalida, setearSimbSoldados
 
 
 setearSimbOficiales:
@@ -325,7 +368,6 @@ setearSimbOficiales:
     mov al, byte[simbOficElegido]
     mov byte[simboloOficiales], al
 
-    mPuts simboloOficiales
     ret
 
     errSeteoOficial:
