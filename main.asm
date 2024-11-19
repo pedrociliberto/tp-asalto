@@ -95,15 +95,15 @@ section .data
     ; Tableros y sus posibles estados
 
     tableroOrig         db " "," ","1","2","3","4","5","6","7"," ",10
-                        db " "," "," "," ","_","_","_"," "," "," ",10 
+                        db " "," "," ","-","_","_","_","-"," "," ",10 
                         db "1"," "," ","|","X","X","X","|"," "," ",10
-                        db "2"," ","_","|","X","X","X","|","_"," ",10
+                        db "2","-","_","|","X","X","X","|","_","-",10
                         db "3","|","X","X","X","X","X","X","X","|",10 
                         db "4","|","X","X","X","X","X","X","X","|",10 
                         db "5","|","X","X"," "," "," ","X","X","|",10 
-                        db "6"," ","-","|"," "," ","O","|","-"," ",10 
+                        db "6","-","-","|"," "," ","O","|","-","-",10 
                         db "7"," "," ","|","O"," "," ","|"," "," ",10 
-                        db " "," "," "," ","-","-","-"," "," "," ",10,0
+                        db " "," "," ","-","-","-","-","-"," "," ",10,0
 
     tableroInv          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
@@ -149,9 +149,11 @@ section .data
     
     msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
     msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
+    msgCasillaInvMovSold    db "No se puede mover el soldado a esa casilla. Intente de nuevo.", 0
 
     msgCasillaInvalidaOfic  db "Casilla inválida: no hay un oficial en esa casilla. Intente de nuevo.", 0
     msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
+    msgCasillaInvMovOfic    db "No se puede mover el oficial a esa casilla. Intente de nuevo.", 0
 
     msgPregRotacion         db "¡Se puede rotar el tablero! Elija una de las opciones (1-4):", 0
     msgRotacionesPosibles   db "1. Rotar a la izquierda", 10
@@ -258,9 +260,21 @@ section .bss
 
     fila                resq 1
     columna             resq 1   
+    desplazCasOrig      resq 1
 
+    filaAMover          resq 1
+    columnaAMover       resq 1
+    desplazCasAMover    resq 1
+
+    filaAux             resq 1
+    columnaAux          resq 1
+
+    
     msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
     msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
+
+    msgErrorEspecificoSoldMov   resb 71 ; Máximo largo de mensaje de error para movimientos de soldados
+    msgErrorEspecificoOficMov   resb 71 ; Máximo largo de mensaje de error para movimientos de oficiales
 
 section .text
     global main
@@ -372,19 +386,20 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
         todoOkSold:
 
-            mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
-            mGets soldadoElegido        ; Obtengo la ficha a mover
+            mPuts msgTurnoSoldados      ; Muestra el mensaje de seleccionar ficha a mover
+            mGets soldadoElegido        ; Obtiene la ficha a mover
             
-            jmp verificarFichaSold ; verificar si la ficha elegida es valida
+            jmp verificarFichaSold ; Verifica si la ficha elegida es valida
 
             casillaAMoverseSold:
-
-                mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
-                mGets casillaMovSold    ; Obtengo la casilla a mover
                 
-                ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
+                mPuts msgTurnoMovSold   ; Muestra el mensaje de seleccionar casilla a mover
+                mGets casillaMovSold    ; Obtiene la casilla a mover
 
-                ;jmp realizarMovimiento ; Realizo el movimiento
+                jmp verificarMovimientoSold ; Verifica si el movimiento es valido
+
+                moverSoldado:
+                    call realizarMovimientoSold ; Realiza el movimiento
 
     mov byte[msgErrorEspecificoOfic], 0
     turnoOficiales:
@@ -392,26 +407,27 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         
         mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
 
-        mPuts tableroEnJuego ; Muestro el tablero
+        mPuts tableroEnJuego ; Muestra el tablero
 
         cmp byte[msgErrorEspecificoOfic], 0
         jne imprimirErrorOfic
 
         todoOkOfic:
 
-            mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
-            mGets oficialElegido    ; Obtengo la ficha a mover
+            mPuts msgTurnoOficiales ; Muestra el mensaje de seleccionar ficha a mover
+            mGets oficialElegido    ; Obtiene la ficha a mover
 
-            jmp verificarFichaOfic ; verificar si la ficha elegida es valida
+            jmp verificarFichaOfic ; Verifica si la ficha elegida es valida
 
             casillaAMoverseOfic:
 
-                mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
-                mGets casillaMovOfic    ; Obtengo la casilla a mover
+                mPuts msgTurnoMovOfic   ; Muestra el mensaje de seleccionar casilla a mover
+                mGets casillaMovOfic    ; Obtiene la casilla a mover
                 
-                ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+                ;jmp verificarMovimientoOfic ; Verifica si el movimiento es valido
 
-                ;jmp realizarMovimiento ; Realizo el movimiento
+                ;moverOficial:
+                    ;call realizarMovimientoOfic ; Realiza el movimiento
 
                 ; Repetir en loop
                 jmp loopMovimientos
@@ -506,6 +522,7 @@ verificarFichaSold:
     imul bx, 11
     add rbx, [columna]
     inc rbx
+    mov qword[desplazCasOrig], rbx
     
     mov rax,0
     mov rdx, 0
@@ -576,6 +593,7 @@ verificarFichaOfic:
     imul bx, 11
     add rbx, [columna]
     inc rbx
+    mov qword[desplazCasOrig], rbx
     
     mov rax, 0
     mov rdx, 0
@@ -605,13 +623,125 @@ verificarFichaOfic:
         jmp todoOkOfic
 
 verificarMovimientoSold:
+    mov al, byte[casillaMovSold] ; Numero de fila
+    
+    cmp al, '1'
+    jl errorInputSoldMov
+    cmp al, '7'
+    jg errorInputSoldMov
+
+    mov qword[filaAMover], 0
+    mSscanf byte[casillaMovSold], formatoAtoi, filaAMover
+
+    cmp rax, 1
+    jl errorInputSoldMov
+
+    mov al, byte[casillaMovSold+1] ; Caracter '-'
+    cmp al, '-'
+    jne errorInputSoldMov
+    
+    mov al, byte[casillaMovSold+2] ; Numero de columna
+    cmp al, '1'
+    jl errorInputSoldMov
+    cmp al, '7'
+    jg errorInputSoldMov
+
+    mov qword[columnaAMover], 0
+    mSscanf byte[casillaMovSold+2], formatoAtoi, columnaAMover
+
+    cmp rax, 1
+    jl errorInputSoldMov
+
+    mov al, byte[casillaMovSold+3] ; Caracter nulo
+    cmp al, 0
+    jne errorInputSoldMov
+
+    ; Comparamos la fila a mover con la fila actual
+    mMov filaAux, fila, 1
+    inc qword[filaAux]
+    mCmp [filaAux], [filaAMover], 1
+    jne errorCasillaInvalidaSoldMov
+
+    ; Comparamos la columna a mover con la columna actual
+    mov qword[columnaAux], 0 ; Reiniciamos la columna auxiliar
+    mMov columnaAux, columna, 1
+
+    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento hacia adelante
+    je columnaAMoverValida
+
+    inc qword[columnaAux]
+    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la izquierda
+    je columnaAMoverValida
+
+    sub qword[columnaAux], 2
+    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la derecha
+    je columnaAMoverValida
+
+    jmp errorCasillaInvalidaSoldMov
+
+    columnaAMoverValida: ; Queda ver si en esa casilla está vacía o no
+        call casillaAMoverSoldEstaVacia
+        cmp rax, 1
+        je errorCasillaInvalidaSoldMov ; Si recibimos 1, la casilla está ocupada (o está fuera del tablero)
+        
+        jmp moverSoldado 
+
+
+    errorInputSoldMov:
+        mov rax, [msgErrorInputSold]
+        mMov msgErrorEspecificoSold, msgErrorInputSold, 61
+        jmp turnoSoldados
+
+    errorCasillaInvalidaSoldMov:
+        mov rax, [msgCasillaInvMovSold]
+        mMov msgErrorEspecificoSold, msgCasillaInvMovSold, 61
+        jmp turnoSoldados
+
+    imprimirErrorSoldMov:
+        mPuts msgErrorEspecificoSold
+        jmp turnoSoldados
+    
+    
     ret
+
+casillaAMoverSoldEstaVacia:
+    ; Calculamos desplazamiento en tablero
+    mov rbx, 0
+    mov rbx, [filaAMover]
+    inc rbx
+    imul bx, 11
+    add rbx, [columnaAMover]
+    inc rbx
+    mov qword[desplazCasAMover], rbx
+
+    mov al, byte[tableroEnJuego+rbx]
+    cmp al, ' '
+    je casillaVacia
+
+    mov rax, 1
+    ret
+
+    casillaVacia:
+        mov rax, 0
+        ret
 
 verificarMovimientoOfic:
     ret
 
-realizarMovimiento:
+realizarMovimientoSold:
+    mov rax, qword[desplazCasOrig]
+    mov rbx, qword[desplazCasAMover]
+
+    mov byte[tableroEnJuego+rax], ' '
+    mMov tableroEnJuego+rbx, simboloSoldados, 1
+
     ret
+
+realizarMovimientoOfic:
+    ret
+    
+
+
 
 cambiarTableroSoldNuevo:
     mov rbx, 26 ; Desplazamiento de la primera casilla en donde puede haber piezas
@@ -629,6 +759,6 @@ cambiarTableroSoldNuevo:
     ret
 
 cambiarTableroOficNuevo:
-    mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer
-    mMov tableroEnJuego+92, simboloOficiales, 1
+    mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer oficial (desplazamiento)
+    mMov tableroEnJuego+92, simboloOficiales, 1 ; Segundo oficial (desplazamiento)
     ret
