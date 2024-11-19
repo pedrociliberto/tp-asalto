@@ -34,16 +34,61 @@
     rep movsb
 %endmacro
 
+%macro mCmp 3 ; Compara %3 bytes del campo %1 con %2
+    mov rcx, %3
+    lea rsi, %1
+    lea rdi, %2
+    repe cmpsb
+%endmacro 
+
 %macro mErrorJump 2 ; Imprime el mensaje de error %1 y salta a la etiqueta %2
     mPuts %1
     jmp %2
 %endmacro
 
+%macro mfGets 2
+    mov rdi, %1
+    mov rsi, %2
+    mov rdx, [stdin]
+    sub rsp, 8
+    call fgets
+    add rsp, 8
+%endmacro
+
+%macro mLeerEntradaEstandar 2
+    mov rax, 0      ; syscall: read
+    mov rdi, 0      ; 0: stdin
+    mov rsi, %1   ; buffer (direccion de guardado de lo leido)
+    mov rdx, %2     ; Cuantos bytes queremos leer
+    syscall
+
+    mov byte[rsi+rax], 0
+%endmacro
+
+%macro mSscanf 3
+    lea rdi, %1     ; Variable Original string
+    mov rsi, %2     ; Formato
+    mov rdx, %3     ; Variable a guardar el int
+    sub rsp, 8
+    call sscanf
+    add rsp, 8
+%endmacro
+
+%macro mAtoi 2
+    lea rdi, %1
+    sub rsp, 8
+    call atoi
+    add rsp, 8
+    mov [%2], eax
+%endmacro
 
 
 extern puts, printf
 extern gets
-extern system
+extern system, stdin
+extern fgets
+extern atoi
+extern sscanf
 
 section .data
 
@@ -56,9 +101,9 @@ section .data
                         db "3","|","X","X","X","X","X","X","X","|",10 
                         db "4","|","X","X","X","X","X","X","X","|",10 
                         db "5","|","X","X"," "," "," ","X","X","|",10 
-                        db "6"," ","¯","|","O"," "," ","|","¯"," ",10 
+                        db "6"," ","-","|","O"," "," ","|","-"," ",10 
                         db "7"," "," ","|"," "," ","O","|"," "," ",10 
-                        db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
+                        db " "," "," "," ","-","-","-"," "," "," ",10,0
 
     tableroInv          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
@@ -67,9 +112,9 @@ section .data
                         db "3","|","X","X"," "," "," ","X","X","|",10 
                         db "4","|","X","X","X","X","X","X","X","|",10 
                         db "5","|","X","X","X","X","X","X","X","|",10 
-                        db "6"," ","¯","|","X","X","X","|","¯"," ",10 
+                        db "6"," ","-","|","X","X","X","|","-"," ",10 
                         db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
+                        db " "," "," "," ","-","-","-"," "," "," ",10,0
 
     tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
@@ -78,9 +123,9 @@ section .data
                         db "3","|","X","X","X","X"," "," ","O","|",10 
                         db "4","|","X","X","X","X"," "," "," ","|",10 
                         db "5","|","X","X","X","X"," ","O"," ","|",10 
-                        db "6"," ","¯","|","X","X","X","|","¯"," ",10 
+                        db "6"," ","-","|","X","X","X","|","-"," ",10 
                         db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
+                        db " "," "," "," ","-","-","-"," "," "," ",10,0
 
     tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
                         db " "," "," "," ","_","_","_"," "," "," ",10 
@@ -89,9 +134,9 @@ section .data
                         db "3","|","O"," "," ","X","X","X","X","|",10 
                         db "4","|"," "," "," ","X","X","X","X","|",10 
                         db "5","|"," ","O"," ","X","X","X","X","|",10 
-                        db "6"," ","¯","|","X","X","X","|","¯"," ",10 
+                        db "6"," ","-","|","X","X","X","|","-"," ",10 
                         db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
+                        db " "," "," "," ","-","-","-"," "," "," ",10,0
 
     ; Mensajes
 
@@ -100,6 +145,12 @@ section .data
     msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
 
     msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
+    
+    msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
+    msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
+
+    msgCasillaInvalidaOfic  db "Casilla inválida: no hay un oficial en esa casilla. Intente de nuevo.", 0
+    msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
 
     msgPregRotacion         db "¡Se puede rotar el tablero! Elija una de las opciones (1-4):", 0
     msgRotacionesPosibles   db "1. Rotar a la izquierda", 10
@@ -144,17 +195,11 @@ section .data
     ; Razones de victoria de oficiales
     msgOficialesGanan       db "no quedan suficientes soldados para ocupar la fortaleza.", 0
 
-    ; Casillas/movimientos inválidos
-    msgCasillaVaciaSold     db "Casilla inválida: no hay un soldado en esa casilla.", 0
-    msgCasillaVaciaOfic     db "Casilla inválida: no hay un oficial en esa casilla.", 0
-    msgMovInvalidoSold      db "Movimiento inválido: no es posible mover el soldado a esa casilla.",0
-    msgMovInvalidoOfic      db "Movimiento inválido: no es posible mover el oficial a esa casilla.",0
-
     ; Turnos
-    msgTurnoSoldados        db "Es turno de los soldados. Decida a qué soldado desea mover: (F C)", 0
-    msgTurnoOficiales       db "Es turno de los oficiales. Decida a qué oficial desea mover: (F C)", 0
-    msgTurnoMovSold         db "¿A qué casilla desea mover el soldado? (F C)", 0
-    msgTurnoMovOfic         db "¿A qué casilla desea mover el oficial? (F C)", 0
+    msgTurnoSoldados        db "Es turno de los soldados. Decida a qué soldado desea mover: (<numFila>-<numColumna>)", 0
+    msgTurnoOficiales       db "Es turno de los oficiales. Decida a qué oficial desea mover: (<numFila>-<numColumna>)", 0
+    msgTurnoMovSold         db "¿A qué casilla desea mover el soldado? (<numFila>-<numColumna>)", 0
+    msgTurnoMovOfic         db "¿A qué casilla desea mover el oficial? (<numFila>-<numColumna>)", 0
 
     msgCapturaSold          db "Un oficial ha capturado a un soldado.", 0
     msgInvalidOfic          db "¡Un oficial ha sido invalidado! No ha capturado a un soldado regalado.", 0
@@ -188,27 +233,41 @@ section .data
 
     cmdLimpiarPantalla      db "clear", 0
 
+    ; Formato
+
+    formatoAtoi             db "%u", 0
+
+    string db "12345", 0
+    numero dq 0
+
+
 
 section .bss
 
-    eleccionRotar       resd 1
-    rotacionElegida     resd 1
+    eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
+    rotacionElegida     resd 1  ; Variable pivote para la rotación del tablero
 
     simbOficElegido     resd 1  ; Variable pivote para el símbolo de los oficiales
     simbSoldElegido     resd 1  ; Variable pivote para el símbolo de los soldados
 
-    piezaIniElegida     resd 1
+    piezaIniElegida     resd 1  ; Variable pivote para la pieza que inicia
 
-    casillaMovSold      resd 2 ; Fila y columna de la casilla a mover
-    casillaMovOfic      resd 2 ; Fila y columna de la casilla a mover
+    tableroEnJuego      resb 116 ; Tablero en juego
 
-    tableroEnJuego      resb 111 ; Tablero en juego
+    soldadoElegido      resb 4  ; Fila y columna del soldado a mover
+    casillaMovSold      resb 4  ; Fila y columna de la casilla de destino del soldado
+
+    oficialElegido      resb 4  ; Fila y columna del oficial a mover
+    casillaMovOfic      resb 4  ; Fila y columna de la casilla de destino del oficial
+
+    fila                resq 1
+    columna             resq 1   
 
 section .text
     global main
 
 main:
-    
+
     mPuts msgBienvenida
 
     personalizar:
@@ -276,7 +335,7 @@ comenzarPartida:
         cmp byte[orientacionTablero], '3'
         je rotarInvertir
 
-        mMov tableroEnJuego, tableroOrig, 111
+        mMov tableroEnJuego, tableroOrig, 116
 
         comenzarPorInicio:
             cmp byte[piezaDeInicio], 's'
@@ -285,50 +344,63 @@ comenzarPartida:
             je turnoOficiales
 
     rotarIzquierda:
-        mMov tableroEnJuego, tableroIzq, 111
+        mMov tableroEnJuego, tableroIzq, 116
         jmp comenzarPorInicio
     
     rotarDerecha:
-        mMov tableroEnJuego, tableroDer, 111
+        mMov tableroEnJuego, tableroDer, 116
         jmp comenzarPorInicio
 
     rotarInvertir:
-        mMov tableroEnJuego, tableroInv, 111
+        mMov tableroEnJuego, tableroInv, 116
         jmp comenzarPorInicio
 
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
     turnoSoldados:
+        mov byte [soldadoElegido], '0'
+    
         mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
 
         mPuts tableroEnJuego ; Muestro el tablero
 
-        mPuts msgTurnoSoldados ; Muestro el mensaje de seleccionar ficha a mover
-        mGets casillaMovSold ; Obtengo la ficha a mover
-        call verificarFichaSold ; verificar si la ficha elegida es valida
+        mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
+        mGets soldadoElegido    ; Obtengo la ficha a mover
+        
+        jmp verificarFichaSold ; verificar si la ficha elegida es valida
 
-        mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
-        mGets casillaMovSold ; Obtengo la casilla a mover
-        call verificarMovimientoSold ; verificar si el movimiento es valido
+        casillaAMoverseSold:
 
-        call realizarMovimiento ; Realizo el movimiento
+            mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
+            mGets casillaMovSold    ; Obtengo la casilla a mover
+            
+            ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
+
+            ;jmp realizarMovimiento ; Realizo el movimiento
+
         
     turnoOficiales:
+        mov byte[oficialElegido], '0'
+        
         mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
 
         mPuts tableroEnJuego ; Muestro el tablero
 
         mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
-        mGets casillaMovOfic ; Obtengo la ficha a mover
-        call verificarFichaOfic ; verificar si la ficha elegida es valida
+        mGets oficialElegido    ; Obtengo la ficha a mover
 
-        mPuts msgTurnoMovSold ; Muestro el mensaje de seleccionar casilla a mover
-        mGets casillaMovSold ; Obtengo la casilla a mover
-        call verificarMovimientoOfic ; verificar si el movimiento es valido
+        jmp verificarFichaOfic ; verificar si la ficha elegida es valida
 
-        call realizarMovimiento ; Realizo el movimiento
+        casillaAMoverseOfic:
 
-        ; Repetir en loop
-        jmp loopMovimientos
+            mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
+            mGets casillaMovOfic    ; Obtengo la casilla a mover
+            
+            ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+
+            ;jmp realizarMovimiento ; Realizo el movimiento
+
+            ; Repetir en loop
+            jmp loopMovimientos
 
     ret
 
@@ -376,10 +448,133 @@ setearSimbOficiales:
 
 
 verificarFichaSold:
-    ret
+    mov al, byte[soldadoElegido] ; Numero de fila
+    
+    cmp al, '1'
+    jl errorInputSold
+    cmp al, '7'
+    jg errorInputSold
+
+    mov qword[fila], 0
+    mSscanf byte[soldadoElegido], formatoAtoi, fila
+
+    cmp rax, 1
+    jl errorInputSold
+
+    mov al, byte[soldadoElegido+1] ; Caracter '-'
+    cmp al, '-'
+    jne errorInputSold
+    
+    mov al, byte[soldadoElegido+2] ; Numero de columna
+    cmp al, '1'
+    jl errorInputSold
+    cmp al, '7'
+    jg errorInputSold
+
+    mov qword[columna], 0
+    mSscanf byte[soldadoElegido+2], formatoAtoi, columna
+
+    cmp rax, 1
+    jl errorInputSold
+
+    mov al, byte[soldadoElegido+3] ; Caracter nulo
+    cmp al, 0
+    jne errorInputSold
+
+    ; Calculamos desplazamiento en tablero
+    mov rbx, 0
+    mov rbx, [fila]
+    inc rbx
+    imul bx, 11
+    add rbx, [columna]
+    inc rbx
+    
+    mov rax,0
+    mov rdx, 0
+
+    mov dl, byte[tableroEnJuego+rbx]
+    mov al, [simboloSoldados]
+
+    cmp dl, al
+    jne errorCasillaInvalidaSold
+    
+    mov rax, 0
+    jmp casillaAMoverseSold
+
+    errorInputSold:
+        mPuts msgErrorInputSold ; CREAR MENSAJE DE ERROR
+        mov rax, 1
+        jmp turnoSoldados
+
+    errorCasillaInvalidaSold:
+        mPuts msgCasillaInvalidaSold ; CREAR MENSAJE DE CASILLA ERRÓNEA
+        mov rax, 1
+        jmp turnoSoldados
+    
 
 verificarFichaOfic:
-    ret
+    mov cl, byte[oficialElegido] ; Numero de fila
+    
+    cmp cl, '1'
+    jl errorInputOfic
+    cmp cl, '7'
+    jg errorInputOfic
+    
+    mov qword[fila], 0
+    mSscanf byte[oficialElegido], formatoAtoi, fila
+
+    cmp rax, 1
+    jl errorInputOfic
+
+    mov cl, byte[oficialElegido+1] ; Caracter '-'
+    cmp cl, '-'
+    jne errorInputOfic
+    
+    mov cl, byte[oficialElegido+2] ; Numero de columna
+    cmp cl, '1'
+    jl errorInputOfic
+    cmp cl, '7'
+    jg errorInputOfic
+
+    mov qword[columna], 0
+    mSscanf byte[oficialElegido+2], formatoAtoi, columna
+
+    cmp rax, 1
+    jl errorInputOfic
+
+    mov cl, byte[oficialElegido+3] ; Caracter nulo
+    cmp cl, 0
+    jne errorInputOfic
+
+    ; Calculamos desplazamiento en tablero
+    mov rbx, 0
+    mov rbx, [fila]
+    inc rbx
+    imul bx, 11
+    add rbx, [columna]
+    inc rbx
+    
+    mov rax, 0
+    mov rdx, 0
+
+    mov dl, byte[tableroEnJuego+rbx]
+    mov cl, [simboloOficiales]
+
+    cmp dl, cl
+    jne errorCasillaInvalidaOfic
+    
+    mov rax, 0
+    jmp casillaAMoverseOfic
+
+    errorInputOfic:
+        mPuts msgErrorInputOfic ; CREAR MENSAJE DE ERROR
+        mov rax, 1
+        jmp turnoOficiales
+
+    errorCasillaInvalidaOfic:
+        mPuts msgCasillaInvalidaOfic ; CREAR MENSAJE DE CASILLA ERRÓNEA
+        mov rax, 1
+        jmp turnoOficiales
 
 verificarMovimientoSold:
     ret
