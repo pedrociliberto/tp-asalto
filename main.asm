@@ -435,10 +435,9 @@ setearSimbSoldados:
     mov al, byte[simbSoldElegido]
     mov byte[simboloSoldados], al
 
-    jmp cambiarTableroSoldNuevo
+    call cambiarTableroSoldNuevo
 
-    finSeteoSoldado:
-        ret
+    ret
 
     errSeteoSoldado:
         mErrorJump msgOpcionInvalida, setearSimbSoldados
@@ -627,9 +626,9 @@ cambiarTableroSoldNuevo:
             cmp rbx, 75 ; Desplazamiento de la última casilla en donde puede haber piezas
             jl cicloCambiarSoldados
 
-    jmp finSeteoSoldado
+    ret
 
 cambiarTableroOficNuevo:
-    
     mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer
     mMov tableroEnJuego+92, simboloOficiales, 1
+    ret
