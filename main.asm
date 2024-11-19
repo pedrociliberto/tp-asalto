@@ -101,8 +101,8 @@ section .data
                         db "3","|","X","X","X","X","X","X","X","|",10 
                         db "4","|","X","X","X","X","X","X","X","|",10 
                         db "5","|","X","X"," "," "," ","X","X","|",10 
-                        db "6"," ","-","|","O"," "," ","|","-"," ",10 
-                        db "7"," "," ","|"," "," ","O","|"," "," ",10 
+                        db "6"," ","-","|"," "," ","O","|","-"," ",10 
+                        db "7"," "," ","|","O"," "," ","|"," "," ",10 
                         db " "," "," "," ","-","-","-"," "," "," ",10,0
 
     tableroInv          db " "," ","1","2","3","4","5","6","7"," ",10
@@ -145,6 +145,7 @@ section .data
     msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
 
     msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
+    
     
     msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
     msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
@@ -237,11 +238,6 @@ section .data
 
     formatoAtoi             db "%u", 0
 
-    string db "12345", 0
-    numero dq 0
-
-
-
 section .bss
 
     eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
@@ -263,6 +259,9 @@ section .bss
     fila                resq 1
     columna             resq 1   
 
+    msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
+    msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
+
 section .text
     global main
 
@@ -276,7 +275,7 @@ main:
         mGets eleccionRotar
 
         cmp dword[eleccionRotar], 'n' 
-        je comenzarPartida
+        je dejarTableroOrig
         cmp dword[eleccionRotar], 's'
         je personalizarRotacion
 
@@ -296,7 +295,7 @@ main:
         cmp dword[rotacionElegida], '4'
         jg invalidaRotacion
 
-        jmp personalizarSimbolos
+        jmp rotarTablero
 
     invalidaRotacion:
         mErrorJump msgOpcionInvalida, personalizarRotacion
@@ -321,11 +320,11 @@ main:
 
         setearPiezaInicio:
             mMov piezaDeInicio, piezaIniElegida, 1
-            jmp comenzarPartida
+            jmp comenzarPorInicio
     
     ret
 
-comenzarPartida:
+rotarTablero:
     ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
     ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
         cmp byte[orientacionTablero], '1'
@@ -336,26 +335,31 @@ comenzarPartida:
         je rotarInvertir
 
         mMov tableroEnJuego, tableroOrig, 116
-
-        comenzarPorInicio:
-            cmp byte[piezaDeInicio], 's'
-            je turnoSoldados
-            cmp byte[piezaDeInicio], 'o'
-            je turnoOficiales
+        jmp personalizarSimbolos
 
     rotarIzquierda:
         mMov tableroEnJuego, tableroIzq, 116
-        jmp comenzarPorInicio
+        jmp personalizarSimbolos
     
     rotarDerecha:
         mMov tableroEnJuego, tableroDer, 116
-        jmp comenzarPorInicio
+        jmp personalizarSimbolos
 
     rotarInvertir:
         mMov tableroEnJuego, tableroInv, 116
-        jmp comenzarPorInicio
+        jmp personalizarSimbolos
+
+comenzarPorInicio:
+    cmp byte[piezaDeInicio], 's'
+    je loopMovimientos
+    cmp byte[piezaDeInicio], 'o'
+    je turnoOficiales
+
+dejarTableroOrig:
+    mMov tableroEnJuego, tableroOrig, 116
 
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
+    mov byte[msgErrorEspecificoSold], 0
     turnoSoldados:
         mov byte [soldadoElegido], '0'
     
@@ -363,21 +367,26 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
         mPuts tableroEnJuego ; Muestro el tablero
 
-        mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
-        mGets soldadoElegido    ; Obtengo la ficha a mover
-        
-        jmp verificarFichaSold ; verificar si la ficha elegida es valida
+        cmp byte[msgErrorEspecificoSold], 0
+        jne imprimirErrorSold
 
-        casillaAMoverseSold:
+        todoOkSold:
 
-            mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
-            mGets casillaMovSold    ; Obtengo la casilla a mover
+            mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
+            mGets soldadoElegido        ; Obtengo la ficha a mover
             
-            ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
+            jmp verificarFichaSold ; verificar si la ficha elegida es valida
 
-            ;jmp realizarMovimiento ; Realizo el movimiento
+            casillaAMoverseSold:
 
-        
+                mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
+                mGets casillaMovSold    ; Obtengo la casilla a mover
+                
+                ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
+
+                ;jmp realizarMovimiento ; Realizo el movimiento
+
+    mov byte[msgErrorEspecificoOfic], 0
     turnoOficiales:
         mov byte[oficialElegido], '0'
         
@@ -385,22 +394,27 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
         mPuts tableroEnJuego ; Muestro el tablero
 
-        mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
-        mGets oficialElegido    ; Obtengo la ficha a mover
+        cmp byte[msgErrorEspecificoOfic], 0
+        jne imprimirErrorOfic
 
-        jmp verificarFichaOfic ; verificar si la ficha elegida es valida
+        todoOkOfic:
 
-        casillaAMoverseOfic:
+            mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
+            mGets oficialElegido    ; Obtengo la ficha a mover
 
-            mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
-            mGets casillaMovOfic    ; Obtengo la casilla a mover
-            
-            ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+            jmp verificarFichaOfic ; verificar si la ficha elegida es valida
 
-            ;jmp realizarMovimiento ; Realizo el movimiento
+            casillaAMoverseOfic:
 
-            ; Repetir en loop
-            jmp loopMovimientos
+                mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
+                mGets casillaMovOfic    ; Obtengo la casilla a mover
+                
+                ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+
+                ;jmp realizarMovimiento ; Realizo el movimiento
+
+                ; Repetir en loop
+                jmp loopMovimientos
 
     ret
 
@@ -421,7 +435,10 @@ setearSimbSoldados:
     mov al, byte[simbSoldElegido]
     mov byte[simboloSoldados], al
 
-    ret
+    jmp cambiarTableroSoldNuevo
+
+    finSeteoSoldado:
+        ret
 
     errSeteoSoldado:
         mErrorJump msgOpcionInvalida, setearSimbSoldados
@@ -439,6 +456,8 @@ setearSimbOficiales:
 
     mov al, byte[simbOficElegido]
     mov byte[simboloOficiales], al
+
+    call cambiarTableroOficNuevo
 
     ret
 
@@ -499,17 +518,22 @@ verificarFichaSold:
     jne errorCasillaInvalidaSold
     
     mov rax, 0
+    mov [msgErrorEspecificoSold], rax
     jmp casillaAMoverseSold
 
     errorInputSold:
-        mPuts msgErrorInputSold ; CREAR MENSAJE DE ERROR
-        mov rax, 1
+        mov rax, [msgErrorInputSold]
+        mMov msgErrorEspecificoSold, msgErrorInputSold, 61
         jmp turnoSoldados
 
     errorCasillaInvalidaSold:
-        mPuts msgCasillaInvalidaSold ; CREAR MENSAJE DE CASILLA ERRÓNEA
-        mov rax, 1
+        mov rax, [msgCasillaInvalidaSold]
+        mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 71
         jmp turnoSoldados
+
+    imprimirErrorSold:
+        mPuts msgErrorEspecificoSold
+        jmp todoOkSold
     
 
 verificarFichaOfic:
@@ -564,17 +588,22 @@ verificarFichaOfic:
     jne errorCasillaInvalidaOfic
     
     mov rax, 0
+    mov [msgErrorEspecificoOfic], rax
     jmp casillaAMoverseOfic
 
     errorInputOfic:
-        mPuts msgErrorInputOfic ; CREAR MENSAJE DE ERROR
-        mov rax, 1
+        mov rax, [msgErrorInputOfic]
+        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 61
         jmp turnoOficiales
 
     errorCasillaInvalidaOfic:
-        mPuts msgCasillaInvalidaOfic ; CREAR MENSAJE DE CASILLA ERRÓNEA
-        mov rax, 1
+        mov rax, [msgErrorInputOfic]
+        mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 71
         jmp turnoOficiales
+
+    imprimirErrorOfic:
+        mPuts msgErrorEspecificoOfic
+        jmp todoOkOfic
 
 verificarMovimientoSold:
     ret
@@ -585,3 +614,22 @@ verificarMovimientoOfic:
 realizarMovimiento:
     ret
 
+cambiarTableroSoldNuevo:
+    mov rbx, 26 ; Desplazamiento de la primera casilla en donde puede haber piezas
+
+    cicloCambiarSoldados:
+        cmp byte[tableroEnJuego+rbx], 'X'
+        jne noCambiarSoldado
+        mMov tableroEnJuego+rbx, simboloSoldados, 1 ; Cambio el simbolo de los soldados
+
+        noCambiarSoldado:
+            inc rbx
+            cmp rbx, 75 ; Desplazamiento de la última casilla en donde puede haber piezas
+            jl cicloCambiarSoldados
+
+    jmp finSeteoSoldado
+
+cambiarTableroOficNuevo:
+    
+    mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer
+    mMov tableroEnJuego+92, simboloOficiales, 1

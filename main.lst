@@ -108,9 +108,9 @@
    102 00000040 7C0A               
    103 00000042 357C58582020205858-                             db "5","|","X","X"," "," "," ","X","X","|",10 
    103 0000004B 7C0A               
-   104 0000004D 36202D7C4F20207C2D-                             db "6"," ","-","|","O"," "," ","|","-"," ",10 
+   104 0000004D 36202D7C20204F7C2D-                             db "6"," ","-","|"," "," ","O","|","-"," ",10 
    104 00000056 200A               
-   105 00000058 3720207C20204F7C20-                             db "7"," "," ","|"," "," ","O","|"," "," ",10 
+   105 00000058 3720207C4F20207C20-                             db "7"," "," ","|","O"," "," ","|"," "," ",10 
    105 00000061 200A               
    106 00000063 202020202D2D2D2020-                             db " "," "," "," ","-","-","-"," "," "," ",10,0
    106 0000006C 200A00             
@@ -129,916 +129,986 @@
    113 000000AF 7C0A               
    114 000000B1 357C58585858585858-                             db "5","|","X","X","X","X","X","X","X","|",10 
    114 000000BA 7C0A               
-   115 000000BC 3620C2AF7C5858587C-                             db "6"," ","¯","|","X","X","X","|","¯"," ",10 
-   115 000000C5 C2AF200A           
-   116 000000C9 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
-   116 000000D2 200A               
-   117 000000D4 20202020C2AFC2AFC2-                             db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
-   117 000000DD AF2020200A00       
+   115 000000BC 36202D7C5858587C2D-                             db "6"," ","-","|","X","X","X","|","-"," ",10 
+   115 000000C5 200A               
+   116 000000C7 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
+   116 000000D0 200A               
+   117 000000D2 202020202D2D2D2020-                             db " "," "," "," ","-","-","-"," "," "," ",10,0
+   117 000000DB 200A00             
    118                                  
-   119 000000E3 202031323334353637-         tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
-   119 000000EC 200A               
-   120 000000EE 202020205F5F5F2020-                             db " "," "," "," ","_","_","_"," "," "," ",10 
-   120 000000F7 200A               
-   121 000000F9 3120207C5858587C20-                             db "1"," "," ","|","X","X","X","|"," "," ",10
-   121 00000102 200A               
-   122 00000104 32205F7C5858587C5F-                             db "2"," ","_","|","X","X","X","|","_"," ",10
-   122 0000010D 200A               
-   123 0000010F 337C5858585820204F-                             db "3","|","X","X","X","X"," "," ","O","|",10 
-   123 00000118 7C0A               
-   124 0000011A 347C58585858202020-                             db "4","|","X","X","X","X"," "," "," ","|",10 
-   124 00000123 7C0A               
-   125 00000125 357C58585858204F20-                             db "5","|","X","X","X","X"," ","O"," ","|",10 
-   125 0000012E 7C0A               
-   126 00000130 3620C2AF7C5858587C-                             db "6"," ","¯","|","X","X","X","|","¯"," ",10 
-   126 00000139 C2AF200A           
-   127 0000013D 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
-   127 00000146 200A               
-   128 00000148 20202020C2AFC2AFC2-                             db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
-   128 00000151 AF2020200A00       
+   119 000000DE 202031323334353637-         tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
+   119 000000E7 200A               
+   120 000000E9 202020205F5F5F2020-                             db " "," "," "," ","_","_","_"," "," "," ",10 
+   120 000000F2 200A               
+   121 000000F4 3120207C5858587C20-                             db "1"," "," ","|","X","X","X","|"," "," ",10
+   121 000000FD 200A               
+   122 000000FF 32205F7C5858587C5F-                             db "2"," ","_","|","X","X","X","|","_"," ",10
+   122 00000108 200A               
+   123 0000010A 337C5858585820204F-                             db "3","|","X","X","X","X"," "," ","O","|",10 
+   123 00000113 7C0A               
+   124 00000115 347C58585858202020-                             db "4","|","X","X","X","X"," "," "," ","|",10 
+   124 0000011E 7C0A               
+   125 00000120 357C58585858204F20-                             db "5","|","X","X","X","X"," ","O"," ","|",10 
+   125 00000129 7C0A               
+   126 0000012B 36202D7C5858587C2D-                             db "6"," ","-","|","X","X","X","|","-"," ",10 
+   126 00000134 200A               
+   127 00000136 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
+   127 0000013F 200A               
+   128 00000141 202020202D2D2D2020-                             db " "," "," "," ","-","-","-"," "," "," ",10,0
+   128 0000014A 200A00             
    129                                  
-   130 00000157 202031323334353637-         tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
-   130 00000160 200A               
-   131 00000162 202020205F5F5F2020-                             db " "," "," "," ","_","_","_"," "," "," ",10 
-   131 0000016B 200A               
-   132 0000016D 3120207C5858587C20-                             db "1"," "," ","|","X","X","X","|"," "," ",10
-   132 00000176 200A               
-   133 00000178 32205F7C5858587C5F-                             db "2"," ","_","|","X","X","X","|","_"," ",10
-   133 00000181 200A               
-   134 00000183 337C4F202058585858-                             db "3","|","O"," "," ","X","X","X","X","|",10 
-   134 0000018C 7C0A               
-   135 0000018E 347C20202058585858-                             db "4","|"," "," "," ","X","X","X","X","|",10 
-   135 00000197 7C0A               
-   136 00000199 357C204F2058585858-                             db "5","|"," ","O"," ","X","X","X","X","|",10 
-   136 000001A2 7C0A               
-   137 000001A4 3620C2AF7C5858587C-                             db "6"," ","¯","|","X","X","X","|","¯"," ",10 
-   137 000001AD C2AF200A           
-   138 000001B1 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
-   138 000001BA 200A               
-   139 000001BC 20202020C2AFC2AFC2-                             db " "," "," "," ","¯","¯","¯"," "," "," ",10,0
-   139 000001C5 AF2020200A00       
+   130 0000014D 202031323334353637-         tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
+   130 00000156 200A               
+   131 00000158 202020205F5F5F2020-                             db " "," "," "," ","_","_","_"," "," "," ",10 
+   131 00000161 200A               
+   132 00000163 3120207C5858587C20-                             db "1"," "," ","|","X","X","X","|"," "," ",10
+   132 0000016C 200A               
+   133 0000016E 32205F7C5858587C5F-                             db "2"," ","_","|","X","X","X","|","_"," ",10
+   133 00000177 200A               
+   134 00000179 337C4F202058585858-                             db "3","|","O"," "," ","X","X","X","X","|",10 
+   134 00000182 7C0A               
+   135 00000184 347C20202058585858-                             db "4","|"," "," "," ","X","X","X","X","|",10 
+   135 0000018D 7C0A               
+   136 0000018F 357C204F2058585858-                             db "5","|"," ","O"," ","X","X","X","X","|",10 
+   136 00000198 7C0A               
+   137 0000019A 36202D7C5858587C2D-                             db "6"," ","-","|","X","X","X","|","-"," ",10 
+   137 000001A3 200A               
+   138 000001A5 3720207C5858587C20-                             db "7"," "," ","|","X","X","X","|"," "," ",10 
+   138 000001AE 200A               
+   139 000001B0 202020202D2D2D2020-                             db " "," "," "," ","-","-","-"," "," "," ",10,0
+   139 000001B9 200A00             
    140                                  
    141                                      ; Mensajes
    142                                  
-   143 000001CB C2A14269656E76656E-         msgBienvenida           db "¡Bienvenido al juego El Asalto!", 0
-   143 000001D4 69646F20616C206A75-
-   143 000001DD 65676F20456C204173-
-   143 000001E6 616C746F2100       
+   143 000001BC C2A14269656E76656E-         msgBienvenida           db "¡Bienvenido al juego El Asalto!", 0
+   143 000001C5 69646F20616C206A75-
+   143 000001CE 65676F20456C204173-
+   143 000001D7 616C746F2100       
    144                                  
-   145 000001EC C2BF44657365612070-         msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
-   145 000001F5 6572736F6E616C697A-
-   145 000001FE 617220656C20746162-
-   145 00000207 6C65726F3F2028732F-
-   145 00000210 6E293A2000         
+   145 000001DD C2BF44657365612070-         msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
+   145 000001E6 6572736F6E616C697A-
+   145 000001EF 617220656C20746162-
+   145 000001F8 6C65726F3F2028732F-
+   145 00000201 6E293A2000         
    146                                  
-   147 00000215 4F706369C3B36E2069-         msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
-   147 0000021E 6E76C3A16C6964612E-
-   147 00000227 20496E74656E746520-
-   147 00000230 6465206E7565766F2E-
-   147 00000239 00                 
+   147 00000206 4F706369C3B36E2069-         msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
+   147 0000020F 6E76C3A16C6964612E-
+   147 00000218 20496E74656E746520-
+   147 00000221 6465206E7565766F2E-
+   147 0000022A 00                 
    148                                      
-   149 0000023A 436173696C6C612069-         msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
-   149 00000243 6E76C3A16C6964613A-
-   149 0000024C 206E6F206861792075-
-   149 00000255 6E20736F6C6461646F-
-   149 0000025E 20656E206573612063-
-   149 00000267 6173696C6C612E2049-
-   149 00000270 6E74656E7465206465-
-   149 00000279 206E7565766F2E00   
-   150 00000281 4572726F7220656E20-         msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
-   150 0000028A 656C20666F726D6174-
-   150 00000293 6F20646520656E7472-
-   150 0000029C 6164612064656C2073-
-   150 000002A5 6F6C6461646F2E2049-
-   150 000002AE 6E74656E7465206465-
-   150 000002B7 206E7565766F2E00   
-   151                                  
-   152 000002BF 436173696C6C612069-         msgCasillaInvalidaOfic  db "Casilla inválida: no hay un oficial en esa casilla. Intente de nuevo.", 0
-   152 000002C8 6E76C3A16C6964613A-
-   152 000002D1 206E6F206861792075-
-   152 000002DA 6E206F66696369616C-
-   152 000002E3 20656E206573612063-
-   152 000002EC 6173696C6C612E2049-
-   152 000002F5 6E74656E7465206465-
-   152 000002FE 206E7565766F2E00   
-   153 00000306 4572726F7220656E20-         msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
-   153 0000030F 656C20666F726D6174-
-   153 00000318 6F20646520656E7472-
-   153 00000321 6164612064656C206F-
-   153 0000032A 66696369616C2E2049-
-   153 00000333 6E74656E7465206465-
-   153 0000033C 206E7565766F2E00   
-   154                                  
-   155 00000344 C2A153652070756564-         msgPregRotacion         db "¡Se puede rotar el tablero! Elija una de las opciones (1-4):", 0
-   155 0000034D 6520726F7461722065-
-   155 00000356 6C207461626C65726F-
-   155 0000035F 2120456C696A612075-
-   155 00000368 6E61206465206C6173-
-   155 00000371 206F7063696F6E6573-
-   155 0000037A 2028312D34293A00   
-   156 00000382 312E20526F74617220-         msgRotacionesPosibles   db "1. Rotar a la izquierda", 10
-   156 0000038B 61206C6120697A7175-
-   156 00000394 69657264610A       
-   157 0000039A 322E20526F74617220-                                 db "2. Rotar a la derecha", 10
-   157 000003A3 61206C612064657265-
-   157 000003AC 6368610A           
-   158 000003B0 332E20496E76657274-                                 db "3. Invertir el tablero", 10
-   158 000003B9 697220656C20746162-
-   158 000003C2 6C65726F0A         
-   159 000003C7 342E204E6F20726F74-                                 db "4. No rotar", 0
-   159 000003D0 617200             
-   160                                      
-   161 000003D3 C2A1456C696A616D6F-         msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba un solo caracter para cada uno (si escribe más, nos quedaremos con el primero).", 0
-   161 000003DC 73206C6F732073C3AD-
-   161 000003E5 6D626F6C6F73207061-
-   161 000003EE 726120636164612070-
-   161 000003F7 6572736F6E616A6521-
-   161 00000400 204573637269626120-
-   161 00000409 756E20736F6C6F2063-
-   161 00000412 617261637465722070-
-   161 0000041B 617261206361646120-
-   161 00000424 756E6F202873692065-
-   161 0000042D 736372696265206DC3-
-   161 00000436 A1732C206E6F732071-
-   161 0000043F 7565646172656D6F73-
-   161 00000448 20636F6E20656C2070-
-   161 00000451 72696D65726F292E00 
-   162 0000045A 53C3AD6D626F6C6F20-         msgSimboloOficiales     db "Símbolo para los oficiales:", 0
-   162 00000463 70617261206C6F7320-
-   162 0000046C 6F66696369616C6573-
-   162 00000475 3A00               
-   163 00000477 53C3AD6D626F6C6F20-         msgSimboloSoldados      db "Símbolo para los soldados:", 0
-   163 00000480 70617261206C6F7320-
-   163 00000489 736F6C6461646F733A-
-   163 00000492 00                 
-   164                                  
-   165 00000493 C2BF517569C3A96E20-         msgQuienInicia          db "¿Quién inicia el juego: oficiales o soldados? (o/s): ", 0
-   165 0000049C 696E6963696120656C-
-   165 000004A5 206A7565676F3A206F-
-   165 000004AE 66696369616C657320-
-   165 000004B7 6F20736F6C6461646F-
-   165 000004C0 733F20286F2F73293A-
-   165 000004C9 2000               
-   166                                  
-   167 000004CB C2A1556E206F666963-         msgOficialRetirado      db "¡Un oficial ha sido retirado del juego! Se ha olvidado de atrapar a un soldado.", 0
-   167 000004D4 69616C206861207369-
-   167 000004DD 646F20726574697261-
-   167 000004E6 646F2064656C206A75-
-   167 000004EF 65676F212053652068-
-   167 000004F8 61206F6C7669646164-
-   167 00000501 6F2064652061747261-
-   167 0000050A 706172206120756E20-
-   167 00000513 736F6C6461646F2E00 
-   168                                  
-   169 0000051C 4F66696369616C2031-         msgOficial1             db "Oficial 1:", 0
-   169 00000525 3A00               
-   170 00000527 4F66696369616C2032-         msgOficial2             db "Oficial 2:", 0
-   170 00000530 3A00               
-   171                                  
-   172 00000532 4D6F76696D69656E74-         msgCantMovimientos      db "Movimientos totales: %d", 0
-   172 0000053B 6F7320746F74616C65-
-   172 00000544 733A20256400       
-   173 0000054A 2D2048616369612061-         msgCantAdelante         db "- Hacia adelante: %d", 0
-   173 00000553 64656C616E74653A20-
-   173 0000055C 256400             
-   174 0000055F 2D204861636961206C-         msgCantDerecha          db "- Hacia la derecha: %d", 0
-   174 00000568 612064657265636861-
-   174 00000571 3A20256400         
-   175 00000576 2D204861636961206C-         msgCantIzquierda        db "- Hacia la izquierda: %d", 0
-   175 0000057F 6120697A7175696572-
-   175 00000588 64613A20256400     
-   176 0000058F 2D2048616369612061-         msgCantAtras            db "- Hacia atrás: %d", 0
-   176 00000598 7472C3A1733A202564-
-   176 000005A1 00                 
-   177 000005A2 2D20456E2064696167-         msgCantDiagonal         db "- En diagonal: %d", 0
-   177 000005AB 6F6E616C3A20256400 
-   178                                  
-   179 000005B4 C2A1456C206A756567-         msgJuegoTerminado       db "¡El juego ha terminado!", 0
-   179 000005BD 6F206861207465726D-
-   179 000005C6 696E61646F2100     
-   180 000005CD C2A1456C2067616E61-         msgGanador              db "¡El ganador es el equipo de los %s!", 10, 0
-   180 000005D6 646F7220657320656C-
-   180 000005DF 2065717569706F2064-
-   180 000005E8 65206C6F7320257321-
-   180 000005F1 0A00               
-   181 000005F3 736F6C6461646F7300          stringSoldados          db "soldados", 0
-   182 000005FC 6F66696369616C6573-         stringOficiales         db "oficiales", 0
-   182 00000605 00                 
-   183                                  
-   184 00000606 52617AC3B36E3A2025-         msgRazonGanador         db "Razón: %s", 0
-   184 0000060F 7300               
-   185                                  
-   186                                      ; Se ha decidido salir de la partida
-   187 00000611 536520686120646563-         msgSalidaPartida        db "Se ha decidido salir de la partida. ¿Desea guardarla? (y/n)", 0
-   187 0000061A 696469646F2073616C-
-   187 00000623 6972206465206C6120-
-   187 0000062C 706172746964612E20-
-   187 00000635 C2BF44657365612067-
-   187 0000063E 7561726461726C613F-
-   187 00000647 2028792F6E2900     
-   188 0000064E 6E                          guardadoPartida         db 'n' ; guardar (y), no guardar (n)
-   189                                  
-   190                                      ; Razones de victoria de soldados
-   191 0000064F 6C6F7320736F6C6461-         msgSoldadosFortaleza    db "los soldados han ocupado todos los puntos de la fortaleza.", 0
-   191 00000658 646F732068616E206F-
-   191 00000661 63757061646F20746F-
-   191 0000066A 646F73206C6F732070-
-   191 00000673 756E746F7320646520-
-   191 0000067C 6C6120666F7274616C-
-   191 00000685 657A612E00         
-   192 0000068A 6C6F7320736F6C6461-         msgSoldadosRodean       db "los soldados han rodeado a los oficiales.", 0
-   192 00000693 646F732068616E2072-
-   192 0000069C 6F646561646F206120-
-   192 000006A5 6C6F73206F66696369-
-   192 000006AE 616C65732E00       
-   193 000006B4 616D626F73206F6669-         msgSoldadosInvalidar    db "ambos oficiales han sido invalidados."
-   193 000006BD 6369616C6573206861-
-   193 000006C6 6E207369646F20696E-
-   193 000006CF 76616C696461646F73-
-   193 000006D8 2E                 
-   194                                  
-   195                                      ; Razones de victoria de oficiales
-   196 000006D9 6E6F2071756564616E-         msgOficialesGanan       db "no quedan suficientes soldados para ocupar la fortaleza.", 0
-   196 000006E2 20737566696369656E-
-   196 000006EB 74657320736F6C6461-
-   196 000006F4 646F73207061726120-
-   196 000006FD 6F6375706172206C61-
-   196 00000706 20666F7274616C657A-
-   196 0000070F 612E00             
-   197                                  
-   198                                      ; Turnos
-   199 00000712 4573207475726E6F20-         msgTurnoSoldados        db "Es turno de los soldados. Decida a qué soldado desea mover: (<numFila>-<numColumna>)", 0
-   199 0000071B 6465206C6F7320736F-
-   199 00000724 6C6461646F732E2044-
-   199 0000072D 656369646120612071-
-   199 00000736 75C3A920736F6C6461-
-   199 0000073F 646F20646573656120-
-   199 00000748 6D6F7665723A20283C-
-   199 00000751 6E756D46696C613E2D-
-   199 0000075A 3C6E756D436F6C756D-
-   199 00000763 6E613E2900         
-   200 00000768 4573207475726E6F20-         msgTurnoOficiales       db "Es turno de los oficiales. Decida a qué oficial desea mover: (<numFila>-<numColumna>)", 0
-   200 00000771 6465206C6F73206F66-
-   200 0000077A 696369616C65732E20-
-   200 00000783 446563696461206120-
-   200 0000078C 7175C3A9206F666963-
-   200 00000795 69616C206465736561-
-   200 0000079E 206D6F7665723A2028-
-   200 000007A7 3C6E756D46696C613E-
-   200 000007B0 2D3C6E756D436F6C75-
-   200 000007B9 6D6E613E2900       
-   201 000007BF C2BF41207175C3A920-         msgTurnoMovSold         db "¿A qué casilla desea mover el soldado? (<numFila>-<numColumna>)", 0
-   201 000007C8 636173696C6C612064-
-   201 000007D1 65736561206D6F7665-
-   201 000007DA 7220656C20736F6C64-
-   201 000007E3 61646F3F20283C6E75-
-   201 000007EC 6D46696C613E2D3C6E-
-   201 000007F5 756D436F6C756D6E61-
-   201 000007FE 3E2900             
-   202 00000801 C2BF41207175C3A920-         msgTurnoMovOfic         db "¿A qué casilla desea mover el oficial? (<numFila>-<numColumna>)", 0
-   202 0000080A 636173696C6C612064-
-   202 00000813 65736561206D6F7665-
-   202 0000081C 7220656C206F666963-
-   202 00000825 69616C3F20283C6E75-
-   202 0000082E 6D46696C613E2D3C6E-
-   202 00000837 756D436F6C756D6E61-
-   202 00000840 3E2900             
-   203                                  
-   204 00000843 556E206F6669636961-         msgCapturaSold          db "Un oficial ha capturado a un soldado.", 0
-   204 0000084C 6C2068612063617074-
-   204 00000855 757261646F20612075-
-   204 0000085E 6E20736F6C6461646F-
-   204 00000867 2E00               
-   205 00000869 C2A1556E206F666963-         msgInvalidOfic          db "¡Un oficial ha sido invalidado! No ha capturado a un soldado regalado.", 0
-   205 00000872 69616C206861207369-
-   205 0000087B 646F20696E76616C69-
-   205 00000884 6461646F21204E6F20-
-   205 0000088D 686120636170747572-
-   205 00000896 61646F206120756E20-
-   205 0000089F 736F6C6461646F2072-
-   205 000008A8 6567616C61646F2E00 
-   206                                      
-   207                                      ; Contadores
-   208                                  
-   209 000008B1 00                          movimientosOfic1        db 0
-   210 000008B2 00                          movimientosOfic2        db 0
-   211                                      
-   212 000008B3 00                          movOfic1Adelante        db 0
-   213 000008B4 00                          movOfic1Derecha         db 0
-   214 000008B5 00                          movOfic1Izquierda       db 0
-   215 000008B6 00                          movOfic1Atras           db 0
-   216 000008B7 00                          movOfic1Diagonal        db 0
-   217                                  
-   218 000008B8 00                          movOfic2Adelante        db 0
-   219 000008B9 00                          movOfic2Derecha         db 0
-   220 000008BA 00                          movOfic2Izquierda       db 0
-   221 000008BB 00                          movOfic2Atras           db 0
-   222 000008BC 00                          movOfic2Diagonal        db 0
-   223                                  
-   224 000008BD 00                          cantSoldCapturados      db 0
-   225 000008BE 00                          cantOficInvalidados     db 0
-   226                                  
-   227 000008BF 4F00                        simboloOficiales        db 'O', 0
-   228 000008C1 5800                        simboloSoldados         db 'X', 0
-   229 000008C3 04                          orientacionTablero      db  4       ; 4 -> no rotar (default) 
-   230 000008C4 73                          piezaDeInicio           db 's'      ; soldados (s), oficiales (o)
-   231                                  
-   232                                      ; Comandos 
-   233                                  
-   234 000008C5 636C65617200                cmdLimpiarPantalla      db "clear", 0
-   235                                  
-   236                                      ; Formato
-   237                                  
-   238 000008CB 257500                      formatoAtoi             db "%u", 0
-   239                                  
-   240 000008CE 313233343500                string db "12345", 0
-   241 000008D4 0000000000000000            numero dq 0
+   149                                      
+   150 0000022B 436173696C6C612069-         msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
+   150 00000234 6E76C3A16C6964613A-
+   150 0000023D 206E6F206861792075-
+   150 00000246 6E20736F6C6461646F-
+   150 0000024F 20656E206573612063-
+   150 00000258 6173696C6C612E2049-
+   150 00000261 6E74656E7465206465-
+   150 0000026A 206E7565766F2E00   
+   151 00000272 4572726F7220656E20-         msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
+   151 0000027B 656C20666F726D6174-
+   151 00000284 6F20646520656E7472-
+   151 0000028D 6164612064656C2073-
+   151 00000296 6F6C6461646F2E2049-
+   151 0000029F 6E74656E7465206465-
+   151 000002A8 206E7565766F2E00   
+   152                                  
+   153 000002B0 436173696C6C612069-         msgCasillaInvalidaOfic  db "Casilla inválida: no hay un oficial en esa casilla. Intente de nuevo.", 0
+   153 000002B9 6E76C3A16C6964613A-
+   153 000002C2 206E6F206861792075-
+   153 000002CB 6E206F66696369616C-
+   153 000002D4 20656E206573612063-
+   153 000002DD 6173696C6C612E2049-
+   153 000002E6 6E74656E7465206465-
+   153 000002EF 206E7565766F2E00   
+   154 000002F7 4572726F7220656E20-         msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
+   154 00000300 656C20666F726D6174-
+   154 00000309 6F20646520656E7472-
+   154 00000312 6164612064656C206F-
+   154 0000031B 66696369616C2E2049-
+   154 00000324 6E74656E7465206465-
+   154 0000032D 206E7565766F2E00   
+   155                                  
+   156 00000335 C2A153652070756564-         msgPregRotacion         db "¡Se puede rotar el tablero! Elija una de las opciones (1-4):", 0
+   156 0000033E 6520726F7461722065-
+   156 00000347 6C207461626C65726F-
+   156 00000350 2120456C696A612075-
+   156 00000359 6E61206465206C6173-
+   156 00000362 206F7063696F6E6573-
+   156 0000036B 2028312D34293A00   
+   157 00000373 312E20526F74617220-         msgRotacionesPosibles   db "1. Rotar a la izquierda", 10
+   157 0000037C 61206C6120697A7175-
+   157 00000385 69657264610A       
+   158 0000038B 322E20526F74617220-                                 db "2. Rotar a la derecha", 10
+   158 00000394 61206C612064657265-
+   158 0000039D 6368610A           
+   159 000003A1 332E20496E76657274-                                 db "3. Invertir el tablero", 10
+   159 000003AA 697220656C20746162-
+   159 000003B3 6C65726F0A         
+   160 000003B8 342E204E6F20726F74-                                 db "4. No rotar", 0
+   160 000003C1 617200             
+   161                                      
+   162 000003C4 C2A1456C696A616D6F-         msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba un solo caracter para cada uno (si escribe más, nos quedaremos con el primero).", 0
+   162 000003CD 73206C6F732073C3AD-
+   162 000003D6 6D626F6C6F73207061-
+   162 000003DF 726120636164612070-
+   162 000003E8 6572736F6E616A6521-
+   162 000003F1 204573637269626120-
+   162 000003FA 756E20736F6C6F2063-
+   162 00000403 617261637465722070-
+   162 0000040C 617261206361646120-
+   162 00000415 756E6F202873692065-
+   162 0000041E 736372696265206DC3-
+   162 00000427 A1732C206E6F732071-
+   162 00000430 7565646172656D6F73-
+   162 00000439 20636F6E20656C2070-
+   162 00000442 72696D65726F292E00 
+   163 0000044B 53C3AD6D626F6C6F20-         msgSimboloOficiales     db "Símbolo para los oficiales:", 0
+   163 00000454 70617261206C6F7320-
+   163 0000045D 6F66696369616C6573-
+   163 00000466 3A00               
+   164 00000468 53C3AD6D626F6C6F20-         msgSimboloSoldados      db "Símbolo para los soldados:", 0
+   164 00000471 70617261206C6F7320-
+   164 0000047A 736F6C6461646F733A-
+   164 00000483 00                 
+   165                                  
+   166 00000484 C2BF517569C3A96E20-         msgQuienInicia          db "¿Quién inicia el juego: oficiales o soldados? (o/s): ", 0
+   166 0000048D 696E6963696120656C-
+   166 00000496 206A7565676F3A206F-
+   166 0000049F 66696369616C657320-
+   166 000004A8 6F20736F6C6461646F-
+   166 000004B1 733F20286F2F73293A-
+   166 000004BA 2000               
+   167                                  
+   168 000004BC C2A1556E206F666963-         msgOficialRetirado      db "¡Un oficial ha sido retirado del juego! Se ha olvidado de atrapar a un soldado.", 0
+   168 000004C5 69616C206861207369-
+   168 000004CE 646F20726574697261-
+   168 000004D7 646F2064656C206A75-
+   168 000004E0 65676F212053652068-
+   168 000004E9 61206F6C7669646164-
+   168 000004F2 6F2064652061747261-
+   168 000004FB 706172206120756E20-
+   168 00000504 736F6C6461646F2E00 
+   169                                  
+   170 0000050D 4F66696369616C2031-         msgOficial1             db "Oficial 1:", 0
+   170 00000516 3A00               
+   171 00000518 4F66696369616C2032-         msgOficial2             db "Oficial 2:", 0
+   171 00000521 3A00               
+   172                                  
+   173 00000523 4D6F76696D69656E74-         msgCantMovimientos      db "Movimientos totales: %d", 0
+   173 0000052C 6F7320746F74616C65-
+   173 00000535 733A20256400       
+   174 0000053B 2D2048616369612061-         msgCantAdelante         db "- Hacia adelante: %d", 0
+   174 00000544 64656C616E74653A20-
+   174 0000054D 256400             
+   175 00000550 2D204861636961206C-         msgCantDerecha          db "- Hacia la derecha: %d", 0
+   175 00000559 612064657265636861-
+   175 00000562 3A20256400         
+   176 00000567 2D204861636961206C-         msgCantIzquierda        db "- Hacia la izquierda: %d", 0
+   176 00000570 6120697A7175696572-
+   176 00000579 64613A20256400     
+   177 00000580 2D2048616369612061-         msgCantAtras            db "- Hacia atrás: %d", 0
+   177 00000589 7472C3A1733A202564-
+   177 00000592 00                 
+   178 00000593 2D20456E2064696167-         msgCantDiagonal         db "- En diagonal: %d", 0
+   178 0000059C 6F6E616C3A20256400 
+   179                                  
+   180 000005A5 C2A1456C206A756567-         msgJuegoTerminado       db "¡El juego ha terminado!", 0
+   180 000005AE 6F206861207465726D-
+   180 000005B7 696E61646F2100     
+   181 000005BE C2A1456C2067616E61-         msgGanador              db "¡El ganador es el equipo de los %s!", 10, 0
+   181 000005C7 646F7220657320656C-
+   181 000005D0 2065717569706F2064-
+   181 000005D9 65206C6F7320257321-
+   181 000005E2 0A00               
+   182 000005E4 736F6C6461646F7300          stringSoldados          db "soldados", 0
+   183 000005ED 6F66696369616C6573-         stringOficiales         db "oficiales", 0
+   183 000005F6 00                 
+   184                                  
+   185 000005F7 52617AC3B36E3A2025-         msgRazonGanador         db "Razón: %s", 0
+   185 00000600 7300               
+   186                                  
+   187                                      ; Se ha decidido salir de la partida
+   188 00000602 536520686120646563-         msgSalidaPartida        db "Se ha decidido salir de la partida. ¿Desea guardarla? (y/n)", 0
+   188 0000060B 696469646F2073616C-
+   188 00000614 6972206465206C6120-
+   188 0000061D 706172746964612E20-
+   188 00000626 C2BF44657365612067-
+   188 0000062F 7561726461726C613F-
+   188 00000638 2028792F6E2900     
+   189 0000063F 6E                          guardadoPartida         db 'n' ; guardar (y), no guardar (n)
+   190                                  
+   191                                      ; Razones de victoria de soldados
+   192 00000640 6C6F7320736F6C6461-         msgSoldadosFortaleza    db "los soldados han ocupado todos los puntos de la fortaleza.", 0
+   192 00000649 646F732068616E206F-
+   192 00000652 63757061646F20746F-
+   192 0000065B 646F73206C6F732070-
+   192 00000664 756E746F7320646520-
+   192 0000066D 6C6120666F7274616C-
+   192 00000676 657A612E00         
+   193 0000067B 6C6F7320736F6C6461-         msgSoldadosRodean       db "los soldados han rodeado a los oficiales.", 0
+   193 00000684 646F732068616E2072-
+   193 0000068D 6F646561646F206120-
+   193 00000696 6C6F73206F66696369-
+   193 0000069F 616C65732E00       
+   194 000006A5 616D626F73206F6669-         msgSoldadosInvalidar    db "ambos oficiales han sido invalidados."
+   194 000006AE 6369616C6573206861-
+   194 000006B7 6E207369646F20696E-
+   194 000006C0 76616C696461646F73-
+   194 000006C9 2E                 
+   195                                  
+   196                                      ; Razones de victoria de oficiales
+   197 000006CA 6E6F2071756564616E-         msgOficialesGanan       db "no quedan suficientes soldados para ocupar la fortaleza.", 0
+   197 000006D3 20737566696369656E-
+   197 000006DC 74657320736F6C6461-
+   197 000006E5 646F73207061726120-
+   197 000006EE 6F6375706172206C61-
+   197 000006F7 20666F7274616C657A-
+   197 00000700 612E00             
+   198                                  
+   199                                      ; Turnos
+   200 00000703 4573207475726E6F20-         msgTurnoSoldados        db "Es turno de los soldados. Decida a qué soldado desea mover: (<numFila>-<numColumna>)", 0
+   200 0000070C 6465206C6F7320736F-
+   200 00000715 6C6461646F732E2044-
+   200 0000071E 656369646120612071-
+   200 00000727 75C3A920736F6C6461-
+   200 00000730 646F20646573656120-
+   200 00000739 6D6F7665723A20283C-
+   200 00000742 6E756D46696C613E2D-
+   200 0000074B 3C6E756D436F6C756D-
+   200 00000754 6E613E2900         
+   201 00000759 4573207475726E6F20-         msgTurnoOficiales       db "Es turno de los oficiales. Decida a qué oficial desea mover: (<numFila>-<numColumna>)", 0
+   201 00000762 6465206C6F73206F66-
+   201 0000076B 696369616C65732E20-
+   201 00000774 446563696461206120-
+   201 0000077D 7175C3A9206F666963-
+   201 00000786 69616C206465736561-
+   201 0000078F 206D6F7665723A2028-
+   201 00000798 3C6E756D46696C613E-
+   201 000007A1 2D3C6E756D436F6C75-
+   201 000007AA 6D6E613E2900       
+   202 000007B0 C2BF41207175C3A920-         msgTurnoMovSold         db "¿A qué casilla desea mover el soldado? (<numFila>-<numColumna>)", 0
+   202 000007B9 636173696C6C612064-
+   202 000007C2 65736561206D6F7665-
+   202 000007CB 7220656C20736F6C64-
+   202 000007D4 61646F3F20283C6E75-
+   202 000007DD 6D46696C613E2D3C6E-
+   202 000007E6 756D436F6C756D6E61-
+   202 000007EF 3E2900             
+   203 000007F2 C2BF41207175C3A920-         msgTurnoMovOfic         db "¿A qué casilla desea mover el oficial? (<numFila>-<numColumna>)", 0
+   203 000007FB 636173696C6C612064-
+   203 00000804 65736561206D6F7665-
+   203 0000080D 7220656C206F666963-
+   203 00000816 69616C3F20283C6E75-
+   203 0000081F 6D46696C613E2D3C6E-
+   203 00000828 756D436F6C756D6E61-
+   203 00000831 3E2900             
+   204                                  
+   205 00000834 556E206F6669636961-         msgCapturaSold          db "Un oficial ha capturado a un soldado.", 0
+   205 0000083D 6C2068612063617074-
+   205 00000846 757261646F20612075-
+   205 0000084F 6E20736F6C6461646F-
+   205 00000858 2E00               
+   206 0000085A C2A1556E206F666963-         msgInvalidOfic          db "¡Un oficial ha sido invalidado! No ha capturado a un soldado regalado.", 0
+   206 00000863 69616C206861207369-
+   206 0000086C 646F20696E76616C69-
+   206 00000875 6461646F21204E6F20-
+   206 0000087E 686120636170747572-
+   206 00000887 61646F206120756E20-
+   206 00000890 736F6C6461646F2072-
+   206 00000899 6567616C61646F2E00 
+   207                                      
+   208                                      ; Contadores
+   209                                  
+   210 000008A2 00                          movimientosOfic1        db 0
+   211 000008A3 00                          movimientosOfic2        db 0
+   212                                      
+   213 000008A4 00                          movOfic1Adelante        db 0
+   214 000008A5 00                          movOfic1Derecha         db 0
+   215 000008A6 00                          movOfic1Izquierda       db 0
+   216 000008A7 00                          movOfic1Atras           db 0
+   217 000008A8 00                          movOfic1Diagonal        db 0
+   218                                  
+   219 000008A9 00                          movOfic2Adelante        db 0
+   220 000008AA 00                          movOfic2Derecha         db 0
+   221 000008AB 00                          movOfic2Izquierda       db 0
+   222 000008AC 00                          movOfic2Atras           db 0
+   223 000008AD 00                          movOfic2Diagonal        db 0
+   224                                  
+   225 000008AE 00                          cantSoldCapturados      db 0
+   226 000008AF 00                          cantOficInvalidados     db 0
+   227                                  
+   228 000008B0 4F00                        simboloOficiales        db 'O', 0
+   229 000008B2 5800                        simboloSoldados         db 'X', 0
+   230 000008B4 04                          orientacionTablero      db  4       ; 4 -> no rotar (default) 
+   231 000008B5 73                          piezaDeInicio           db 's'      ; soldados (s), oficiales (o)
+   232                                  
+   233                                      ; Comandos 
+   234                                  
+   235 000008B6 636C65617200                cmdLimpiarPantalla      db "clear", 0
+   236                                  
+   237                                      ; Formato
+   238                                  
+   239 000008BC 257500                      formatoAtoi             db "%u", 0
+   240                                  
+   241                                  section .bss
    242                                  
-   243                                  
-   244                                  
-   245                                  section .bss
-   246                                  
-   247 00000000 ????????                    eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
-   248 00000004 ????????                    rotacionElegida     resd 1  ; Variable pivote para la rotación del tablero
-   249                                  
-   250 00000008 ????????                    simbOficElegido     resd 1  ; Variable pivote para el símbolo de los oficiales
-   251 0000000C ????????                    simbSoldElegido     resd 1  ; Variable pivote para el símbolo de los soldados
+   243 00000000 ????????                    eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
+   244 00000004 ????????                    rotacionElegida     resd 1  ; Variable pivote para la rotación del tablero
+   245                                  
+   246 00000008 ????????                    simbOficElegido     resd 1  ; Variable pivote para el símbolo de los oficiales
+   247 0000000C ????????                    simbSoldElegido     resd 1  ; Variable pivote para el símbolo de los soldados
+   248                                  
+   249 00000010 ????????                    piezaIniElegida     resd 1  ; Variable pivote para la pieza que inicia
+   250                                  
+   251 00000014 <res 74h>                   tableroEnJuego      resb 116 ; Tablero en juego
    252                                  
-   253 00000010 ????????                    piezaIniElegida     resd 1  ; Variable pivote para la pieza que inicia
-   254                                  
-   255 00000014 <res 74h>                   tableroEnJuego      resb 116 ; Tablero en juego
-   256                                  
-   257 00000088 ????????                    soldadoElegido      resb 4  ; Fila y columna del soldado a mover
-   258 0000008C ????????                    casillaMovSold      resb 4  ; Fila y columna de la casilla de destino del soldado
-   259                                  
-   260 00000090 ????????                    oficialElegido      resb 4  ; Fila y columna del oficial a mover
-   261 00000094 ????????                    casillaMovOfic      resb 4  ; Fila y columna de la casilla de destino del oficial
-   262                                  
-   263 00000098 ????????????????            fila                resq 1
-   264 000000A0 ????????????????            columna             resq 1   
-   265                                  
-   266                                  section .text
-   267                                      global main
-   268                                  
-   269                                  main:
-   270                                  
-   271                                      mPuts msgBienvenida
+   253 00000088 ????????                    soldadoElegido      resb 4  ; Fila y columna del soldado a mover
+   254 0000008C ????????                    casillaMovSold      resb 4  ; Fila y columna de la casilla de destino del soldado
+   255                                  
+   256 00000090 ????????                    oficialElegido      resb 4  ; Fila y columna del oficial a mover
+   257 00000094 ????????                    casillaMovOfic      resb 4  ; Fila y columna de la casilla de destino del oficial
+   258                                  
+   259 00000098 ????????????????            fila                resq 1
+   260 000000A0 ????????????????            columna             resq 1   
+   261                                  
+   262 000000A8 <res 47h>                   msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
+   263 000000EF <res 47h>                   msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
+   264                                  
+   265                                  section .text
+   266                                      global main
+   267                                  
+   268                                  main:
+   269                                  
+   270                                      mPuts msgBienvenida
      2 00000000 48BF-               <1>  mov rdi, %1
-     2 00000002 [CB01000000000000]  <1>
+     2 00000002 [BC01000000000000]  <1>
      3 0000000A 4883EC08            <1>  sub rsp, 8
      4 0000000E E8(00000000)        <1>  call puts
      5 00000013 4883C408            <1>  add rsp, 8
-   272                                  
-   273                                      personalizar:
-   274 00000017 C70425[00000000]00-             mov dword[eleccionRotar], ''    ; vaciar variable
-   274 0000001F 000000             
-   275                                          mPuts msgPersonalizarTablero
+   271                                  
+   272                                      personalizar:
+   273 00000017 C70425[00000000]00-             mov dword[eleccionRotar], ''    ; vaciar variable
+   273 0000001F 000000             
+   274                                          mPuts msgPersonalizarTablero
      2 00000022 48BF-               <1>  mov rdi, %1
-     2 00000024 [EC01000000000000]  <1>
+     2 00000024 [DD01000000000000]  <1>
      3 0000002C 4883EC08            <1>  sub rsp, 8
      4 00000030 E8(00000000)        <1>  call puts
      5 00000035 4883C408            <1>  add rsp, 8
-   276                                          mGets eleccionRotar
+   275                                          mGets eleccionRotar
     17 00000039 48BF-               <1>  mov rdi, %1
     17 0000003B [0000000000000000]  <1>
     18 00000043 4883EC08            <1>  sub rsp, 8
     19 00000047 E8(00000000)        <1>  call gets
     20 0000004C 4883C408            <1>  add rsp, 8
-   277                                  
-   278 00000050 833C25[00000000]6E              cmp dword[eleccionRotar], 'n' 
-   279 00000058 0F845D010000                    je comenzarPartida
-   280 0000005E 833C25[00000000]73              cmp dword[eleccionRotar], 's'
-   281 00000066 7419                            je personalizarRotacion
-   282                                  
-   283                                          mErrorJump msgOpcionInvalida, personalizar
+   276                                  
+   277 00000050 833C25[00000000]6E              cmp dword[eleccionRotar], 'n' 
+   278 00000058 0F8409020000                    je dejarTableroOrig
+   279 0000005E 833C25[00000000]73              cmp dword[eleccionRotar], 's'
+   280 00000066 7419                            je personalizarRotacion
+   281                                  
+   282                                          mErrorJump msgOpcionInvalida, personalizar
     45                              <1>  mPuts %1
      2 00000068 48BF-               <2>  mov rdi, %1
-     2 0000006A [1502000000000000]  <2>
+     2 0000006A [0602000000000000]  <2>
      3 00000072 4883EC08            <2>  sub rsp, 8
      4 00000076 E8(00000000)        <2>  call puts
      5 0000007B 4883C408            <2>  add rsp, 8
     46 0000007F EB96                <1>  jmp %2
-   284                                  
-   285                                      personalizarRotacion:
-   286                                          mPuts msgPregRotacion
+   283                                  
+   284                                      personalizarRotacion:
+   285                                          mPuts msgPregRotacion
      2 00000081 48BF-               <1>  mov rdi, %1
-     2 00000083 [4403000000000000]  <1>
+     2 00000083 [3503000000000000]  <1>
      3 0000008B 4883EC08            <1>  sub rsp, 8
      4 0000008F E8(00000000)        <1>  call puts
      5 00000094 4883C408            <1>  add rsp, 8
-   287                                          mPuts msgRotacionesPosibles
+   286                                          mPuts msgRotacionesPosibles
      2 00000098 48BF-               <1>  mov rdi, %1
-     2 0000009A [8203000000000000]  <1>
+     2 0000009A [7303000000000000]  <1>
      3 000000A2 4883EC08            <1>  sub rsp, 8
      4 000000A6 E8(00000000)        <1>  call puts
      5 000000AB 4883C408            <1>  add rsp, 8
-   288                                  
-   289 000000AF C70425[04000000]00-             mov dword[rotacionElegida], '' ; limpiar variable
-   289 000000B7 000000             
-   290                                          mGets rotacionElegida
+   287                                  
+   288 000000AF C70425[04000000]00-             mov dword[rotacionElegida], '' ; limpiar variable
+   288 000000B7 000000             
+   289                                          mGets rotacionElegida
     17 000000BA 48BF-               <1>  mov rdi, %1
     17 000000BC [0400000000000000]  <1>
     18 000000C4 4883EC08            <1>  sub rsp, 8
     19 000000C8 E8(00000000)        <1>  call gets
     20 000000CD 4883C408            <1>  add rsp, 8
-   291                                  
-   292                                          mMov orientacionTablero, rotacionElegida, 1
+   290                                  
+   291                                          mMov orientacionTablero, rotacionElegida, 1
     31 000000D1 B901000000          <1>  mov rcx, %3
     32 000000D6 488D3425[04000000]  <1>  lea rsi, [%2]
-    33 000000DE 488D3C25[C3080000]  <1>  lea rdi, [%1]
+    33 000000DE 488D3C25[B4080000]  <1>  lea rdi, [%1]
     34 000000E6 F3A4                <1>  rep movsb
-   293                                          
-   294 000000E8 833C25[04000000]31              cmp dword[rotacionElegida], '1'
-   295 000000F0 7C0C                            jl invalidaRotacion
-   296 000000F2 833C25[04000000]34              cmp dword[rotacionElegida], '4'
-   297 000000FA 7F02                            jg invalidaRotacion
-   298                                  
-   299 000000FC EB1C                            jmp personalizarSimbolos
-   300                                  
-   301                                      invalidaRotacion:
-   302                                          mErrorJump msgOpcionInvalida, personalizarRotacion
+   292                                          
+   293 000000E8 833C25[04000000]31              cmp dword[rotacionElegida], '1'
+   294 000000F0 7C0F                            jl invalidaRotacion
+   295 000000F2 833C25[04000000]34              cmp dword[rotacionElegida], '4'
+   296 000000FA 7F05                            jg invalidaRotacion
+   297                                  
+   298 000000FC E9C0000000                      jmp rotarTablero
+   299                                  
+   300                                      invalidaRotacion:
+   301                                          mErrorJump msgOpcionInvalida, personalizarRotacion
     45                              <1>  mPuts %1
-     2 000000FE 48BF-               <2>  mov rdi, %1
-     2 00000100 [1502000000000000]  <2>
-     3 00000108 4883EC08            <2>  sub rsp, 8
-     4 0000010C E8(00000000)        <2>  call puts
-     5 00000111 4883C408            <2>  add rsp, 8
-    46 00000115 E967FFFFFF          <1>  jmp %2
-   303                                  
-   304                                      personalizarSimbolos:
-   305                                          mPuts msgPersonalizarSimb
-     2 0000011A 48BF-               <1>  mov rdi, %1
-     2 0000011C [D303000000000000]  <1>
-     3 00000124 4883EC08            <1>  sub rsp, 8
-     4 00000128 E8(00000000)        <1>  call puts
-     5 0000012D 4883C408            <1>  add rsp, 8
-   306                                  
-   307 00000131 E851020000                      call setearSimbSoldados
-   308 00000136 E8C1020000                      call setearSimbOficiales
-   309                                          
-   310                                      personalizarQuienInicia:
-   311 0000013B C70425[10000000]00-             mov dword[piezaIniElegida], ''    ; vaciar variable
-   311 00000143 000000             
-   312                                          mPuts msgQuienInicia
-     2 00000146 48BF-               <1>  mov rdi, %1
-     2 00000148 [9304000000000000]  <1>
-     3 00000150 4883EC08            <1>  sub rsp, 8
-     4 00000154 E8(00000000)        <1>  call puts
-     5 00000159 4883C408            <1>  add rsp, 8
-   313                                          mGets piezaIniElegida
-    17 0000015D 48BF-               <1>  mov rdi, %1
-    17 0000015F [1000000000000000]  <1>
-    18 00000167 4883EC08            <1>  sub rsp, 8
-    19 0000016B E8(00000000)        <1>  call gets
-    20 00000170 4883C408            <1>  add rsp, 8
-   314                                  
-   315 00000174 833C25[10000000]6F              cmp dword[piezaIniElegida], 'o' 
-   316 0000017C 7423                            je setearPiezaInicio
-   317 0000017E 833C25[10000000]73              cmp dword[piezaIniElegida], 's'
-   318 00000186 7419                            je setearPiezaInicio
-   319                                  
-   320                                          mErrorJump msgOpcionInvalida, personalizarQuienInicia
+     2 00000101 48BF-               <2>  mov rdi, %1
+     2 00000103 [0602000000000000]  <2>
+     3 0000010B 4883EC08            <2>  sub rsp, 8
+     4 0000010F E8(00000000)        <2>  call puts
+     5 00000114 4883C408            <2>  add rsp, 8
+    46 00000118 E964FFFFFF          <1>  jmp %2
+   302                                  
+   303                                      personalizarSimbolos:
+   304                                          mPuts msgPersonalizarSimb
+     2 0000011D 48BF-               <1>  mov rdi, %1
+     2 0000011F [C403000000000000]  <1>
+     3 00000127 4883EC08            <1>  sub rsp, 8
+     4 0000012B E8(00000000)        <1>  call puts
+     5 00000130 4883C408            <1>  add rsp, 8
+   305                                  
+   306 00000134 E8A5020000                      call setearSimbSoldados
+   307 00000139 E81A030000                      call setearSimbOficiales
+   308                                          
+   309                                      personalizarQuienInicia:
+   310 0000013E C70425[10000000]00-             mov dword[piezaIniElegida], ''    ; vaciar variable
+   310 00000146 000000             
+   311                                          mPuts msgQuienInicia
+     2 00000149 48BF-               <1>  mov rdi, %1
+     2 0000014B [8404000000000000]  <1>
+     3 00000153 4883EC08            <1>  sub rsp, 8
+     4 00000157 E8(00000000)        <1>  call puts
+     5 0000015C 4883C408            <1>  add rsp, 8
+   312                                          mGets piezaIniElegida
+    17 00000160 48BF-               <1>  mov rdi, %1
+    17 00000162 [1000000000000000]  <1>
+    18 0000016A 4883EC08            <1>  sub rsp, 8
+    19 0000016E E8(00000000)        <1>  call gets
+    20 00000173 4883C408            <1>  add rsp, 8
+   313                                  
+   314 00000177 833C25[10000000]6F              cmp dword[piezaIniElegida], 'o' 
+   315 0000017F 7423                            je setearPiezaInicio
+   316 00000181 833C25[10000000]73              cmp dword[piezaIniElegida], 's'
+   317 00000189 7419                            je setearPiezaInicio
+   318                                  
+   319                                          mErrorJump msgOpcionInvalida, personalizarQuienInicia
     45                              <1>  mPuts %1
-     2 00000188 48BF-               <2>  mov rdi, %1
-     2 0000018A [1502000000000000]  <2>
-     3 00000192 4883EC08            <2>  sub rsp, 8
-     4 00000196 E8(00000000)        <2>  call puts
-     5 0000019B 4883C408            <2>  add rsp, 8
-    46 0000019F EB9A                <1>  jmp %2
-   321                                  
-   322                                          setearPiezaInicio:
-   323                                              mMov piezaDeInicio, piezaIniElegida, 1
-    31 000001A1 B901000000          <1>  mov rcx, %3
-    32 000001A6 488D3425[10000000]  <1>  lea rsi, [%2]
-    33 000001AE 488D3C25[C4080000]  <1>  lea rdi, [%1]
-    34 000001B6 F3A4                <1>  rep movsb
-   324 000001B8 EB01                                jmp comenzarPartida
-   325                                      
-   326 000001BA C3                          ret
-   327                                  
-   328                                  comenzarPartida:
-   329                                      ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
-   330                                      ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
-   331 000001BB 803C25[C3080000]31              cmp byte[orientacionTablero], '1'
-   332 000001C3 7443                            je rotarIzquierda
-   333 000001C5 803C25[C3080000]32              cmp byte[orientacionTablero], '2'
-   334 000001CD 7452                            je rotarDerecha
-   335 000001CF 803C25[C3080000]33              cmp byte[orientacionTablero], '3'
-   336 000001D7 7461                            je rotarInvertir
-   337                                  
-   338                                          mMov tableroEnJuego, tableroOrig, 116
-    31 000001D9 B974000000          <1>  mov rcx, %3
-    32 000001DE 488D3425[00000000]  <1>  lea rsi, [%2]
-    33 000001E6 488D3C25[14000000]  <1>  lea rdi, [%1]
-    34 000001EE F3A4                <1>  rep movsb
+     2 0000018B 48BF-               <2>  mov rdi, %1
+     2 0000018D [0602000000000000]  <2>
+     3 00000195 4883EC08            <2>  sub rsp, 8
+     4 00000199 E8(00000000)        <2>  call puts
+     5 0000019E 4883C408            <2>  add rsp, 8
+    46 000001A2 EB9A                <1>  jmp %2
+   320                                  
+   321                                          setearPiezaInicio:
+   322                                              mMov piezaDeInicio, piezaIniElegida, 1
+    31 000001A4 B901000000          <1>  mov rcx, %3
+    32 000001A9 488D3425[10000000]  <1>  lea rsi, [%2]
+    33 000001B1 488D3C25[B5080000]  <1>  lea rdi, [%1]
+    34 000001B9 F3A4                <1>  rep movsb
+   323 000001BB E98F000000                          jmp comenzarPorInicio
+   324                                      
+   325 000001C0 C3                          ret
+   326                                  
+   327                                  rotarTablero:
+   328                                      ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
+   329                                      ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
+   330 000001C1 803C25[B4080000]31              cmp byte[orientacionTablero], '1'
+   331 000001C9 7430                            je rotarIzquierda
+   332 000001CB 803C25[B4080000]32              cmp byte[orientacionTablero], '2'
+   333 000001D3 7442                            je rotarDerecha
+   334 000001D5 803C25[B4080000]33              cmp byte[orientacionTablero], '3'
+   335 000001DD 7454                            je rotarInvertir
+   336                                  
+   337                                          mMov tableroEnJuego, tableroOrig, 116
+    31 000001DF B974000000          <1>  mov rcx, %3
+    32 000001E4 488D3425[00000000]  <1>  lea rsi, [%2]
+    33 000001EC 488D3C25[14000000]  <1>  lea rdi, [%1]
+    34 000001F4 F3A4                <1>  rep movsb
+   338 000001F6 E922FFFFFF                      jmp personalizarSimbolos
    339                                  
-   340                                          comenzarPorInicio:
-   341 000001F0 803C25[C4080000]73                  cmp byte[piezaDeInicio], 's'
-   342 000001F8 7459                                je turnoSoldados
-   343 000001FA 803C25[C4080000]6F                  cmp byte[piezaDeInicio], 'o'
-   344 00000202 0F84E2000000                        je turnoOficiales
-   345                                  
-   346                                      rotarIzquierda:
-   347                                          mMov tableroEnJuego, tableroIzq, 116
-    31 00000208 B974000000          <1>  mov rcx, %3
-    32 0000020D 488D3425[57010000]  <1>  lea rsi, [%2]
-    33 00000215 488D3C25[14000000]  <1>  lea rdi, [%1]
-    34 0000021D F3A4                <1>  rep movsb
-   348 0000021F EBCF                            jmp comenzarPorInicio
-   349                                      
-   350                                      rotarDerecha:
-   351                                          mMov tableroEnJuego, tableroDer, 116
-    31 00000221 B974000000          <1>  mov rcx, %3
-    32 00000226 488D3425[E3000000]  <1>  lea rsi, [%2]
-    33 0000022E 488D3C25[14000000]  <1>  lea rdi, [%1]
-    34 00000236 F3A4                <1>  rep movsb
-   352 00000238 EBB6                            jmp comenzarPorInicio
-   353                                  
-   354                                      rotarInvertir:
-   355                                          mMov tableroEnJuego, tableroInv, 116
-    31 0000023A B974000000          <1>  mov rcx, %3
-    32 0000023F 488D3425[6F000000]  <1>  lea rsi, [%2]
-    33 00000247 488D3C25[14000000]  <1>  lea rdi, [%1]
-    34 0000024F F3A4                <1>  rep movsb
-   356 00000251 EB9D                            jmp comenzarPorInicio
+   340                                      rotarIzquierda:
+   341                                          mMov tableroEnJuego, tableroIzq, 116
+    31 000001FB B974000000          <1>  mov rcx, %3
+    32 00000200 488D3425[4D010000]  <1>  lea rsi, [%2]
+    33 00000208 488D3C25[14000000]  <1>  lea rdi, [%1]
+    34 00000210 F3A4                <1>  rep movsb
+   342 00000212 E906FFFFFF                      jmp personalizarSimbolos
+   343                                      
+   344                                      rotarDerecha:
+   345                                          mMov tableroEnJuego, tableroDer, 116
+    31 00000217 B974000000          <1>  mov rcx, %3
+    32 0000021C 488D3425[DE000000]  <1>  lea rsi, [%2]
+    33 00000224 488D3C25[14000000]  <1>  lea rdi, [%1]
+    34 0000022C F3A4                <1>  rep movsb
+   346 0000022E E9EAFEFFFF                      jmp personalizarSimbolos
+   347                                  
+   348                                      rotarInvertir:
+   349                                          mMov tableroEnJuego, tableroInv, 116
+    31 00000233 B974000000          <1>  mov rcx, %3
+    32 00000238 488D3425[6F000000]  <1>  lea rsi, [%2]
+    33 00000240 488D3C25[14000000]  <1>  lea rdi, [%1]
+    34 00000248 F3A4                <1>  rep movsb
+   350 0000024A E9CEFEFFFF                      jmp personalizarSimbolos
+   351                                  
+   352                                  comenzarPorInicio:
+   353 0000024F 803C25[B5080000]73          cmp byte[piezaDeInicio], 's'
+   354 00000257 7425                        je loopMovimientos
+   355 00000259 803C25[B5080000]6F          cmp byte[piezaDeInicio], 'o'
+   356 00000261 0F84CC000000                je turnoOficiales
    357                                  
-   358                                  loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
-   359                                      turnoSoldados:
-   360 00000253 C60425[88000000]30              mov byte [soldadoElegido], '0'
-   361                                      
-   362                                          mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
-    24 0000025B 48BF-               <1>  mov rdi, %1
-    24 0000025D [C508000000000000]  <1>
-    25 00000265 4883EC08            <1>  sub rsp, 8
-    26 00000269 E8(00000000)        <1>  call system
-    27 0000026E 4883C408            <1>  add rsp, 8
-   363                                  
-   364                                          mPuts tableroEnJuego ; Muestro el tablero
-     2 00000272 48BF-               <1>  mov rdi, %1
-     2 00000274 [1400000000000000]  <1>
-     3 0000027C 4883EC08            <1>  sub rsp, 8
-     4 00000280 E8(00000000)        <1>  call puts
-     5 00000285 4883C408            <1>  add rsp, 8
-   365                                  
-   366                                          mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
-     2 00000289 48BF-               <1>  mov rdi, %1
-     2 0000028B [1207000000000000]  <1>
-     3 00000293 4883EC08            <1>  sub rsp, 8
-     4 00000297 E8(00000000)        <1>  call puts
-     5 0000029C 4883C408            <1>  add rsp, 8
-   367                                          mGets soldadoElegido    ; Obtengo la ficha a mover
-    17 000002A0 48BF-               <1>  mov rdi, %1
-    17 000002A2 [8800000000000000]  <1>
-    18 000002AA 4883EC08            <1>  sub rsp, 8
-    19 000002AE E8(00000000)        <1>  call gets
-    20 000002B3 4883C408            <1>  add rsp, 8
-   368                                          
-   369 000002B7 E9B5010000                      jmp verificarFichaSold ; verificar si la ficha elegida es valida
-   370                                  
-   371                                          casillaAMoverseSold:
+   358                                  dejarTableroOrig:
+   359                                      mMov tableroEnJuego, tableroOrig, 116
+    31 00000267 B974000000          <1>  mov rcx, %3
+    32 0000026C 488D3425[00000000]  <1>  lea rsi, [%2]
+    33 00000274 488D3C25[14000000]  <1>  lea rdi, [%1]
+    34 0000027C F3A4                <1>  rep movsb
+   360                                  
+   361                                  loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
+   362 0000027E C60425[A8000000]00          mov byte[msgErrorEspecificoSold], 0
+   363                                      turnoSoldados:
+   364 00000286 C60425[88000000]30              mov byte [soldadoElegido], '0'
+   365                                      
+   366                                          mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
+    24 0000028E 48BF-               <1>  mov rdi, %1
+    24 00000290 [B608000000000000]  <1>
+    25 00000298 4883EC08            <1>  sub rsp, 8
+    26 0000029C E8(00000000)        <1>  call system
+    27 000002A1 4883C408            <1>  add rsp, 8
+   367                                  
+   368                                          mPuts tableroEnJuego ; Muestro el tablero
+     2 000002A5 48BF-               <1>  mov rdi, %1
+     2 000002A7 [1400000000000000]  <1>
+     3 000002AF 4883EC08            <1>  sub rsp, 8
+     4 000002B3 E8(00000000)        <1>  call puts
+     5 000002B8 4883C408            <1>  add rsp, 8
+   369                                  
+   370 000002BC 803C25[A8000000]00              cmp byte[msgErrorEspecificoSold], 0
+   371 000002C4 0F855E030000                    jne imprimirErrorSold
    372                                  
-   373                                              mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
-     2 000002BC 48BF-               <1>  mov rdi, %1
-     2 000002BE [BF07000000000000]  <1>
-     3 000002C6 4883EC08            <1>  sub rsp, 8
-     4 000002CA E8(00000000)        <1>  call puts
-     5 000002CF 4883C408            <1>  add rsp, 8
-   374                                              mGets casillaMovSold    ; Obtengo la casilla a mover
-    17 000002D3 48BF-               <1>  mov rdi, %1
-    17 000002D5 [8C00000000000000]  <1>
-    18 000002DD 4883EC08            <1>  sub rsp, 8
-    19 000002E1 E8(00000000)        <1>  call gets
-    20 000002E6 4883C408            <1>  add rsp, 8
-   375                                              
-   376                                              ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
-   377                                  
-   378                                              ;jmp realizarMovimiento ; Realizo el movimiento
+   373                                          todoOkSold:
+   374                                  
+   375                                              mPuts msgTurnoSoldados      ; Muestro el mensaje de seleccionar ficha a mover
+     2 000002CA 48BF-               <1>  mov rdi, %1
+     2 000002CC [0307000000000000]  <1>
+     3 000002D4 4883EC08            <1>  sub rsp, 8
+     4 000002D8 E8(00000000)        <1>  call puts
+     5 000002DD 4883C408            <1>  add rsp, 8
+   376                                              mGets soldadoElegido        ; Obtengo la ficha a mover
+    17 000002E1 48BF-               <1>  mov rdi, %1
+    17 000002E3 [8800000000000000]  <1>
+    18 000002EB 4883EC08            <1>  sub rsp, 8
+    19 000002EF E8(00000000)        <1>  call gets
+    20 000002F4 4883C408            <1>  add rsp, 8
+   377                                              
+   378 000002F8 E9D5010000                          jmp verificarFichaSold ; verificar si la ficha elegida es valida
    379                                  
-   380                                          
-   381                                      turnoOficiales:
-   382 000002EA C60425[90000000]30              mov byte[oficialElegido], '0'
-   383                                          
-   384                                          mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
-    24 000002F2 48BF-               <1>  mov rdi, %1
-    24 000002F4 [C508000000000000]  <1>
-    25 000002FC 4883EC08            <1>  sub rsp, 8
-    26 00000300 E8(00000000)        <1>  call system
-    27 00000305 4883C408            <1>  add rsp, 8
-   385                                  
-   386                                          mPuts tableroEnJuego ; Muestro el tablero
-     2 00000309 48BF-               <1>  mov rdi, %1
-     2 0000030B [1400000000000000]  <1>
-     3 00000313 4883EC08            <1>  sub rsp, 8
-     4 00000317 E8(00000000)        <1>  call puts
-     5 0000031C 4883C408            <1>  add rsp, 8
-   387                                  
-   388                                          mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
-     2 00000320 48BF-               <1>  mov rdi, %1
-     2 00000322 [6807000000000000]  <1>
-     3 0000032A 4883EC08            <1>  sub rsp, 8
-     4 0000032E E8(00000000)        <1>  call puts
-     5 00000333 4883C408            <1>  add rsp, 8
-   389                                          mGets oficialElegido    ; Obtengo la ficha a mover
-    17 00000337 48BF-               <1>  mov rdi, %1
-    17 00000339 [9000000000000000]  <1>
-    18 00000341 4883EC08            <1>  sub rsp, 8
-    19 00000345 E8(00000000)        <1>  call gets
-    20 0000034A 4883C408            <1>  add rsp, 8
-   390                                  
-   391 0000034E E966020000                      jmp verificarFichaOfic ; verificar si la ficha elegida es valida
-   392                                  
-   393                                          casillaAMoverseOfic:
+   380                                              casillaAMoverseSold:
+   381                                  
+   382                                                  mPuts msgTurnoMovSold   ; Muestro el mensaje de seleccionar casilla a mover
+     2 000002FD 48BF-               <1>  mov rdi, %1
+     2 000002FF [B007000000000000]  <1>
+     3 00000307 4883EC08            <1>  sub rsp, 8
+     4 0000030B E8(00000000)        <1>  call puts
+     5 00000310 4883C408            <1>  add rsp, 8
+   383                                                  mGets casillaMovSold    ; Obtengo la casilla a mover
+    17 00000314 48BF-               <1>  mov rdi, %1
+    17 00000316 [8C00000000000000]  <1>
+    18 0000031E 4883EC08            <1>  sub rsp, 8
+    19 00000322 E8(00000000)        <1>  call gets
+    20 00000327 4883C408            <1>  add rsp, 8
+   384                                                  
+   385                                                  ;jmp verificarMovimientoSold ; verificar si el movimiento es valido
+   386                                  
+   387                                                  ;jmp realizarMovimiento ; Realizo el movimiento
+   388                                  
+   389 0000032B C60425[EF000000]00          mov byte[msgErrorEspecificoOfic], 0
+   390                                      turnoOficiales:
+   391 00000333 C60425[90000000]30              mov byte[oficialElegido], '0'
+   392                                          
+   393                                          mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
+    24 0000033B 48BF-               <1>  mov rdi, %1
+    24 0000033D [B608000000000000]  <1>
+    25 00000345 4883EC08            <1>  sub rsp, 8
+    26 00000349 E8(00000000)        <1>  call system
+    27 0000034E 4883C408            <1>  add rsp, 8
    394                                  
-   395                                              mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
-     2 00000353 48BF-               <1>  mov rdi, %1
-     2 00000355 [0108000000000000]  <1>
-     3 0000035D 4883EC08            <1>  sub rsp, 8
-     4 00000361 E8(00000000)        <1>  call puts
-     5 00000366 4883C408            <1>  add rsp, 8
-   396                                              mGets casillaMovOfic    ; Obtengo la casilla a mover
-    17 0000036A 48BF-               <1>  mov rdi, %1
-    17 0000036C [9400000000000000]  <1>
-    18 00000374 4883EC08            <1>  sub rsp, 8
-    19 00000378 E8(00000000)        <1>  call gets
-    20 0000037D 4883C408            <1>  add rsp, 8
-   397                                              
-   398                                              ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+   395                                          mPuts tableroEnJuego ; Muestro el tablero
+     2 00000352 48BF-               <1>  mov rdi, %1
+     2 00000354 [1400000000000000]  <1>
+     3 0000035C 4883EC08            <1>  sub rsp, 8
+     4 00000360 E8(00000000)        <1>  call puts
+     5 00000365 4883C408            <1>  add rsp, 8
+   396                                  
+   397 00000369 803C25[EF000000]00              cmp byte[msgErrorEspecificoOfic], 0
+   398 00000371 0F8529040000                    jne imprimirErrorOfic
    399                                  
-   400                                              ;jmp realizarMovimiento ; Realizo el movimiento
+   400                                          todoOkOfic:
    401                                  
-   402                                              ; Repetir en loop
-   403 00000381 E9CDFEFFFF                          jmp loopMovimientos
+   402                                              mPuts msgTurnoOficiales ; Muestro el mensaje de seleccionar ficha a mover
+     2 00000377 48BF-               <1>  mov rdi, %1
+     2 00000379 [5907000000000000]  <1>
+     3 00000381 4883EC08            <1>  sub rsp, 8
+     4 00000385 E8(00000000)        <1>  call puts
+     5 0000038A 4883C408            <1>  add rsp, 8
+   403                                              mGets oficialElegido    ; Obtengo la ficha a mover
+    17 0000038E 48BF-               <1>  mov rdi, %1
+    17 00000390 [9000000000000000]  <1>
+    18 00000398 4883EC08            <1>  sub rsp, 8
+    19 0000039C E8(00000000)        <1>  call gets
+    20 000003A1 4883C408            <1>  add rsp, 8
    404                                  
-   405 00000386 C3                          ret
+   405 000003A5 E99A020000                          jmp verificarFichaOfic ; verificar si la ficha elegida es valida
    406                                  
-   407                                  
+   407                                              casillaAMoverseOfic:
    408                                  
-   409                                  
-   410                                  
-   411                                  setearSimbSoldados:
-   412                                      mPuts msgSimboloSoldados
-     2 00000387 48BF-               <1>  mov rdi, %1
-     2 00000389 [7704000000000000]  <1>
-     3 00000391 4883EC08            <1>  sub rsp, 8
-     4 00000395 E8(00000000)        <1>  call puts
-     5 0000039A 4883C408            <1>  add rsp, 8
-   413 0000039E C70425[0C000000]00-         mov dword[simbSoldElegido], ''
-   413 000003A6 000000             
-   414                                      mGets simbSoldElegido
-    17 000003A9 48BF-               <1>  mov rdi, %1
-    17 000003AB [0C00000000000000]  <1>
-    18 000003B3 4883EC08            <1>  sub rsp, 8
-    19 000003B7 E8(00000000)        <1>  call gets
-    20 000003BC 4883C408            <1>  add rsp, 8
+   409                                                  mPuts msgTurnoMovOfic   ; Muestro el mensaje de seleccionar casilla a mover
+     2 000003AA 48BF-               <1>  mov rdi, %1
+     2 000003AC [F207000000000000]  <1>
+     3 000003B4 4883EC08            <1>  sub rsp, 8
+     4 000003B8 E8(00000000)        <1>  call puts
+     5 000003BD 4883C408            <1>  add rsp, 8
+   410                                                  mGets casillaMovOfic    ; Obtengo la casilla a mover
+    17 000003C1 48BF-               <1>  mov rdi, %1
+    17 000003C3 [9400000000000000]  <1>
+    18 000003CB 4883EC08            <1>  sub rsp, 8
+    19 000003CF E8(00000000)        <1>  call gets
+    20 000003D4 4883C408            <1>  add rsp, 8
+   411                                                  
+   412                                                  ;jmp verificarMovimientoOfic ; verificar si el movimiento es valido
+   413                                  
+   414                                                  ;jmp realizarMovimiento ; Realizo el movimiento
    415                                  
-   416 000003C0 803C25[0C000000]20          cmp byte[simbSoldElegido], ' '
-   417 000003C8 7419                        je errSeteoSoldado
-   418 000003CA 803C25[0C000000]00          cmp byte[simbSoldElegido], ''
-   419 000003D2 740F                        je errSeteoSoldado
+   416                                                  ; Repetir en loop
+   417 000003D8 E9A1FEFFFF                              jmp loopMovimientos
+   418                                  
+   419 000003DD C3                          ret
    420                                  
-   421 000003D4 8A0425[0C000000]            mov al, byte[simbSoldElegido]
-   422 000003DB 880425[C1080000]            mov byte[simboloSoldados], al
+   421                                  
+   422                                  
    423                                  
-   424 000003E2 C3                          ret
-   425                                  
-   426                                      errSeteoSoldado:
-   427                                          mErrorJump msgOpcionInvalida, setearSimbSoldados
-    45                              <1>  mPuts %1
-     2 000003E3 48BF-               <2>  mov rdi, %1
-     2 000003E5 [1502000000000000]  <2>
-     3 000003ED 4883EC08            <2>  sub rsp, 8
-     4 000003F1 E8(00000000)        <2>  call puts
-     5 000003F6 4883C408            <2>  add rsp, 8
-    46 000003FA EB8B                <1>  jmp %2
-   428                                  
+   424                                  
+   425                                  setearSimbSoldados:
+   426                                      mPuts msgSimboloSoldados
+     2 000003DE 48BF-               <1>  mov rdi, %1
+     2 000003E0 [6804000000000000]  <1>
+     3 000003E8 4883EC08            <1>  sub rsp, 8
+     4 000003EC E8(00000000)        <1>  call puts
+     5 000003F1 4883C408            <1>  add rsp, 8
+   427 000003F5 C70425[0C000000]00-         mov dword[simbSoldElegido], ''
+   427 000003FD 000000             
+   428                                      mGets simbSoldElegido
+    17 00000400 48BF-               <1>  mov rdi, %1
+    17 00000402 [0C00000000000000]  <1>
+    18 0000040A 4883EC08            <1>  sub rsp, 8
+    19 0000040E E8(00000000)        <1>  call gets
+    20 00000413 4883C408            <1>  add rsp, 8
    429                                  
-   430                                  setearSimbOficiales:
-   431                                      mPuts msgSimboloOficiales
-     2 000003FC 48BF-               <1>  mov rdi, %1
-     2 000003FE [5A04000000000000]  <1>
-     3 00000406 4883EC08            <1>  sub rsp, 8
-     4 0000040A E8(00000000)        <1>  call puts
-     5 0000040F 4883C408            <1>  add rsp, 8
-   432 00000413 C70425[08000000]00-         mov dword[simbOficElegido], ''
-   432 0000041B 000000             
-   433                                      mGets simbOficElegido
-    17 0000041E 48BF-               <1>  mov rdi, %1
-    17 00000420 [0800000000000000]  <1>
-    18 00000428 4883EC08            <1>  sub rsp, 8
-    19 0000042C E8(00000000)        <1>  call gets
-    20 00000431 4883C408            <1>  add rsp, 8
+   430 00000417 803C25[0C000000]20          cmp byte[simbSoldElegido], ' '
+   431 0000041F 741E                        je errSeteoSoldado
+   432 00000421 803C25[0C000000]00          cmp byte[simbSoldElegido], ''
+   433 00000429 7414                        je errSeteoSoldado
    434                                  
-   435 00000435 803C25[08000000]20          cmp byte[simbOficElegido], ' '
-   436 0000043D 7419                        je errSeteoOficial
-   437 0000043F 803C25[08000000]00          cmp byte[simbOficElegido], ''
-   438 00000447 740F                        je errSeteoOficial
+   435 0000042B 8A0425[0C000000]            mov al, byte[simbSoldElegido]
+   436 00000432 880425[B2080000]            mov byte[simboloSoldados], al
+   437                                  
+   438 00000439 E981030000                  jmp cambiarTableroSoldNuevo
    439                                  
-   440 00000449 8A0425[08000000]            mov al, byte[simbOficElegido]
-   441 00000450 880425[BF080000]            mov byte[simboloOficiales], al
+   440                                      finSeteoSoldado:
+   441 0000043E C3                              ret
    442                                  
-   443 00000457 C3                          ret
-   444                                  
-   445                                      errSeteoOficial:
-   446                                          mPuts msgOpcionInvalida
+   443                                      errSeteoSoldado:
+   444                                          mErrorJump msgOpcionInvalida, setearSimbSoldados
+    45                              <1>  mPuts %1
+     2 0000043F 48BF-               <2>  mov rdi, %1
+     2 00000441 [0602000000000000]  <2>
+     3 00000449 4883EC08            <2>  sub rsp, 8
+     4 0000044D E8(00000000)        <2>  call puts
+     5 00000452 4883C408            <2>  add rsp, 8
+    46 00000456 EB86                <1>  jmp %2
+   445                                  
+   446                                  
+   447                                  setearSimbOficiales:
+   448                                      mPuts msgSimboloOficiales
      2 00000458 48BF-               <1>  mov rdi, %1
-     2 0000045A [1502000000000000]  <1>
+     2 0000045A [4B04000000000000]  <1>
      3 00000462 4883EC08            <1>  sub rsp, 8
      4 00000466 E8(00000000)        <1>  call puts
      5 0000046B 4883C408            <1>  add rsp, 8
-   447 0000046F EB8B                            jmp setearSimbOficiales
-   448                                  
-   449                                  
-   450                                  verificarFichaSold:
-   451 00000471 8A0425[88000000]            mov al, byte[soldadoElegido] ; Numero de fila
-   452                                      
-   453 00000478 3C31                        cmp al, '1'
-   454 0000047A 0F8CF7000000                jl errorInputSold
-   455 00000480 3C37                        cmp al, '7'
-   456 00000482 0F8FEF000000                jg errorInputSold
-   457                                  
-   458 00000488 48C70425[98000000]-         mov qword[fila], 0
-   458 00000490 00000000           
-   459                                      mSscanf byte[soldadoElegido], formatoAtoi, fila
-    69 00000494 488D3C25[88000000]  <1>  lea rdi, %1
-    70 0000049C 48BE-               <1>  mov rsi, %2
-    70 0000049E [CB08000000000000]  <1>
-    71 000004A6 48BA-               <1>  mov rdx, %3
-    71 000004A8 [9800000000000000]  <1>
-    72 000004B0 4883EC08            <1>  sub rsp, 8
-    73 000004B4 E8(00000000)        <1>  call sscanf
-    74 000004B9 4883C408            <1>  add rsp, 8
-   460                                  
-   461 000004BD 4883F801                    cmp rax, 1
-   462 000004C1 0F8CB0000000                jl errorInputSold
+   449 0000046F C70425[08000000]00-         mov dword[simbOficElegido], ''
+   449 00000477 000000             
+   450                                      mGets simbOficElegido
+    17 0000047A 48BF-               <1>  mov rdi, %1
+    17 0000047C [0800000000000000]  <1>
+    18 00000484 4883EC08            <1>  sub rsp, 8
+    19 00000488 E8(00000000)        <1>  call gets
+    20 0000048D 4883C408            <1>  add rsp, 8
+   451                                  
+   452 00000491 803C25[08000000]20          cmp byte[simbOficElegido], ' '
+   453 00000499 741E                        je errSeteoOficial
+   454 0000049B 803C25[08000000]00          cmp byte[simbOficElegido], ''
+   455 000004A3 7414                        je errSeteoOficial
+   456                                  
+   457 000004A5 8A0425[08000000]            mov al, byte[simbOficElegido]
+   458 000004AC 880425[B0080000]            mov byte[simboloOficiales], al
+   459                                  
+   460 000004B3 E839030000                  call cambiarTableroOficNuevo
+   461                                  
+   462 000004B8 C3                          ret
    463                                  
-   464 000004C7 8A0425[89000000]            mov al, byte[soldadoElegido+1] ; Caracter '-'
-   465 000004CE 3C2D                        cmp al, '-'
-   466 000004D0 0F85A1000000                jne errorInputSold
-   467                                      
-   468 000004D6 8A0425[8A000000]            mov al, byte[soldadoElegido+2] ; Numero de columna
-   469 000004DD 3C31                        cmp al, '1'
-   470 000004DF 0F8C92000000                jl errorInputSold
-   471 000004E5 3C37                        cmp al, '7'
-   472 000004E7 0F8F8A000000                jg errorInputSold
-   473                                  
-   474 000004ED 48C70425[A0000000]-         mov qword[columna], 0
-   474 000004F5 00000000           
-   475                                      mSscanf byte[soldadoElegido+2], formatoAtoi, columna
-    69 000004F9 488D3C25[8A000000]  <1>  lea rdi, %1
-    70 00000501 48BE-               <1>  mov rsi, %2
-    70 00000503 [CB08000000000000]  <1>
-    71 0000050B 48BA-               <1>  mov rdx, %3
-    71 0000050D [A000000000000000]  <1>
-    72 00000515 4883EC08            <1>  sub rsp, 8
-    73 00000519 E8(00000000)        <1>  call sscanf
-    74 0000051E 4883C408            <1>  add rsp, 8
+   464                                      errSeteoOficial:
+   465                                          mPuts msgOpcionInvalida
+     2 000004B9 48BF-               <1>  mov rdi, %1
+     2 000004BB [0602000000000000]  <1>
+     3 000004C3 4883EC08            <1>  sub rsp, 8
+     4 000004C7 E8(00000000)        <1>  call puts
+     5 000004CC 4883C408            <1>  add rsp, 8
+   466 000004D0 EB86                            jmp setearSimbOficiales
+   467                                  
+   468                                  
+   469                                  verificarFichaSold:
+   470 000004D2 8A0425[88000000]            mov al, byte[soldadoElegido] ; Numero de fila
+   471                                      
+   472 000004D9 3C31                        cmp al, '1'
+   473 000004DB 0F8CFF000000                jl errorInputSold
+   474 000004E1 3C37                        cmp al, '7'
+   475 000004E3 0F8FF7000000                jg errorInputSold
    476                                  
-   477 00000522 4883F801                    cmp rax, 1
-   478 00000526 7C4F                        jl errorInputSold
+   477 000004E9 48C70425[98000000]-         mov qword[fila], 0
+   477 000004F1 00000000           
+   478                                      mSscanf byte[soldadoElegido], formatoAtoi, fila
+    69 000004F5 488D3C25[88000000]  <1>  lea rdi, %1
+    70 000004FD 48BE-               <1>  mov rsi, %2
+    70 000004FF [BC08000000000000]  <1>
+    71 00000507 48BA-               <1>  mov rdx, %3
+    71 00000509 [9800000000000000]  <1>
+    72 00000511 4883EC08            <1>  sub rsp, 8
+    73 00000515 E8(00000000)        <1>  call sscanf
+    74 0000051A 4883C408            <1>  add rsp, 8
    479                                  
-   480 00000528 8A0425[8B000000]            mov al, byte[soldadoElegido+3] ; Caracter nulo
-   481 0000052F 3C00                        cmp al, 0
-   482 00000531 7544                        jne errorInputSold
-   483                                  
-   484                                      ; Calculamos desplazamiento en tablero
-   485 00000533 BB00000000                  mov rbx, 0
-   486 00000538 488B1C25[98000000]          mov rbx, [fila]
-   487 00000540 48FFC3                      inc rbx
-   488 00000543 666BDB0B                    imul bx, 11
-   489 00000547 48031C25[A0000000]          add rbx, [columna]
-   490 0000054F 48FFC3                      inc rbx
-   491                                      
-   492 00000552 B800000000                  mov rax,0
-   493 00000557 BA00000000                  mov rdx, 0
-   494                                  
-   495 0000055C 8A93[14000000]              mov dl, byte[tableroEnJuego+rbx]
-   496 00000562 8A0425[C1080000]            mov al, [simboloSoldados]
-   497                                  
-   498 00000569 38C2                        cmp dl, al
-   499 0000056B 752B                        jne errorCasillaInvalidaSold
-   500                                      
-   501 0000056D B800000000                  mov rax, 0
-   502 00000572 E945FDFFFF                  jmp casillaAMoverseSold
-   503                                  
-   504                                      errorInputSold:
-   505                                          mPuts msgErrorInputSold ; CREAR MENSAJE DE ERROR
-     2 00000577 48BF-               <1>  mov rdi, %1
-     2 00000579 [8102000000000000]  <1>
-     3 00000581 4883EC08            <1>  sub rsp, 8
-     4 00000585 E8(00000000)        <1>  call puts
-     5 0000058A 4883C408            <1>  add rsp, 8
-   506 0000058E B801000000                      mov rax, 1
-   507 00000593 E9BBFCFFFF                      jmp turnoSoldados
-   508                                  
-   509                                      errorCasillaInvalidaSold:
-   510                                          mPuts msgCasillaInvalidaSold ; CREAR MENSAJE DE CASILLA ERRÓNEA
-     2 00000598 48BF-               <1>  mov rdi, %1
-     2 0000059A [3A02000000000000]  <1>
-     3 000005A2 4883EC08            <1>  sub rsp, 8
-     4 000005A6 E8(00000000)        <1>  call puts
-     5 000005AB 4883C408            <1>  add rsp, 8
-   511 000005AF B801000000                      mov rax, 1
-   512 000005B4 E99AFCFFFF                      jmp turnoSoldados
-   513                                      
-   514                                  
-   515                                  verificarFichaOfic:
-   516 000005B9 8A0C25[90000000]            mov cl, byte[oficialElegido] ; Numero de fila
-   517                                      
-   518 000005C0 80F931                      cmp cl, '1'
-   519 000005C3 0F8CFC000000                jl errorInputOfic
-   520 000005C9 80F937                      cmp cl, '7'
-   521 000005CC 0F8FF3000000                jg errorInputOfic
-   522                                      
-   523 000005D2 48C70425[98000000]-         mov qword[fila], 0
-   523 000005DA 00000000           
-   524                                      mSscanf byte[oficialElegido], formatoAtoi, fila
-    69 000005DE 488D3C25[90000000]  <1>  lea rdi, %1
-    70 000005E6 48BE-               <1>  mov rsi, %2
-    70 000005E8 [CB08000000000000]  <1>
-    71 000005F0 48BA-               <1>  mov rdx, %3
-    71 000005F2 [9800000000000000]  <1>
-    72 000005FA 4883EC08            <1>  sub rsp, 8
-    73 000005FE E8(00000000)        <1>  call sscanf
-    74 00000603 4883C408            <1>  add rsp, 8
-   525                                  
-   526 00000607 4883F801                    cmp rax, 1
-   527 0000060B 0F8CB4000000                jl errorInputOfic
+   480 0000051E 4883F801                    cmp rax, 1
+   481 00000522 0F8CB8000000                jl errorInputSold
+   482                                  
+   483 00000528 8A0425[89000000]            mov al, byte[soldadoElegido+1] ; Caracter '-'
+   484 0000052F 3C2D                        cmp al, '-'
+   485 00000531 0F85A9000000                jne errorInputSold
+   486                                      
+   487 00000537 8A0425[8A000000]            mov al, byte[soldadoElegido+2] ; Numero de columna
+   488 0000053E 3C31                        cmp al, '1'
+   489 00000540 0F8C9A000000                jl errorInputSold
+   490 00000546 3C37                        cmp al, '7'
+   491 00000548 0F8F92000000                jg errorInputSold
+   492                                  
+   493 0000054E 48C70425[A0000000]-         mov qword[columna], 0
+   493 00000556 00000000           
+   494                                      mSscanf byte[soldadoElegido+2], formatoAtoi, columna
+    69 0000055A 488D3C25[8A000000]  <1>  lea rdi, %1
+    70 00000562 48BE-               <1>  mov rsi, %2
+    70 00000564 [BC08000000000000]  <1>
+    71 0000056C 48BA-               <1>  mov rdx, %3
+    71 0000056E [A000000000000000]  <1>
+    72 00000576 4883EC08            <1>  sub rsp, 8
+    73 0000057A E8(00000000)        <1>  call sscanf
+    74 0000057F 4883C408            <1>  add rsp, 8
+   495                                  
+   496 00000583 4883F801                    cmp rax, 1
+   497 00000587 7C57                        jl errorInputSold
+   498                                  
+   499 00000589 8A0425[8B000000]            mov al, byte[soldadoElegido+3] ; Caracter nulo
+   500 00000590 3C00                        cmp al, 0
+   501 00000592 754C                        jne errorInputSold
+   502                                  
+   503                                      ; Calculamos desplazamiento en tablero
+   504 00000594 BB00000000                  mov rbx, 0
+   505 00000599 488B1C25[98000000]          mov rbx, [fila]
+   506 000005A1 48FFC3                      inc rbx
+   507 000005A4 666BDB0B                    imul bx, 11
+   508 000005A8 48031C25[A0000000]          add rbx, [columna]
+   509 000005B0 48FFC3                      inc rbx
+   510                                      
+   511 000005B3 B800000000                  mov rax,0
+   512 000005B8 BA00000000                  mov rdx, 0
+   513                                  
+   514 000005BD 8A93[14000000]              mov dl, byte[tableroEnJuego+rbx]
+   515 000005C3 8A0425[B2080000]            mov al, [simboloSoldados]
+   516                                  
+   517 000005CA 38C2                        cmp dl, al
+   518 000005CC 7536                        jne errorCasillaInvalidaSold
+   519                                      
+   520 000005CE B800000000                  mov rax, 0
+   521 000005D3 48890425[A8000000]          mov [msgErrorEspecificoSold], rax
+   522 000005DB E91DFDFFFF                  jmp casillaAMoverseSold
+   523                                  
+   524                                      errorInputSold:
+   525 000005E0 488B0425[72020000]              mov rax, [msgErrorInputSold]
+   526                                          mMov msgErrorEspecificoSold, msgErrorInputSold, 61
+    31 000005E8 B93D000000          <1>  mov rcx, %3
+    32 000005ED 488D3425[72020000]  <1>  lea rsi, [%2]
+    33 000005F5 488D3C25[A8000000]  <1>  lea rdi, [%1]
+    34 000005FD F3A4                <1>  rep movsb
+   527 000005FF E982FCFFFF                      jmp turnoSoldados
    528                                  
-   529 00000611 8A0C25[91000000]            mov cl, byte[oficialElegido+1] ; Caracter '-'
-   530 00000618 80F92D                      cmp cl, '-'
-   531 0000061B 0F85A4000000                jne errorInputOfic
-   532                                      
-   533 00000621 8A0C25[92000000]            mov cl, byte[oficialElegido+2] ; Numero de columna
-   534 00000628 80F931                      cmp cl, '1'
-   535 0000062B 0F8C94000000                jl errorInputOfic
-   536 00000631 80F937                      cmp cl, '7'
-   537 00000634 0F8F8B000000                jg errorInputOfic
+   529                                      errorCasillaInvalidaSold:
+   530 00000604 488B0425[2B020000]              mov rax, [msgCasillaInvalidaSold]
+   531                                          mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 71
+    31 0000060C B947000000          <1>  mov rcx, %3
+    32 00000611 488D3425[2B020000]  <1>  lea rsi, [%2]
+    33 00000619 488D3C25[A8000000]  <1>  lea rdi, [%1]
+    34 00000621 F3A4                <1>  rep movsb
+   532 00000623 E95EFCFFFF                      jmp turnoSoldados
+   533                                  
+   534                                      imprimirErrorSold:
+   535                                          mPuts msgErrorEspecificoSold
+     2 00000628 48BF-               <1>  mov rdi, %1
+     2 0000062A [A800000000000000]  <1>
+     3 00000632 4883EC08            <1>  sub rsp, 8
+     4 00000636 E8(00000000)        <1>  call puts
+     5 0000063B 4883C408            <1>  add rsp, 8
+   536 0000063F E986FCFFFF                      jmp todoOkSold
+   537                                      
    538                                  
-   539 0000063A 48C70425[A0000000]-         mov qword[columna], 0
-   539 00000642 00000000           
-   540                                      mSscanf byte[oficialElegido+2], formatoAtoi, columna
-    69 00000646 488D3C25[92000000]  <1>  lea rdi, %1
-    70 0000064E 48BE-               <1>  mov rsi, %2
-    70 00000650 [CB08000000000000]  <1>
-    71 00000658 48BA-               <1>  mov rdx, %3
-    71 0000065A [A000000000000000]  <1>
-    72 00000662 4883EC08            <1>  sub rsp, 8
-    73 00000666 E8(00000000)        <1>  call sscanf
-    74 0000066B 4883C408            <1>  add rsp, 8
-   541                                  
-   542 0000066F 4883F801                    cmp rax, 1
-   543 00000673 7C50                        jl errorInputOfic
-   544                                  
-   545 00000675 8A0C25[93000000]            mov cl, byte[oficialElegido+3] ; Caracter nulo
-   546 0000067C 80F900                      cmp cl, 0
-   547 0000067F 7544                        jne errorInputOfic
-   548                                  
-   549                                      ; Calculamos desplazamiento en tablero
-   550 00000681 BB00000000                  mov rbx, 0
-   551 00000686 488B1C25[98000000]          mov rbx, [fila]
-   552 0000068E 48FFC3                      inc rbx
-   553 00000691 666BDB0B                    imul bx, 11
-   554 00000695 48031C25[A0000000]          add rbx, [columna]
-   555 0000069D 48FFC3                      inc rbx
+   539                                  verificarFichaOfic:
+   540 00000644 8A0C25[90000000]            mov cl, byte[oficialElegido] ; Numero de fila
+   541                                      
+   542 0000064B 80F931                      cmp cl, '1'
+   543 0000064E 0F8C04010000                jl errorInputOfic
+   544 00000654 80F937                      cmp cl, '7'
+   545 00000657 0F8FFB000000                jg errorInputOfic
+   546                                      
+   547 0000065D 48C70425[98000000]-         mov qword[fila], 0
+   547 00000665 00000000           
+   548                                      mSscanf byte[oficialElegido], formatoAtoi, fila
+    69 00000669 488D3C25[90000000]  <1>  lea rdi, %1
+    70 00000671 48BE-               <1>  mov rsi, %2
+    70 00000673 [BC08000000000000]  <1>
+    71 0000067B 48BA-               <1>  mov rdx, %3
+    71 0000067D [9800000000000000]  <1>
+    72 00000685 4883EC08            <1>  sub rsp, 8
+    73 00000689 E8(00000000)        <1>  call sscanf
+    74 0000068E 4883C408            <1>  add rsp, 8
+   549                                  
+   550 00000692 4883F801                    cmp rax, 1
+   551 00000696 0F8CBC000000                jl errorInputOfic
+   552                                  
+   553 0000069C 8A0C25[91000000]            mov cl, byte[oficialElegido+1] ; Caracter '-'
+   554 000006A3 80F92D                      cmp cl, '-'
+   555 000006A6 0F85AC000000                jne errorInputOfic
    556                                      
-   557 000006A0 B800000000                  mov rax, 0
-   558 000006A5 BA00000000                  mov rdx, 0
-   559                                  
-   560 000006AA 8A93[14000000]              mov dl, byte[tableroEnJuego+rbx]
-   561 000006B0 8A0C25[BF080000]            mov cl, [simboloOficiales]
+   557 000006AC 8A0C25[92000000]            mov cl, byte[oficialElegido+2] ; Numero de columna
+   558 000006B3 80F931                      cmp cl, '1'
+   559 000006B6 0F8C9C000000                jl errorInputOfic
+   560 000006BC 80F937                      cmp cl, '7'
+   561 000006BF 0F8F93000000                jg errorInputOfic
    562                                  
-   563 000006B7 38CA                        cmp dl, cl
-   564 000006B9 752B                        jne errorCasillaInvalidaOfic
-   565                                      
-   566 000006BB B800000000                  mov rax, 0
-   567 000006C0 E98EFCFFFF                  jmp casillaAMoverseOfic
+   563 000006C5 48C70425[A0000000]-         mov qword[columna], 0
+   563 000006CD 00000000           
+   564                                      mSscanf byte[oficialElegido+2], formatoAtoi, columna
+    69 000006D1 488D3C25[92000000]  <1>  lea rdi, %1
+    70 000006D9 48BE-               <1>  mov rsi, %2
+    70 000006DB [BC08000000000000]  <1>
+    71 000006E3 48BA-               <1>  mov rdx, %3
+    71 000006E5 [A000000000000000]  <1>
+    72 000006ED 4883EC08            <1>  sub rsp, 8
+    73 000006F1 E8(00000000)        <1>  call sscanf
+    74 000006F6 4883C408            <1>  add rsp, 8
+   565                                  
+   566 000006FA 4883F801                    cmp rax, 1
+   567 000006FE 7C58                        jl errorInputOfic
    568                                  
-   569                                      errorInputOfic:
-   570                                          mPuts msgErrorInputOfic ; CREAR MENSAJE DE ERROR
-     2 000006C5 48BF-               <1>  mov rdi, %1
-     2 000006C7 [0603000000000000]  <1>
-     3 000006CF 4883EC08            <1>  sub rsp, 8
-     4 000006D3 E8(00000000)        <1>  call puts
-     5 000006D8 4883C408            <1>  add rsp, 8
-   571 000006DC B801000000                      mov rax, 1
-   572 000006E1 E904FCFFFF                      jmp turnoOficiales
-   573                                  
-   574                                      errorCasillaInvalidaOfic:
-   575                                          mPuts msgCasillaInvalidaOfic ; CREAR MENSAJE DE CASILLA ERRÓNEA
-     2 000006E6 48BF-               <1>  mov rdi, %1
-     2 000006E8 [BF02000000000000]  <1>
-     3 000006F0 4883EC08            <1>  sub rsp, 8
-     4 000006F4 E8(00000000)        <1>  call puts
-     5 000006F9 4883C408            <1>  add rsp, 8
-   576 000006FD B801000000                      mov rax, 1
-   577 00000702 E9E3FBFFFF                      jmp turnoOficiales
-   578                                  
-   579                                  verificarMovimientoSold:
-   580 00000707 C3                          ret
-   581                                  
-   582                                  verificarMovimientoOfic:
-   583 00000708 C3                          ret
-   584                                  
-   585                                  realizarMovimiento:
-   586 00000709 C3                          ret
-   587                                  
+   569 00000700 8A0C25[93000000]            mov cl, byte[oficialElegido+3] ; Caracter nulo
+   570 00000707 80F900                      cmp cl, 0
+   571 0000070A 754C                        jne errorInputOfic
+   572                                  
+   573                                      ; Calculamos desplazamiento en tablero
+   574 0000070C BB00000000                  mov rbx, 0
+   575 00000711 488B1C25[98000000]          mov rbx, [fila]
+   576 00000719 48FFC3                      inc rbx
+   577 0000071C 666BDB0B                    imul bx, 11
+   578 00000720 48031C25[A0000000]          add rbx, [columna]
+   579 00000728 48FFC3                      inc rbx
+   580                                      
+   581 0000072B B800000000                  mov rax, 0
+   582 00000730 BA00000000                  mov rdx, 0
+   583                                  
+   584 00000735 8A93[14000000]              mov dl, byte[tableroEnJuego+rbx]
+   585 0000073B 8A0C25[B0080000]            mov cl, [simboloOficiales]
+   586                                  
+   587 00000742 38CA                        cmp dl, cl
+   588 00000744 7536                        jne errorCasillaInvalidaOfic
+   589                                      
+   590 00000746 B800000000                  mov rax, 0
+   591 0000074B 48890425[EF000000]          mov [msgErrorEspecificoOfic], rax
+   592 00000753 E952FCFFFF                  jmp casillaAMoverseOfic
+   593                                  
+   594                                      errorInputOfic:
+   595 00000758 488B0425[F7020000]              mov rax, [msgErrorInputOfic]
+   596                                          mMov msgErrorEspecificoOfic, msgErrorInputOfic, 61
+    31 00000760 B93D000000          <1>  mov rcx, %3
+    32 00000765 488D3425[F7020000]  <1>  lea rsi, [%2]
+    33 0000076D 488D3C25[EF000000]  <1>  lea rdi, [%1]
+    34 00000775 F3A4                <1>  rep movsb
+   597 00000777 E9B7FBFFFF                      jmp turnoOficiales
+   598                                  
+   599                                      errorCasillaInvalidaOfic:
+   600 0000077C 488B0425[F7020000]              mov rax, [msgErrorInputOfic]
+   601                                          mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 71
+    31 00000784 B947000000          <1>  mov rcx, %3
+    32 00000789 488D3425[B0020000]  <1>  lea rsi, [%2]
+    33 00000791 488D3C25[EF000000]  <1>  lea rdi, [%1]
+    34 00000799 F3A4                <1>  rep movsb
+   602 0000079B E993FBFFFF                      jmp turnoOficiales
+   603                                  
+   604                                      imprimirErrorOfic:
+   605                                          mPuts msgErrorEspecificoOfic
+     2 000007A0 48BF-               <1>  mov rdi, %1
+     2 000007A2 [EF00000000000000]  <1>
+     3 000007AA 4883EC08            <1>  sub rsp, 8
+     4 000007AE E8(00000000)        <1>  call puts
+     5 000007B3 4883C408            <1>  add rsp, 8
+   606 000007B7 E9BBFBFFFF                      jmp todoOkOfic
+   607                                  
+   608                                  verificarMovimientoSold:
+   609 000007BC C3                          ret
+   610                                  
+   611                                  verificarMovimientoOfic:
+   612 000007BD C3                          ret
+   613                                  
+   614                                  realizarMovimiento:
+   615 000007BE C3                          ret
+   616                                  
+   617                                  cambiarTableroSoldNuevo:
+   618 000007BF BB1A000000                  mov rbx, 26 ; Desplazamiento de la primera casilla en donde puede haber piezas
+   619                                  
+   620                                      cicloCambiarSoldados:
+   621 000007C4 80BB[14000000]58                cmp byte[tableroEnJuego+rbx], 'X'
+   622 000007CB 7516                            jne noCambiarSoldado
+   623                                          mMov tableroEnJuego+rbx, simboloSoldados, 1 ; Cambio el simbolo de los soldados
+    31 000007CD B901000000          <1>  mov rcx, %3
+    32 000007D2 488D3425[B2080000]  <1>  lea rsi, [%2]
+    33 000007DA 488DBB[14000000]    <1>  lea rdi, [%1]
+    34 000007E1 F3A4                <1>  rep movsb
+   624                                  
+   625                                          noCambiarSoldado:
+   626 000007E3 48FFC3                              inc rbx
+   627 000007E6 4883FB4B                            cmp rbx, 75 ; Desplazamiento de la última casilla en donde puede haber piezas
+   628 000007EA 7CD8                                jl cicloCambiarSoldados
+   629                                  
+   630 000007EC E94DFCFFFF                  jmp finSeteoSoldado
+   631                                  
+   632                                  cambiarTableroOficNuevo:
+   633                                      
+   634                                      mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer
+    31 000007F1 B901000000          <1>  mov rcx, %3
+    32 000007F6 488D3425[B0080000]  <1>  lea rsi, [%2]
+    33 000007FE 488D3C25[67000000]  <1>  lea rdi, [%1]
+    34 00000806 F3A4                <1>  rep movsb
+   635                                      mMov tableroEnJuego+92, simboloOficiales, 1
+    31 00000808 B901000000          <1>  mov rcx, %3
+    32 0000080D 488D3425[B0080000]  <1>  lea rsi, [%2]
+    33 00000815 488D3C25[70000000]  <1>  lea rdi, [%1]
+    34 0000081D F3A4                <1>  rep movsb
