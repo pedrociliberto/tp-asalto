@@ -82,6 +82,18 @@
     mov [%2], eax
 %endmacro
 
+%macro mCalcDesplaz 3
+    mov rdi, %1
+    mov rsi, %2
+    call calcularDesplazamiento
+    mov %3, rax
+%endmacro
+
+%macro mEstaVacia 1 
+    mov rax, 0
+    mov rdi, %1 ; recibe el desplazamiento
+    call estaVacia
+%endmacro
 
 extern puts, printf
 extern gets
@@ -146,7 +158,6 @@ section .data
 
     msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
     
-    
     msgCasillaInvalidaSold  db "Casilla inválida: no hay un soldado en esa casilla. Intente de nuevo.", 0
     msgErrorInputSold       db "Error en el formato de entrada del soldado. Intente de nuevo.", 0
     msgCasillaInvMovSold    db "No se puede mover el soldado a esa casilla. Intente de nuevo.", 0
@@ -161,7 +172,7 @@ section .data
                             db "3. Invertir el tablero", 10
                             db "4. No rotar", 0
     
-    msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba un solo caracter para cada uno (si escribe más, nos quedaremos con el primero).", 0
+    msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba UN (1) solo caracter para cada uno.", 0
     msgSimboloOficiales     db "Símbolo para los oficiales:", 0
     msgSimboloSoldados      db "Símbolo para los soldados:", 0
 
@@ -229,15 +240,14 @@ section .data
 
     simboloOficiales        db 'O', 0
     simboloSoldados         db 'X', 0
+    
     orientacionTablero      db  4       ; 4 -> no rotar (default) 
     piezaDeInicio           db 's'      ; soldados (s), oficiales (o)
 
     ; Comandos 
-
     cmdLimpiarPantalla      db "clear", 0
 
-    ; Formato
-
+    ; Formatos
     formatoAtoi             db "%u", 0
 
 section .bss
@@ -245,8 +255,8 @@ section .bss
     eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
     rotacionElegida     resd 1  ; Variable pivote para la rotación del tablero
 
-    simbOficElegido     resd 1  ; Variable pivote para el símbolo de los oficiales
-    simbSoldElegido     resd 1  ; Variable pivote para el símbolo de los soldados
+    simbOficElegido     resb 2  ; Variable pivote para el símbolo de los oficiales
+    simbSoldElegido     resb 2  ; Variable pivote para el símbolo de los soldados
 
     piezaIniElegida     resd 1  ; Variable pivote para la pieza que inicia
 
@@ -268,7 +278,7 @@ section .bss
 
     filaAux             resq 1
     columnaAux          resq 1
-
+    desplazAux       resq 1
     
     msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
     msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
@@ -283,6 +293,7 @@ main:
 
     mPuts msgBienvenida
 
+    ; Espacio de personalización del tablero
     personalizar:
         mov dword[eleccionRotar], ''    ; vaciar variable
         mPuts msgPersonalizarTablero
@@ -295,6 +306,7 @@ main:
 
         mErrorJump msgOpcionInvalida, personalizar
 
+    ; En caso de querer personalizar, se debe elegir la rotación
     personalizarRotacion:
         mPuts msgPregRotacion
         mPuts msgRotacionesPosibles
@@ -314,12 +326,14 @@ main:
     invalidaRotacion:
         mErrorJump msgOpcionInvalida, personalizarRotacion
 
+    ; Luego de elegir la rotación, se debe personalizar los símbolos
     personalizarSimbolos:
         mPuts msgPersonalizarSimb
 
         call setearSimbSoldados
         call setearSimbOficiales
         
+    ; Luego de personalizar los símbolos, se debe elegir quién inicia la partida
     personalizarQuienInicia:
         mov dword[piezaIniElegida], ''    ; vaciar variable
         mPuts msgQuienInicia
@@ -335,8 +349,10 @@ main:
         setearPiezaInicio:
             mMov piezaDeInicio, piezaIniElegida, 1
             jmp comenzarPorInicio
-    
-    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA ROTAR EL TABLERO EN BASE A LA ELECCIÓN DEL USUARIO
+; --------------------------------------------------------------------------------------------
 
 rotarTablero:
     ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
@@ -363,15 +379,22 @@ rotarTablero:
         mMov tableroEnJuego, tableroInv, 116
         jmp personalizarSimbolos
 
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA COMENZAR EL JUEGO -> Se comienza desde el jugador elegido (o el default)
+; --------------------------------------------------------------------------------------------
+
 comenzarPorInicio:
     cmp byte[piezaDeInicio], 's'
     je loopMovimientos
     cmp byte[piezaDeInicio], 'o'
     je turnoOficiales
 
+
+; En caso de no haber personalizado el tablero, se debe dejar el tablero original
 dejarTableroOrig:
     mMov tableroEnJuego, tableroOrig, 116
 
+; COMIENZA EL JUEGO
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
     mov byte[msgErrorEspecificoSold], 0
     turnoSoldados:
@@ -424,23 +447,29 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
                 mPuts msgTurnoMovOfic   ; Muestra el mensaje de seleccionar casilla a mover
                 mGets casillaMovOfic    ; Obtiene la casilla a mover
                 
-                ;jmp verificarMovimientoOfic ; Verifica si el movimiento es valido
+                jmp verificarMovimientoOfic ; Verifica si el movimiento es valido
 
-                ;moverOficial:
-                    ;call realizarMovimientoOfic ; Realiza el movimiento
-
+                moverOficial:
+                    call realizarMovimientoOfic ; Realiza el movimiento
+                    jmp loopMovimientos
+                
+                capturar:
+                    call capturarSoldado ; Captura soldado
+                    
                 ; Repetir en loop
                 jmp loopMovimientos
 
     ret
+    ; Aquí termina el main !!!
 
 
-
-
+; --------------------------------------------------------------------------------------------
+; RUTINAS PARA SETEAR LOS SÍMBOLOS PERSONALIZADOS DE SOLDADOS Y OFICIALES
+; --------------------------------------------------------------------------------------------
 
 setearSimbSoldados:
     mPuts msgSimboloSoldados
-    mov dword[simbSoldElegido], ''
+    mov byte[simbSoldElegido], ''
     mGets simbSoldElegido
 
     cmp byte[simbSoldElegido], ' '
@@ -448,8 +477,11 @@ setearSimbSoldados:
     cmp byte[simbSoldElegido], ''
     je errSeteoSoldado
 
-    mov al, byte[simbSoldElegido]
-    mov byte[simboloSoldados], al
+    mov al, byte[simbSoldElegido+1]
+    cmp al, 0
+    jne errSeteoSoldado
+
+    mMov simboloSoldados, simbSoldElegido, 1
 
     call cambiarTableroSoldNuevo
 
@@ -457,7 +489,6 @@ setearSimbSoldados:
 
     errSeteoSoldado:
         mErrorJump msgOpcionInvalida, setearSimbSoldados
-
 
 setearSimbOficiales:
     mPuts msgSimboloOficiales
@@ -469,8 +500,11 @@ setearSimbOficiales:
     cmp byte[simbOficElegido], ''
     je errSeteoOficial
 
-    mov al, byte[simbOficElegido]
-    mov byte[simboloOficiales], al
+    mov al, byte[simbOficElegido+1]
+    cmp al, 0
+    jne errSeteoOficial
+
+    mMov simboloOficiales, simbOficElegido, 1
 
     call cambiarTableroOficNuevo
 
@@ -480,6 +514,9 @@ setearSimbOficiales:
         mPuts msgOpcionInvalida
         jmp setearSimbOficiales
 
+; --------------------------------------------------------------------------------------------
+; VERIFICACIONES DE PIEZAS ORIGINALES A MOVER PARA SOLDADOS Y OFICIALES
+; --------------------------------------------------------------------------------------------
 
 verificarFichaSold:
     mov al, byte[soldadoElegido] ; Numero de fila
@@ -516,13 +553,8 @@ verificarFichaSold:
     jne errorInputSold
 
     ; Calculamos desplazamiento en tablero
-    mov rbx, 0
-    mov rbx, [fila]
-    inc rbx
-    imul bx, 11
-    add rbx, [columna]
-    inc rbx
-    mov qword[desplazCasOrig], rbx
+    mCalcDesplaz [fila], [columna], qword[desplazCasOrig]
+    mov rbx, qword[desplazCasOrig]
     
     mov rax,0
     mov rdx, 0
@@ -587,13 +619,8 @@ verificarFichaOfic:
     jne errorInputOfic
 
     ; Calculamos desplazamiento en tablero
-    mov rbx, 0
-    mov rbx, [fila]
-    inc rbx
-    imul bx, 11
-    add rbx, [columna]
-    inc rbx
-    mov qword[desplazCasOrig], rbx
+    mCalcDesplaz [fila], [columna], qword[desplazCasOrig]
+    mov rbx, qword[desplazCasOrig]
     
     mov rax, 0
     mov rdx, 0
@@ -621,6 +648,10 @@ verificarFichaOfic:
     imprimirErrorOfic:
         mPuts msgErrorEspecificoOfic
         jmp todoOkOfic
+
+; --------------------------------------------------------------------------------------------
+; VERFICIACIONES DE CASILLAS DESTINO PARA SOLDADOS Y OFICIALES
+; --------------------------------------------------------------------------------------------
 
 verificarMovimientoSold:
     mov al, byte[casillaMovSold] ; Numero de fila
@@ -656,31 +687,48 @@ verificarMovimientoSold:
     cmp al, 0
     jne errorInputSoldMov
 
-    ; Comparamos la fila a mover con la fila actual
-    mMov filaAux, fila, 1
-    inc qword[filaAux]
-    mCmp [filaAux], [filaAMover], 1
-    jne errorCasillaInvalidaSoldMov
+    ; Primero chequeamos si el soldado original está en alguna de las posiciones especiales
+    call chequearSoldPosEspeciales
+    cmp rax, 0
+    je lugaresComunesSold ; Si recibimos 1, la casilla original es un lugar común: intentamos hacer el movimiento normal
+    
+    cmp rax, 1 ; Si recibimos 1, la casilla original es un lugar especial: solo podemos movernos a la derecha
+    je soloDerechaSold
+    cmp rax, 2 ; Si recibimos 2, la casilla original es un lugar especial: solo podemos movernos a la izquierda
+    je soloIzquierdaSold
+    
+    casillaEspecialAMover:
+        cmp r8, 0
+        jne errorCasillaInvalidaSoldMov
+        jmp moverSoldado
 
-    ; Comparamos la columna a mover con la columna actual
-    mov qword[columnaAux], 0 ; Reiniciamos la columna auxiliar
-    mMov columnaAux, columna, 1
+    lugaresComunesSold:
+        ; Comparamos la fila a mover con la fila actual
+        mMov filaAux, fila, 1
+        inc qword[filaAux]
+        mCmp [filaAux], [filaAMover], 1
+        jne errorCasillaInvalidaSoldMov
 
-    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento hacia adelante
-    je columnaAMoverValida
+        ; Comparamos la columna a mover con la columna actual
+        mov qword[columnaAux], 0 ; Reiniciamos la columna auxiliar
+        mMov columnaAux, columna, 1
 
-    inc qword[columnaAux]
-    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la izquierda
-    je columnaAMoverValida
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento hacia adelante
+        je columnaSoldAMoverValida
 
-    sub qword[columnaAux], 2
-    mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la derecha
-    je columnaAMoverValida
+        inc qword[columnaAux]
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la izquierda
+        je columnaSoldAMoverValida
 
-    jmp errorCasillaInvalidaSoldMov
+        sub qword[columnaAux], 2
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la derecha
+        je columnaSoldAMoverValida
 
-    columnaAMoverValida: ; Queda ver si en esa casilla está vacía o no
-        call casillaAMoverSoldEstaVacia
+        jmp errorCasillaInvalidaSoldMov
+
+    columnaSoldAMoverValida: ; Queda ver si en esa casilla está vacía o no
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
+        mEstaVacia qword[desplazCasAMover]
         cmp rax, 1
         je errorCasillaInvalidaSoldMov ; Si recibimos 1, la casilla está ocupada (o está fuera del tablero)
         
@@ -700,33 +748,178 @@ verificarMovimientoSold:
     imprimirErrorSoldMov:
         mPuts msgErrorEspecificoSold
         jmp turnoSoldados
+
+    soloDerechaSold:
+        mov r8, 1 ; Suponemos que el movimiento es inválido
+
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
+        mEstaVacia qword[desplazCasAMover]
+        cmp rax, 1 
+        je casillaEspecialAMover
+
+        mCmp [fila], [filaAMover], 1 ; Las filas deben ser iguales (el movimiento especial es para el costado)
+        jne casillaEspecialAMover
+
+        mMov columnaAux, columna, 1
+        inc qword[columnaAux]
+        mCmp [columnaAux], [columnaAMover], 1
+        jne casillaEspecialAMover
+        
+        mov r8, 0 ; Si llegamos acá, el movimiento es válido
+        jmp casillaEspecialAMover
     
+    soloIzquierdaSold:
+        mov r8, 1 ; Suponemos que el movimiento es inválido
+
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
+        mEstaVacia qword[desplazCasAMover]
+        cmp rax, 1 
+        je casillaEspecialAMover
+
+        mCmp [fila], [filaAMover], 1 ; Las filas deben ser iguales (el movimiento especial es para el costado)
+        jne casillaEspecialAMover
+
+        mMov columnaAux, columna, 1
+        dec qword[columnaAux]
+        mCmp [columnaAux], [columnaAMover], 1
+        jne casillaEspecialAMover
+
+        mov r8, 0 ; Si llegamos acá, el movimiento es válido
+        jmp casillaEspecialAMover
     
     ret
 
-casillaAMoverSoldEstaVacia:
-    ; Calculamos desplazamiento en tablero
-    mov rbx, 0
-    mov rbx, [filaAMover]
-    inc rbx
-    imul bx, 11
-    add rbx, [columnaAMover]
-    inc rbx
-    mov qword[desplazCasAMover], rbx
+verificarMovimientoOfic:
+    mov al, byte[casillaMovOfic] ; Numero de fila
+    
+    cmp al, '1'
+    jl errorInputOficMov
+    cmp al, '7'
+    jg errorInputOficMov
 
-    mov al, byte[tableroEnJuego+rbx]
-    cmp al, ' '
-    je casillaVacia
+    mov qword[filaAMover], 0
+    mSscanf byte[casillaMovOfic], formatoAtoi, filaAMover
+
+    cmp rax, 1
+    jl errorInputOficMov
+
+    mov al, byte[casillaMovOfic+1] ; Caracter '-'
+    cmp al, '-'
+    jne errorInputOficMov
+    
+    mov al, byte[casillaMovOfic+2] ; Numero de columna
+    cmp al, '1'
+    jl errorInputOficMov
+    cmp al, '7'
+    jg errorInputOficMov
+
+    mov qword[columnaAMover], 0
+    mSscanf byte[casillaMovOfic+2], formatoAtoi, columnaAMover
+
+    cmp rax, 1
+    jl errorInputOficMov
+
+    mov al, byte[casillaMovOfic+3] ; Caracter nulo
+    cmp al, 0
+    jne errorInputOficMov
+
+    ; Comparamos la fila a mover con la fila actual
+    mMov filaAux, fila, 1
+
+    mCmp [filaAux], [filaAMover], 1
+    je filaOficAMoverValida ; Filas iguales -> válido
+    inc qword[filaAux]
+    mCmp [filaAux], [filaAMover], 1
+    je filaOficAMoverValida
+    sub qword[filaAux], 2
+    mCmp [filaAux], [filaAMover], 1
+    je filaOficAMoverValida
+
+    jmp errorCasillaInvalidaOficMov
+
+    filaOficAMoverValida:
+        ; Comparamos la columna a mover con la columna actual
+        mov qword[columnaAux], 0 ; Reiniciamos la columna auxiliar
+        mMov columnaAux, columna, 1
+
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento hacia adelante
+        je columnaOficAMoverValida
+
+        inc qword[columnaAux]
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la izquierda
+        je columnaOficAMoverValida
+
+        sub qword[columnaAux], 2
+        mCmp [columnaAux], [columnaAMover], 1 ; Movimiento diagonal hacia la derecha
+        je columnaOficAMoverValida
+
+        jmp errorCasillaInvalidaOficMov
+
+    columnaOficAMoverValida: ; Podríamos hacer un movimiento normal (casilla vacía) o capturar un soldado...
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
+        mEstaVacia qword[desplazCasAMover]
+        cmp rax, 0
+        je moverOficial ; Si llegamos acá, la casilla a mover está vacía -> movimiento normal
+        
+        ; Si llegamos acá, la casilla no está vacía: ver si hay un soldado para capturar
+        call casillaAMoverHaySoldado
+        cmp rax, 1
+        je errorCasillaInvalidaOficMov ; Si recibimos 1, la casilla a ocupar no tiene un soldado -> movimiento inválido
+
+        ; Si llegamos acá, la casilla a ocupar tiene un soldado: debemos ver si el oficial puede saltar sobre él...
+        call sePuedeSaltarSoldado
+        cmp rax, 1
+        je errorCasillaInvalidaOficMov ; Si recibimos 1, el oficial no puede saltar sobre el soldado -> movimiento inválido
+
+        jmp capturar
+
+
+    errorInputOficMov:
+        mov rax, [msgErrorInputOfic]
+        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 61
+        jmp turnoOficiales
+
+    errorCasillaInvalidaOficMov:
+        mov rax, [msgCasillaInvMovOfic]
+        mMov msgErrorEspecificoOfic, msgCasillaInvMovOfic, 61
+        jmp turnoOficiales
+
+    imprimirErrorOficMov:
+        mPuts msgErrorEspecificoOfic
+        jmp turnoOficiales
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI UNA CASILLA ESTÁ VACÍA
+; --------------------------------------------------------------------------------------------
+
+estaVacia:
+    cmp byte[tableroEnJuego+rdi], ' '
+    je okVacia
 
     mov rax, 1
     ret
 
-    casillaVacia:
+    okVacia:
         mov rax, 0
         ret
 
-verificarMovimientoOfic:
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA CALCULAR EL DESPLAZAMIENTO DE UNA CASILLA EN EL TABLERO
+; --------------------------------------------------------------------------------------------
+
+calcularDesplazamiento:
+    mov rax, 0
+    mov rax, rdi
+    inc rax
+    imul ax, 11
+    add rax, rsi
+    inc rax
+
     ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINAS PARA REALIZAR MOVIMIENTOS SIMPLES DE SOLDADOS Y OFICIALES (los que no requieren capturas)
+; --------------------------------------------------------------------------------------------
 
 realizarMovimientoSold:
     mov rax, qword[desplazCasOrig]
@@ -738,10 +931,17 @@ realizarMovimientoSold:
     ret
 
 realizarMovimientoOfic:
+    mov rax, qword[desplazCasOrig]
+    mov rbx, qword[desplazCasAMover]
+
+    mov byte[tableroEnJuego+rax], ' '
+    mMov tableroEnJuego+rbx, simboloOficiales, 1
+
     ret
     
-
-
+; --------------------------------------------------------------------------------------------
+; RUTINAS PARA CAMBIAR EL TABLERO CON LOS SIMBOLOS PERSONALIZADOS
+; --------------------------------------------------------------------------------------------
 
 cambiarTableroSoldNuevo:
     mov rbx, 26 ; Desplazamiento de la primera casilla en donde puede haber piezas
@@ -761,4 +961,174 @@ cambiarTableroSoldNuevo:
 cambiarTableroOficNuevo:
     mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer oficial (desplazamiento)
     mMov tableroEnJuego+92, simboloOficiales, 1 ; Segundo oficial (desplazamiento)
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA CHEQUEAR SI LA CASILLA DE ORIGEN DE UN SOLDADO ES UNA POSICIÓN ESPECIAL
+; --------------------------------------------------------------------------------------------
+
+chequearSoldPosEspeciales:
+    mov rax, 0
+
+    cmp qword[fila], 5
+    jne noEsLugarEspecial ; Si la fila no es 5, no estamos en una posición especial
+
+    ; Si la columna es 1 o 2 (fila 5), estamos en una posición especial: solo podemos movernos a la derecha
+    cmp qword[columna], 1
+    je esLugarEspecialADer 
+    cmp qword[columna], 2
+    je esLugarEspecialADer 
+
+    ; Si la columna es 6 o 7 (fila 5), estamos en una posición especial: solo podemos movernos a la izquierda
+    cmp qword[columna], 6
+    je esLugarEspecialAIzq 
+    cmp qword[columna], 7
+    je esLugarEspecialAIzq
+
+    noEsLugarEspecial:
+        ret
+
+    esLugarEspecialAIzq:
+        mov rax, 2
+        ret
+    
+    esLugarEspecialADer:
+        mov rax, 1
+        ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI HAY UN SOLDADO EN LA CASILLA DESTINO
+; --------------------------------------------------------------------------------------------
+
+casillaAMoverHaySoldado:
+    ; Calculamos desplazamiento en tablero
+    mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
+    mov rbx, qword[desplazCasAMover]
+
+    mCmp byte[tableroEnJuego+rbx], simboloSoldados, 1
+    je casillaConSoldado
+
+    mov rax, 1
+    ret
+
+    casillaConSoldado:
+        mov rax, 0
+        ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI UN OFICIAL PUEDE SALTAR SOBRE UN SOLDADO
+; --------------------------------------------------------------------------------------------
+
+sePuedeSaltarSoldado:
+    mov rax, qword[fila]
+    mov rbx, qword[filaAMover]
+    sub rax, rbx
+    jg saltoHaciaArriba ; Si la fila original es mayor que la fila destino, el salto es hacia arriba
+    jl saltoHaciaAbajo ; Si la fila original es menor que la fila destino, el salto es hacia abajo
+
+    ; Si estamos acá, el salto es en la misma fila
+    mov rax, qword[columna]
+    mov rbx, qword[columnaAMover]
+
+    sub rax, rbx
+    jg saltoHaciaIzq ; Si la columna original es mayor que la columna destino, el salto es hacia la izquierda
+    jl saltoHaciaDer ; Si la columna original es menor que la columna destino, el salto es hacia la derecha
+
+    saltoHaciaIzq:
+        mMov filaAux, filaAMover, 1
+        mMov columnaAux, columnaAMover, 1
+        dec qword[columnaAux]
+
+        mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
+        mEstaVacia qword[desplazAux]
+        cmp rax, 1
+        je saltoInvalido
+
+        mov rax, 0
+        ret
+
+    saltoHaciaDer:
+        mMov filaAux, filaAMover, 1
+        mMov columnaAux, columnaAMover, 1
+        inc qword[columnaAux]
+
+        mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
+        mEstaVacia qword[desplazAux]
+        cmp rax, 1
+        je saltoInvalido
+
+        mov rax, 0
+        ret
+
+    saltoHaciaArriba:
+        mMov filaAux, filaAMover, 1
+        mMov columnaAux, columnaAMover, 1
+        dec qword[filaAux]
+        
+        mCmp [columna], [columnaAMover], 1
+        je seguirSaltoArriba ; Si las columnas son iguales, el salto es hacia arriba y en línea recta
+        jg haciaArribaIzq ; Si la columna original es mayor que la columna destino, el salto es hacia la izquierda
+
+        inc qword[columnaAux] ; Salto hacia arriba y a la derecha
+        jmp seguirSaltoArriba
+
+        haciaArribaIzq:
+            dec qword[columnaAux] ; Salto hacia arriba y a la izquierda
+
+        seguirSaltoArriba:
+            mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
+            mEstaVacia qword[desplazAux]
+            cmp rax, 1
+            je saltoInvalido
+
+            mov rax, 0
+            ret
+
+    saltoHaciaAbajo:
+        mMov filaAux, filaAMover, 1
+        mMov columnaAux, columnaAMover, 1
+        inc qword[filaAux]
+        
+        mCmp [columna], [columnaAMover], 1
+        je seguirSaltoAbajo ; Si las columnas son iguales, el salto es hacia abajo y en línea recta
+        jg haciaAbajoIzq ; Si la columna original es mayor que la columna destino, el salto es hacia la izquierda
+
+        inc qword[columnaAux] ; Salto hacia abajo y a la derecha
+        jmp seguirSaltoAbajo
+
+        haciaAbajoIzq:
+            dec qword[columnaAux] ; Salto hacia abajo y a la izquierda
+
+        seguirSaltoAbajo:
+            mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
+            mEstaVacia qword[desplazAux]
+            cmp rax, 1
+            je saltoInvalido
+
+            mov rax, 0
+            ret
+
+    saltoInvalido:
+        mov rax, 1
+        ret
+
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA CAPTURAR UN SOLDADO
+; --------------------------------------------------------------------------------------------
+
+capturarSoldado:
+    mov rax, qword[desplazCasOrig] ; Oficial a mover
+    mov rbx, qword[desplazCasAMover] ; Soldado a capturar
+    mov rcx, qword[desplazAux] ; Casilla destino del oficial (donde va a quedar)
+
+    mov byte[tableroEnJuego+rax], ' '
+    mov byte[tableroEnJuego+rbx], ' '
+    
+    mov dl, byte[simboloOficiales]
+    mov byte[tableroEnJuego+rcx], dl
+
+    inc qword[cantSoldCapturados] ; Aumentamos el contador de capturas
+
     ret
