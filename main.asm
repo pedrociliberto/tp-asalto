@@ -189,6 +189,10 @@ section .data
     msgCantIzquierda        db "- Hacia la izquierda: %d", 0
     msgCantAtras            db "- Hacia atrás: %d", 0
     msgCantDiagonal         db "- En diagonal: %d", 0
+    msgCantDiagArribaDer    db "--- Adelante-derecha: %d", 0
+    msgCantDiagArribaIzq    db "--- Adelante-izquierda: %d", 0
+    msgCantDiagAbajoDer     db "--- Atrás-derecha: %d", 0
+    msgCantDiagAbajoIzq     db "--- Atrás-izquierda: %d", 0
 
     msgJuegoTerminado       db "¡El juego ha terminado!", 0
     msgGanador              db "¡El ganador es el equipo de los %s!", 10, 0
@@ -220,23 +224,37 @@ section .data
     
     ; Contadores
 
-    movimientosOfic1        db 0
-    movimientosOfic2        db 0
+    movimientosOfic1        dq 0
+    movimientosOfic2        dq 0
     
-    movOfic1Adelante        db 0
-    movOfic1Derecha         db 0
-    movOfic1Izquierda       db 0
-    movOfic1Atras           db 0
-    movOfic1Diagonal        db 0
+    movOfic1Adelante        dq 0
+    movOfic1Derecha         dq 0
+    movOfic1Izquierda       dq 0
+    movOfic1Atras           dq 0
+    movOfic1Diagonal        dq 0
+    movOfic1DiagArribaDer   dq 0
+    movOfic1DiagArribaIzq   dq 0
+    movOfic1DiagAbajoDer    dq 0
+    movOfic1DiagAbajoIzq    dq 0
 
-    movOfic2Adelante        db 0
-    movOfic2Derecha         db 0
-    movOfic2Izquierda       db 0
-    movOfic2Atras           db 0
-    movOfic2Diagonal        db 0
+    movOfic2Adelante        dq 0
+    movOfic2Derecha         dq 0
+    movOfic2Izquierda       dq 0
+    movOfic2Atras           dq 0
+    movOfic2Diagonal        dq 0
+    movOfic2DiagArribaDer   dq 0
+    movOfic2DiagArribaIzq   dq 0
+    movOfic2DiagAbajoDer    dq 0
+    movOfic2DiagAbajoIzq    dq 0
 
-    cantSoldCapturados      db 0
-    cantOficInvalidados     db 0
+    cantSoldCapturados      db 0 ; Cuando haya 16 soldados capturados, los oficiales ganan
+    cantOficInvalidados     db 0 ; Cuando haya 2 oficiales invalidados, los soldados ganan
+
+    casillaOfic1            dq 7,3
+    casillaOfic2            dq 6,5
+
+    cantCapturasOfic1       db 0
+    cantCapturasOfic2       db 0
 
     simboloOficiales        db 'O', 0
     simboloSoldados         db 'X', 0
@@ -937,6 +955,21 @@ realizarMovimientoOfic:
     mov byte[tableroEnJuego+rax], ' '
     mMov tableroEnJuego+rbx, simboloOficiales, 1
 
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+    ; Incrementamos la cantidad de movimientos del oficial correspondiente
+    cmp rax, 1
+    je movOfic1
+    
+    ; Si llegamos acá, el oficial 2 es el que se mueve
+    call actualizarContadoresOfic2
+    call refrescarCasActOfic2
+    ret
+    
+    movOfic1: ; Si llegamos acá, el oficial 1 es el que se mueve
+        call actualizarContadoresOfic1
+        call refrescarCasActOfic1
+
     ret
     
 ; --------------------------------------------------------------------------------------------
@@ -1131,4 +1164,162 @@ capturarSoldado:
 
     inc qword[cantSoldCapturados] ; Aumentamos el contador de capturas
 
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+    cmp rax, 1
+    je movOfic1Captura
+
+    inc qword[cantCapturasOfic2]
+    call actualizarContadoresOfic2
+    call refrescarCasActOfic2
     ret
+
+    movOfic1Captura:
+        inc qword[cantCapturasOfic1]
+        call actualizarContadoresOfic1
+        call refrescarCasActOfic1
+
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR CUÁL OFICIAL SE ESTÁ MOVIENDO
+; --------------------------------------------------------------------------------------------
+
+verQueOficialEs:
+    ; Comenzamos verificando si el oficial 1 es el que se está moviendo
+    mCmp qword[fila], qword[casillaOfic1], 1 ; Fila de la casilla de origen vs. Fila del oficial 1
+    jne esOfic2 ; Si las filas no son iguales, el oficial 1 no es el que se está moviendo
+    mCmp qword[columna], qword[casillaOfic1+8], 1 ; Columna de la casilla de origen vs. Columna del oficial 1
+    jne esOfic2 ; Si las columnas no son iguales, el oficial 1 no es el que se está moviendo
+
+    mov rax, 1 ; es el oficial 1
+    ret
+
+    esOfic2:
+        mov rax, 2 ; es el oficial 2
+
+    ret
+
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA ACTUALIZAR LOS CONTADORES DE MOVIMIENTOS DE LOS OFICIALES
+; --------------------------------------------------------------------------------------------
+
+actualizarContadoresOfic1:
+    inc qword[movimientosOfic1]
+    mov rax, qword[desplazCasOrig]
+    sub rax, qword[desplazCasAMover] ; rax = desplazOrigen - desplazDestino
+    cmp rax, 1
+    je movOfic1Izq
+    cmp rax, -1
+    je movOfic1Der
+    cmp rax, 11
+    je movOfic1Arriba
+    cmp rax, -11
+    je movOfic1Abajo
+    cmp rax, 10
+    je movOfic1ArrDer
+    cmp rax, -10
+    je movOfic1AbjIzq
+    cmp rax, 12
+    je movOfic1ArrIzq
+    cmp rax, -12
+    je movOfic1AbjDer
+
+    ret
+
+    movOfic1Izq:
+        inc qword[movOfic1Izquierda]
+        ret
+    movOfic1Der:
+        inc qword[movOfic1Derecha]
+        ret
+    movOfic1Arriba:
+        inc qword[movOfic1Arriba]
+        ret
+    movOfic1Abajo:
+        inc qword[movOfic1Abajo]
+        ret
+    movOfic1ArrDer:
+        inc qword[movOfic1Diagonal]
+        inc qword[movOfic1DiagArribaDer]
+        ret
+    movOfic1AbjDer:
+        inc qword[movOfic1Diagonal]
+        inc qword[movOfic1DiagAbajoDer]
+        ret
+    movOfic1AbjIzq:
+        inc qword[movOfic1Diagonal]
+        inc qword[movOfic1DiagAbajoIzq]
+        ret
+    movOfic1ArrIzq:
+        inc qword[movOfic1Diagonal]
+        inc qword[movOfic1DiagArribaIzq]
+        ret
+
+actualizarContadoresOfic2:
+    inc qword[movimientosOfic2]
+    mov rax, qword[desplazCasOrig]
+    sub rax, qword[desplazCasAMover] ; rax = desplazOrigen - desplazDestino
+    cmp rax, 1
+    je movOfic2Izq
+    cmp rax, -1
+    je movOfic2Der
+    cmp rax, 11
+    je movOfic2Arriba
+    cmp rax, -11
+    je movOfic2Abajo
+    cmp rax, 10
+    je movOfic2ArrDer
+    cmp rax, -10
+    je movOfic2AbjIzq
+    cmp rax, 12
+    je movOfic2ArrIzq
+    cmp rax, -12
+    je movOfic2AbjDer
+
+    ret
+
+    movOfic2Izq:
+        inc qword[movOfic2Izquierda]
+        ret
+    movOfic2Der:
+        inc qword[movOfic2Derecha]
+        ret
+    movOfic2Arriba:
+        inc qword[movOfic2Adelante]
+        ret
+    movOfic2Abajo:
+        inc qword[movOfic2Atras]
+        ret
+    movOfic2ArrDer:
+        inc qword[movOfic2Diagonal]
+        inc qword[movOfic2DiagArribaDer]
+        ret
+    movOfic2AbjDer:
+        inc qword[movOfic2Diagonal]
+        inc qword[movOfic2DiagAbajoDer]
+        ret
+    movOfic2AbjIzq:
+        inc qword[movOfic2Diagonal]
+        inc qword[movOfic2DiagAbajoIzq]
+        ret
+    movOfic2ArrIzq:
+        inc qword[movOfic2Diagonal]
+        inc qword[movOfic2DiagArribaIzq]
+        ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA REFRESCAR LA CASILLA ACTUAL DE LOS OFICIALES
+; --------------------------------------------------------------------------------------------
+
+refrescarCasActOfic1:
+    mMov casillaOfic1, filaAMover, 1
+    mMov casillaOfic1+8, columnaAMover, 1
+    ret
+
+refrescarCasActOfic2:
+    mMov casillaOfic2, filaAMover, 1
+    mMov casillaOfic2+8, columnaAMover, 1
+    ret    
+
