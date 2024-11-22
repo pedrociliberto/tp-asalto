@@ -95,6 +95,18 @@
     call estaVacia
 %endmacro
 
+%macro mHaySoldado 1
+    mov rax, 0
+    mov rdi, %1 ; recibe el desplazamiento
+    call haySoldado
+%endmacro
+
+%macro mPuedeCapturar 2
+    mov rdi, %1 ; diferencia de desplazamiento
+    mov rsi, %2 ; 0 para sumar [rdi] al desplazamiento, 1 para restar
+    call podiaComerPieza
+%endmacro
+
 extern puts, printf
 extern gets
 extern system, stdin
@@ -180,26 +192,34 @@ section .data
 
     msgOficialRetirado      db "¡Un oficial ha sido retirado del juego! Se ha olvidado de atrapar a un soldado.", 0
 
-    msgOficial1             db "Oficial 1:", 0
-    msgOficial2             db "Oficial 2:", 0
+    msgEstadisticas         db "Estadísticas de los oficiales:", 10, 0
 
-    msgCantMovimientos      db "Movimientos totales: %d", 0
-    msgCantAdelante         db "- Hacia adelante: %d", 0
-    msgCantDerecha          db "- Hacia la derecha: %d", 0
-    msgCantIzquierda        db "- Hacia la izquierda: %d", 0
-    msgCantAtras            db "- Hacia atrás: %d", 0
-    msgCantDiagonal         db "- En diagonal: %d", 0
-    msgCantDiagArribaDer    db "--- Adelante-derecha: %d", 0
-    msgCantDiagArribaIzq    db "--- Adelante-izquierda: %d", 0
-    msgCantDiagAbajoDer     db "--- Atrás-derecha: %d", 0
-    msgCantDiagAbajoIzq     db "--- Atrás-izquierda: %d", 0
+    msgCantTotalCapturas    db "Cantidad total de capturas: %d", 10, 10, 0
 
-    msgJuegoTerminado       db "¡El juego ha terminado!", 0
+    msgOficial1             db "Oficial 1:", 10, 0
+    msgOficial2             db "Oficial 2:", 10, 0
+
+    msgCantMovimientos      db "Movimientos totales: %d", 10, 0
+    msgCantAdelante         db "- Hacia adelante: %d", 10, 0
+    msgCantDerecha          db "- Hacia la derecha: %d", 10, 0
+    msgCantIzquierda        db "- Hacia la izquierda: %d", 10, 0
+    msgCantAtras            db "- Hacia atrás: %d", 10, 0
+    msgCantDiagonal         db "- En diagonal: %d", 10, 0
+    msgCantDiagArribaDer    db "--- Adelante-derecha: %d", 10, 0
+    msgCantDiagArribaIzq    db "--- Adelante-izquierda: %d", 10, 0
+    msgCantDiagAbajoDer     db "--- Atrás-derecha: %d", 10, 0
+    msgCantDiagAbajoIzq     db "--- Atrás-izquierda: %d", 10, 0
+
+    msgCantSoldadosCapt     db "Cantidad de soldados capturados: %d", 10, 10, 0
+
+    msgJuegoTerminado       db "¡El juego ha terminado!", 10, 0
     msgGanador              db "¡El ganador es el equipo de los %s!", 10, 0
     stringSoldados          db "soldados", 0
     stringOficiales         db "oficiales", 0
 
-    msgRazonGanador         db "Razón: %s", 0
+    msgRazonGanador         db "Razón: %s", 10, 0
+
+    varRazonFin             db '----', 0 ; Razón de fin de juego (a llenar)          
 
     ; Se ha decidido salir de la partida
     msgSalidaPartida        db "Se ha decidido salir de la partida. ¿Desea guardarla? (y/n)", 0
@@ -208,7 +228,7 @@ section .data
     ; Razones de victoria de soldados
     msgSoldadosFortaleza    db "los soldados han ocupado todos los puntos de la fortaleza.", 0
     msgSoldadosRodean       db "los soldados han rodeado a los oficiales.", 0
-    msgSoldadosInvalidar    db "ambos oficiales han sido invalidados."
+    msgSoldadosInvalidar    db "ambos oficiales han sido invalidados.", 0
 
     ; Razones de victoria de oficiales
     msgOficialesGanan       db "no quedan suficientes soldados para ocupar la fortaleza.", 0
@@ -247,14 +267,14 @@ section .data
     movOfic2DiagAbajoDer    dq 0
     movOfic2DiagAbajoIzq    dq 0
 
-    cantSoldCapturados      db 0 ; Cuando haya 16 soldados capturados, los oficiales ganan
+    cantSoldCapturados      dq 0 ; Cuando haya 16 soldados capturados, los oficiales ganan
     cantOficInvalidados     db 0 ; Cuando haya 2 oficiales invalidados, los soldados ganan
 
     casillaOfic1            dq 7,3
     casillaOfic2            dq 6,5
 
-    cantCapturasOfic1       db 0
-    cantCapturasOfic2       db 0
+    cantCapturasOfic1       dq 0
+    cantCapturasOfic2       dq 0
 
     simboloOficiales        db 'O', 0
     simboloSoldados         db 'X', 0
@@ -296,7 +316,7 @@ section .bss
 
     filaAux             resq 1
     columnaAux          resq 1
-    desplazAux       resq 1
+    desplazAux          resq 1
     
     msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
     msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
@@ -469,10 +489,19 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
                 moverOficial:
                     call realizarMovimientoOfic ; Realiza el movimiento
+                    ; Verificar fin de juego por algún movimiento de oficial
+                    call verificarFinJuegoOficiales
+                    cmp rax, 0
+                    je finDeJuego
+                    
                     jmp loopMovimientos
                 
                 capturar:
                     call capturarSoldado ; Captura soldado
+                    ; Verificar fin de juego por captura de soldado
+                    call verificarFinJuegoOficiales
+                    cmp rax, 0
+                    je finDeJuego
                     
                 ; Repetir en loop
                 jmp loopMovimientos
@@ -880,7 +909,7 @@ verificarMovimientoOfic:
         je moverOficial ; Si llegamos acá, la casilla a mover está vacía -> movimiento normal
         
         ; Si llegamos acá, la casilla no está vacía: ver si hay un soldado para capturar
-        call casillaAMoverHaySoldado
+        mHaySoldado qword[desplazCasAMover]
         cmp rax, 1
         je errorCasillaInvalidaOficMov ; Si recibimos 1, la casilla a ocupar no tiene un soldado -> movimiento inválido
 
@@ -949,22 +978,44 @@ realizarMovimientoSold:
     ret
 
 realizarMovimientoOfic:
-    mov rax, qword[desplazCasOrig]
-    mov rbx, qword[desplazCasAMover]
+    ; Vemos si el oficial podía capturar un soldado y no lo hizo
+    call podiaCapturarSoldado 
+    cmp rax, 0 ; Si fue así, significa que el oficial se desentendió de su deber
+    je quitarOficial
 
-    mov byte[tableroEnJuego+rax], ' '
-    mMov tableroEnJuego+rbx, simboloOficiales, 1
+    ; Necesitamos chequear si el otro oficial podría haber capturado al soldado
+    call podiaCapturarSoldadoOtroOficial
+    cmp rax, 0 ; Si fue así, significa que el otro oficial se desentendió de su deber
+    je quitarOtroOficial
 
-    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+    jmp noPodianHacerNada
 
-    ; Incrementamos la cantidad de movimientos del oficial correspondiente
-    cmp rax, 1
-    je movOfic1
+    quitarOficial:
+        call desentenderOficial
+        ret
     
-    ; Si llegamos acá, el oficial 2 es el que se mueve
-    call actualizarContadoresOfic2
-    call refrescarCasActOfic2
-    ret
+    quitarOtroOficial:
+        call desentenderOtroOficial
+        ret
+
+    ; Si llegamos acá, el oficial no podía capturar un soldado -> OK!
+    noPodianHacerNada:
+        mov rax, qword[desplazCasOrig]
+        mov rbx, qword[desplazCasAMover]
+
+        mov byte[tableroEnJuego+rax], ' '
+        mMov tableroEnJuego+rbx, simboloOficiales, 1
+
+        call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+        ; Incrementamos la cantidad de movimientos del oficial correspondiente
+        cmp rax, 1 ; Si recibimos 1, el oficial 1 es el que se mueve
+        je movOfic1
+        
+        ; Si llegamos acá, el oficial 2 es el que se mueve
+        call actualizarContadoresOfic2
+        call refrescarCasActOfic2
+        ret
     
     movOfic1: ; Si llegamos acá, el oficial 1 es el que se mueve
         call actualizarContadoresOfic1
@@ -1033,18 +1084,15 @@ chequearSoldPosEspeciales:
 ; RUTINA PARA VERIFICAR SI HAY UN SOLDADO EN LA CASILLA DESTINO
 ; --------------------------------------------------------------------------------------------
 
-casillaAMoverHaySoldado:
+haySoldado:
     ; Calculamos desplazamiento en tablero
-    mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
-    mov rbx, qword[desplazCasAMover]
-
-    mCmp byte[tableroEnJuego+rbx], simboloSoldados, 1
-    je casillaConSoldado
+    mCmp byte[tableroEnJuego+rdi], [simboloSoldados], 1
+    je okSoldado
 
     mov rax, 1
     ret
 
-    casillaConSoldado:
+    okSoldado:
         mov rax, 0
         ret
 
@@ -1235,10 +1283,10 @@ actualizarContadoresOfic1:
         inc qword[movOfic1Derecha]
         ret
     movOfic1Arriba:
-        inc qword[movOfic1Arriba]
+        inc qword[movOfic1Adelante]
         ret
     movOfic1Abajo:
-        inc qword[movOfic1Abajo]
+        inc qword[movOfic1Atras]
         ret
     movOfic1ArrDer:
         inc qword[movOfic1Diagonal]
@@ -1323,3 +1371,322 @@ refrescarCasActOfic2:
     mMov casillaOfic2+8, columnaAMover, 1
     ret    
 
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI UN OFICIAL PODÍA CAPTURAR UN SOLDADO Y NO LO HIZO
+; --------------------------------------------------------------------------------------------
+
+podiaCapturarSoldado:
+    push qword[desplazCasOrig]
+    mMov desplazAux, desplazCasOrig, 1
+
+    ; Casilla arriba-izquierda
+    sub qword[desplazAux], 12
+    mHaySoldado qword[desplazAux]
+    cmp rax, 0
+    jne verCasArriba
+
+    mPuedeCapturar 12, 1 ; restar 12 a desplazAux
+    cmp rax, 0
+    je podiaCapturar
+
+    ; Casilla arriba
+    verCasArriba:
+        mMov desplazAux, desplazCasOrig, 1
+        sub qword[desplazAux], 11
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasArribaDer
+
+        mPuedeCapturar 11, 1 ; restar 11 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla arriba-derecha
+    verCasArribaDer:
+        mMov desplazAux, desplazCasOrig, 1
+        sub qword[desplazAux], 10
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasIzq
+        
+        mPuedeCapturar 10, 1 ; restar 10 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla izquierda
+    verCasIzq:
+        mMov desplazAux, desplazCasOrig, 1
+        sub qword[desplazAux], 1
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasDer
+        
+        mPuedeCapturar 1, 1 ; restar 1 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla derecha
+    verCasDer:
+        mMov desplazAux, desplazCasOrig, 1
+        add qword[desplazAux], 1
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasAbajoIzq
+        
+        mPuedeCapturar 1, 0 ; sumar 1 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla abajo-izquierda
+    verCasAbajoIzq:
+        mMov desplazAux, desplazCasOrig, 1
+        add qword[desplazAux], 10
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasAbajo
+        
+        mPuedeCapturar 10, 0 ; sumar 10 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla abajo
+    verCasAbajo:
+        mMov desplazAux, desplazCasOrig, 1
+        add qword[desplazAux], 11
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne verCasAbajoDer
+        
+        mPuedeCapturar 11, 0 ; sumar 11 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+
+    ; Casilla abajo-derecha
+    verCasAbajoDer:
+        mMov desplazAux, desplazCasOrig, 1
+        add qword[desplazAux], 12
+        mHaySoldado qword[desplazAux]
+        cmp rax, 0
+        jne okNoPodiaCapturar
+        
+        mPuedeCapturar 12, 0 ; sumar 12 a desplazAux
+        cmp rax, 0
+        je podiaCapturar
+    
+    okNoPodiaCapturar:
+        mov rax, 1
+        jmp popDesplazIntermedio
+    
+    podiaCapturar:
+        mov rax, 0
+
+    popDesplazIntermedio:
+        pop qword[desplazCasOrig]
+        ret
+
+podiaComerPieza:
+    cmp rsi, 0
+    je sumarDesplaz 
+    sub qword[desplazAux], rdi
+    jmp verSiEspacioEstaLibre
+
+    sumarDesplaz:
+        add qword[desplazAux], rdi
+
+    verSiEspacioEstaLibre:
+        mEstaVacia qword[desplazAux]
+        cmp rax, 0
+        je okComerPieza
+
+        mov rax, 1
+        ret
+
+    okComerPieza:
+        mov rax, 0
+        ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA QUITAR AL OFICIAL QUE SE DESPREOCUPÓ DE CAPTURAR SOLDADOS
+; --------------------------------------------------------------------------------------------
+
+desentenderOficial:
+    mov rbx, qword[desplazCasOrig]
+    mov rdx, ' '
+    mov byte[tableroEnJuego+rbx], dl
+
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+    cmp rax, 1
+    je desentenderOfic1
+
+    desentenderOfic2:
+        mov qword[casillaOfic2], 0
+        mov qword[casillaOfic2+8], 0
+        jmp agregarOficDesentendido
+
+    desentenderOfic1:
+        mov qword[casillaOfic1], 0
+        mov qword[casillaOfic1+8], 0
+
+    agregarOficDesentendido:
+        inc byte[cantOficInvalidados]
+    
+    ret
+    
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI EL OTRO OFICIAL PODÍA CAPTURAR UN SOLDADO Y NO LO HIZO
+; --------------------------------------------------------------------------------------------
+
+podiaCapturarSoldadoOtroOficial:
+    push qword[desplazCasOrig]
+
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+    cmp rax, 1
+    je verificarOfic2
+
+    verificarOfic1:
+        mCalcDesplaz qword[casillaOfic1], qword[casillaOfic1+8], qword[desplazCasOrig]
+        call podiaCapturarSoldado
+        cmp rax, 0
+        je okPodiaComerElOtro
+        jmp noPodiaComerElOtro
+    
+    verificarOfic2:
+        mCalcDesplaz qword[casillaOfic2], qword[casillaOfic2+8], qword[desplazCasOrig]
+        call podiaCapturarSoldado
+        cmp rax, 0
+        je okPodiaComerElOtro
+        jmp noPodiaComerElOtro
+
+    okPodiaComerElOtro:
+        mov rax, 0
+        jmp popDesplaz
+
+    noPodiaComerElOtro:
+        mov rax, 1
+
+    popDesplaz:
+        pop qword[desplazCasOrig]
+
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA INVALIDAR AL OTRO OFICIAL QUE NO SE MOVIÓ (el cual podía capturar un soldado)
+; --------------------------------------------------------------------------------------------
+
+desentenderOtroOficial:
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+    cmp rax, 1
+    je otroEsOfic2
+
+    otroEsOfic1:
+        mMov fila, casillaOfic1, 1
+        mMov columna, casillaOfic1+8, 1
+        mCalcDesplaz qword[casillaOfic1], qword[casillaOfic1+8], qword[desplazCasOrig]
+        call desentenderOficial
+        ret
+
+    otroEsOfic2:
+        mMov fila, casillaOfic2, 1
+        mMov columna, casillaOfic2+8, 1
+        mCalcDesplaz qword[casillaOfic2], qword[casillaOfic2+8], qword[desplazCasOrig]
+        call desentenderOficial
+    
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VER SI EL MOVIMIENTO DE UN OFICIAL RESULTA EN EL FIN DEL JUEGO
+; --------------------------------------------------------------------------------------------
+
+verificarFinJuegoOficiales:
+    ; Verificamos si ambos oficiales han sido invalidados
+    cmp byte[cantOficInvalidados], 2
+    je finInvalidados
+
+    ; Verificamos que los oficiales hayan capturado necesarios soldados para ganar
+    cmp qword[cantSoldCapturados], 16
+    je finSoldCapturados
+
+    mov rax, 1
+    ret
+
+    finInvalidados:
+        mov dword[varRazonFin], "oInv"
+        jmp hayFinJuegoOfic
+
+    finSoldCapturados:
+        mov dword[varRazonFin], "sCap"
+
+    hayFinJuegoOfic:
+        mov rax, 0
+        ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI EL MOVIMIENTO DE UN SOLDADO RESULTA EN EL FIN DEL JUEGO
+; --------------------------------------------------------------------------------------------
+
+verificarFinJuegoSoldados:
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINAS PARA TERMINAR EL JUEGO Y MOSTRAR LAS ESTADÍSTICAS
+; --------------------------------------------------------------------------------------------
+
+finDeJuego:
+    mCommand cmdLimpiarPantalla
+    mPuts msgJuegoTerminado
+
+    cmp dword[varRazonFin], "oInv"
+    je oficialesInvalidados
+
+    cmp dword[varRazonFin], "sCap"
+    je soldadosCapturados
+
+    ret
+
+    oficialesInvalidados:
+        mPrint msgGanador, stringSoldados
+        mPrint msgRazonGanador, msgSoldadosInvalidar
+        jmp mostrarEstadisticas
+
+    soldadosCapturados:
+        mPrint msgGanador, stringOficiales
+        mPrint msgRazonGanador, msgOficialesGanan
+        jmp mostrarEstadisticas
+
+
+mostrarEstadisticas:
+    mPuts msgEstadisticas
+
+    mPrint msgCantTotalCapturas, qword[cantSoldCapturados]
+
+    ; Estadísticas del oficial 1
+    mPuts msgOficial1
+    mPrint msgCantMovimientos, qword[movimientosOfic1]
+    mPrint msgCantAdelante, qword[movOfic1Adelante]
+    mPrint msgCantDerecha, qword[movOfic1Derecha]
+    mPrint msgCantIzquierda, qword[movOfic1Izquierda]
+    mPrint msgCantAtras, qword[movOfic1Atras]
+    mPrint msgCantDiagonal, qword[movOfic1Diagonal]
+    mPrint msgCantDiagArribaDer, qword[movOfic1DiagArribaDer]
+    mPrint msgCantDiagArribaIzq, qword[movOfic1DiagArribaIzq]
+    mPrint msgCantDiagAbajoDer, qword[movOfic1DiagAbajoDer]
+    mPrint msgCantDiagAbajoIzq, qword[movOfic1DiagAbajoIzq]
+    mPrint msgCantSoldadosCapt, qword[cantCapturasOfic1]
+
+    ; Estadísticas del oficial 2
+    mPuts msgOficial2
+    mPrint msgCantMovimientos, qword[movimientosOfic2]
+    mPrint msgCantAdelante, qword[movOfic2Adelante]
+    mPrint msgCantDerecha, qword[movOfic2Derecha]
+    mPrint msgCantIzquierda, qword[movOfic2Izquierda]
+    mPrint msgCantAtras, qword[movOfic2Atras]
+    mPrint msgCantDiagonal, qword[movOfic2Diagonal]
+    mPrint msgCantDiagArribaDer, qword[movOfic2DiagArribaDer]
+    mPrint msgCantDiagArribaIzq, qword[movOfic2DiagArribaIzq]
+    mPrint msgCantDiagAbajoDer, qword[movOfic2DiagAbajoDer]
+    mPrint msgCantDiagAbajoIzq, qword[movOfic2DiagAbajoIzq]
+    mPrint msgCantSoldadosCapt, qword[cantCapturasOfic2]
+
+    ret
