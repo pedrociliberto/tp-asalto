@@ -74,12 +74,13 @@
     add rsp, 8
 %endmacro
 
-%macro mAtoi 2
-    lea rdi, %1
+%macro mSprintf 3
+    mov rdi, %1     ; Variable donde se guardará el string
+    mov rsi, %2     ; Formato
+    mov rdx, %3     ; Variable a guardar en el string
     sub rsp, 8
-    call atoi
+    call sprintf
     add rsp, 8
-    mov [%2], eax
 %endmacro
 
 %macro mCalcDesplaz 3
@@ -107,12 +108,50 @@
     call podiaComerPieza
 %endmacro
 
+%macro mOpenFile 2
+    mov rdi, %1 ; nombre del archivo
+    mov rsi, %2 ; modo de apertura
+    sub rsp, 8
+    call fopen
+    add rsp, 8
+
+    cmp rax, 0
+    mov qword[idArchGuardado], rax ; Guardamos el ID del archivo
+%endmacro
+
+%macro mCloseFile 1
+    mov rdi, [%1] ; ID del archivo
+    sub rsp, 8
+    call fclose
+    add rsp, 8
+%endmacro
+
+%macro mReadLine 3 
+    mov rdi, %1 ; lugar a dejar lo leido
+    mov rsi, %2 ; cantidad de bytes a leer
+    mov rdx, %3 ; bloques de lectura
+    mov rcx, [idArchGuardado] ; ID del archivo
+    sub rsp, 8
+    call fread
+    add rsp, 8
+%endmacro
+
+%macro mWriteLine 3
+    mov rdi, %1 ; string a escribir
+    mov rsi, %2 ; cantidad de bytes a escribir
+    mov rdx, %3 ; bloques de escritura
+    mov rcx, [idArchGuardado] ; ID del archivo
+    sub rsp, 8
+    call fwrite
+    add rsp, 8
+%endmacro
+
+; Importación de funciones de la librería C
 extern puts, printf
 extern gets
 extern system, stdin
-extern fgets
-extern atoi
-extern sscanf
+extern sscanf, sprintf
+extern fopen, fclose, fread, fwrite, fgets
 
 section .data
 
@@ -164,7 +203,7 @@ section .data
 
     ; Mensajes
 
-    msgBienvenida           db "¡Bienvenido al juego El Asalto!", 0
+    msgBienvenida           db "¡Bienvenido al juego El Asalto! ('#' para salir)", 0
 
     msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
 
@@ -222,8 +261,17 @@ section .data
     varRazonFin             db '----', 0 ; Razón de fin de juego (a llenar)          
 
     ; Se ha decidido salir de la partida
-    msgSalidaPartida        db "Se ha decidido salir de la partida. ¿Desea guardarla? (y/n)", 0
-    guardadoPartida         db 'n' ; guardar (y), no guardar (n)
+    msgSalidaPartida        db "Se ha decidido salir de la partida. ¿Desea guardarla? (s/n)", 0
+    msgAclaracionSalida     db "NOTA: Si decide no guardar la partida, se perderá todo el progreso. En cambio, si decide guardarla y tenía una partida guardada, se sobreescribirá.", 0
+    guardadoPartida         db 'n', 0 ; guardar (s), no guardar (n)
+
+    yaHabiaGuardado         db 'n', 0 ; ya había guardado (s), no había guardado (n)
+
+    turnoDe                 db 's', 0 ; soldados (s), oficiales (o)
+
+    msgPartidaGuardada      db "¡Partida guardada con éxito!", 0
+
+    msgErrorOpenFile        db "Error al abrir el archivo.", 0
 
     ; Razones de victoria de soldados
     msgSoldadosFortaleza    db "los soldados han ocupado todos los puntos de la fortaleza.", 0
@@ -283,10 +331,46 @@ section .data
     piezaDeInicio           db 's'      ; soldados (s), oficiales (o)
 
     ; Comandos 
-    cmdLimpiarPantalla      db "clear", 0
+    cmdLimpiarPantalla          db "clear", 0
+    cmdCrearArchivoPartida      db "touch partidaGuardada.dat", 0
+    cmdBorrarArchivoPartida     db "rm partidaGuardada.dat", 0
+    cmdLimpiarArchivo           db "echo -n > partidaGuardada.dat", 0
 
     ; Formatos
     formatoAtoi             db "%u", 0
+    formatoItoa             db "%s", 0
+
+    ; Modos de apertura de archivos
+    modoLectura             db "rb", 0
+    modoEscritura           db "wb", 0
+    modoAppend              db "ab", 0
+
+    nombreArchivo           db "partidaGuardada.dat", 0
+
+    ; CONTADORES EN FORMATO DE CADENA
+
+    movimientosOfic1Str        db ' ', 0
+    movimientosOfic2Str        db ' ', 0
+    movOfic1AdelanteStr        db ' ', 0
+    movOfic1DerechaStr         db ' ', 0
+    movOfic1IzquierdaStr       db ' ', 0
+    movOfic1AtrasStr           db ' ', 0
+    movOfic1DiagonalStr        db ' ', 0
+    movOfic1DiagArribaDerStr   db ' ', 0
+    movOfic1DiagArribaIzqStr   db ' ', 0
+    movOfic1DiagAbajoDerStr    db ' ', 0
+    movOfic1DiagAbajoIzqStr    db ' ', 0
+    movOfic2AdelanteStr        db ' ', 0
+    movOfic2DerechaStr         db ' ', 0
+    movOfic2IzquierdaStr       db ' ', 0
+    movOfic2AtrasStr           db ' ', 0
+    movOfic2DiagonalStr        db ' ', 0
+    movOfic2DiagArribaDerStr   db ' ', 0
+    movOfic2DiagArribaIzqStr   db ' ', 0
+    movOfic2DiagAbajoDerStr    db ' ', 0
+    movOfic2DiagAbajoIzqStr    db ' ', 0
+    cantSoldCapturadosStr      db ' ', 0 
+    cantOficInvalidadosStr     db ' ', 0 
 
 section .bss
 
@@ -318,6 +402,8 @@ section .bss
     columnaAux          resq 1
     desplazAux          resq 1
     desplazAux2         resq 1
+
+    idArchGuardado      resq 1 ; ID del archivo de la partida guardada
     
     msgErrorEspecificoSold  resb 71 ; Máximo largo de mensaje de error para soldados
     msgErrorEspecificoOfic  resb 71 ; Máximo largo de mensaje de error para oficiales
@@ -329,8 +415,20 @@ section .text
     global main
 
 main:
+    ; Vemos si hay una partida guardada
+    mOpenFile nombreArchivo, modoLectura
+    cmp rax, 0
+    jg partidaGuardada
+    jmp bienvenida
 
-    mPuts msgBienvenida
+    partidaGuardada:
+        call abrirPartidaGuardada
+        cmp byte[turnoDe], 's'
+        je loopMovimientos
+        jmp turnoOficiales
+
+    bienvenida:
+        mPuts msgBienvenida
 
     ; Espacio de personalización del tablero
     personalizar:
@@ -343,6 +441,9 @@ main:
         cmp dword[eleccionRotar], 's'
         je personalizarRotacion
 
+        cmp dword[eleccionRotar], '#'
+        je salirSinGuardar
+
         mErrorJump msgOpcionInvalida, personalizar
 
     ; En caso de querer personalizar, se debe elegir la rotación
@@ -352,6 +453,9 @@ main:
 
         mov dword[rotacionElegida], '' ; limpiar variable
         mGets rotacionElegida
+
+        cmp dword[rotacionElegida], '#'
+        je salirSinGuardar
 
         mMov orientacionTablero, rotacionElegida, 1
         
@@ -370,13 +474,21 @@ main:
         mPuts msgPersonalizarSimb
 
         call setearSimbSoldados
+        cmp rax, 0
+        je salirSinGuardar
+        
         call setearSimbOficiales
+        cmp rax, 0
+        je salirSinGuardar
         
     ; Luego de personalizar los símbolos, se debe elegir quién inicia la partida
     personalizarQuienInicia:
         mov dword[piezaIniElegida], ''    ; vaciar variable
         mPuts msgQuienInicia
         mGets piezaIniElegida
+
+        cmp dword[piezaIniElegida], '#'
+        je salirSinGuardar
 
         cmp dword[piezaIniElegida], 'o' 
         je setearPiezaInicio
@@ -437,6 +549,7 @@ dejarTableroOrig:
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
     mov byte[msgErrorEspecificoSold], 0
     turnoSoldados:
+        mov byte[turnoDe], 's'
         mov byte [soldadoElegido], '0'
     
         mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
@@ -450,6 +563,9 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
             mPuts msgTurnoSoldados      ; Muestra el mensaje de seleccionar ficha a mover
             mGets soldadoElegido        ; Obtiene la ficha a mover
+
+            cmp byte[soldadoElegido], '#'
+            je salirDelJuego
             
             jmp verificarFichaSold ; Verifica si la ficha elegida es valida
 
@@ -457,6 +573,9 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
                 
                 mPuts msgTurnoMovSold   ; Muestra el mensaje de seleccionar casilla a mover
                 mGets casillaMovSold    ; Obtiene la casilla a mover
+
+                cmp byte[casillaMovSold], '#'
+                je salirDelJuego
 
                 jmp verificarMovimientoSold ; Verifica si el movimiento es valido
 
@@ -469,6 +588,7 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
     mov byte[msgErrorEspecificoOfic], 0
     turnoOficiales:
+        mov byte[turnoDe], 'o'
         mov byte[oficialElegido], '0'
         
         mCommand cmdLimpiarPantalla ; Limpia la pantalla para mostrar el tablero
@@ -483,12 +603,18 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
             mPuts msgTurnoOficiales ; Muestra el mensaje de seleccionar ficha a mover
             mGets oficialElegido    ; Obtiene la ficha a mover
 
+            cmp byte[oficialElegido], '#'
+            je salirDelJuego
+
             jmp verificarFichaOfic ; Verifica si la ficha elegida es valida
 
             casillaAMoverseOfic:
 
                 mPuts msgTurnoMovOfic   ; Muestra el mensaje de seleccionar casilla a mover
                 mGets casillaMovOfic    ; Obtiene la casilla a mover
+
+                cmp byte[casillaMovOfic], '#'
+                je salirDelJuego
                 
                 jmp verificarMovimientoOfic ; Verifica si el movimiento es valido
 
@@ -521,7 +647,6 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
 setearSimbSoldados:
     mPuts msgSimboloSoldados
-    mov byte[simbSoldElegido], ''
     mGets simbSoldElegido
 
     cmp byte[simbSoldElegido], ' '
@@ -532,6 +657,9 @@ setearSimbSoldados:
     mov al, byte[simbSoldElegido+1]
     cmp al, 0
     jne errSeteoSoldado
+
+    cmp byte[simbSoldElegido], '#'
+    je salirSinGuardar
 
     mMov simboloSoldados, simbSoldElegido, 1
 
@@ -544,7 +672,6 @@ setearSimbSoldados:
 
 setearSimbOficiales:
     mPuts msgSimboloOficiales
-    mov dword[simbOficElegido], ''
     mGets simbOficElegido
 
     cmp byte[simbOficElegido], ' '
@@ -555,6 +682,9 @@ setearSimbOficiales:
     mov al, byte[simbOficElegido+1]
     cmp al, 0
     jne errSeteoOficial
+
+    cmp byte[simbOficElegido], '#'
+    je salirSinGuardar
 
     mMov simboloOficiales, simbOficElegido, 1
 
@@ -1940,6 +2070,7 @@ ofic2Desentendido:
 ; --------------------------------------------------------------------------------------------
 
 finDeJuego:
+    mCommand cmdBorrarArchivoPartida
     mCommand cmdLimpiarPantalla
     mPuts msgJuegoTerminado
 
@@ -2010,5 +2141,145 @@ mostrarEstadisticas:
     mPrint msgCantDiagAbajoDer, qword[movOfic2DiagAbajoDer]
     mPrint msgCantDiagAbajoIzq, qword[movOfic2DiagAbajoIzq]
     mPrint msgCantSoldadosCapt, qword[cantCapturasOfic2]
+
+    jmp salirSinGuardar
+
+; --------------------------------------------------------------------------------------------
+; RUTINAS PARA SALIR DEL JUEGO (guardando o no la partida)
+; --------------------------------------------------------------------------------------------
+
+salirSinGuardar:
+    mov rax, 0
+    ret
+
+salirDelJuego:
+    mCommand cmdLimpiarPantalla
+
+    mPuts msgSalidaPartida
+    mPuts msgAclaracionSalida
+
+    recibirOpcionGuardado:
+        mGets guardadoPartida
+
+    cmp byte[guardadoPartida+1], 0
+    jne guardadoInvalido
+
+    cmp byte[guardadoPartida], 's'
+    je guardarPartida
+
+    cmp byte[guardadoPartida], 'n'
+    je removerArchivo
+
+    guardadoInvalido:
+        mPuts msgOpcionInvalida
+        jmp recibirOpcionGuardado
+
+    removerArchivo:
+        cmp byte[yaHabiaGuardado], 's' ; Si ya había guardado la partida, la borramos
+        jne salirSinGuardar
+        
+        mCommand cmdBorrarArchivoPartida
+        mov byte[yaHabiaGuardado], 'n' ; Para la próxima vez que se quiera salir, no se borra nada
+        jmp salirSinGuardar
+
+
+guardarPartida:
+    mov byte[yaHabiaGuardado], 's'
+    mOpenFile nombreArchivo, modoEscritura
+    call agregarDatosPartida
+    mCloseFile idArchGuardado
+
+    mPuts msgPartidaGuardada
+    ret    
+
+agregarDatosPartida:
+    mWriteLine tableroEnJuego, 116, 1
+
+    mWriteLine yaHabiaGuardado, 1, 1 ; Guardamos si ya había guardado la partida
+
+    mWriteLine turnoDe, 1, 1 ; Guardamos el turno actual
+
+    mWriteLine movimientosOfic1, 8, 1
+    mWriteLine movimientosOfic2, 8, 1
+
+    mWriteLine movOfic1Adelante, 8, 1
+    mWriteLine movOfic1Derecha, 8, 1
+    mWriteLine movOfic1Izquierda, 8, 1
+    mWriteLine movOfic1Atras, 8, 1
+    mWriteLine movOfic1Diagonal, 8, 1
+    mWriteLine movOfic1DiagArribaDer, 8, 1
+    mWriteLine movOfic1DiagArribaIzq, 8, 1
+    mWriteLine movOfic1DiagAbajoDer, 8, 1
+    mWriteLine movOfic1DiagAbajoIzq, 8, 1
+
+    mWriteLine movOfic2Adelante, 8, 1
+    mWriteLine movOfic2Derecha, 8, 1
+    mWriteLine movOfic2Izquierda, 8, 1
+    mWriteLine movOfic2Atras, 8, 1
+    mWriteLine movOfic2Diagonal, 8, 1
+    mWriteLine movOfic2DiagArribaDer, 8, 1
+    mWriteLine movOfic2DiagArribaIzq, 8, 1
+    mWriteLine movOfic2DiagAbajoDer, 8, 1
+    mWriteLine movOfic2DiagAbajoIzq, 8, 1
+
+    mWriteLine cantSoldCapturados, 8, 1
+    mWriteLine cantOficInvalidados, 8, 1
+
+    mWriteLine casillaOfic1, 8, 1
+    mWriteLine casillaOfic1+8, 8, 1
+
+    mWriteLine casillaOfic2, 8, 1
+    mWriteLine casillaOfic2+8, 8, 1
+
+    mWriteLine cantCapturasOfic1, 8, 1
+    mWriteLine cantCapturasOfic2, 8, 1
+
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA OBTENER LOS DATOS DE UNA PARTIDA GUARDADA
+; --------------------------------------------------------------------------------------------
+
+abrirPartidaGuardada:
+    ; Recreamos el tablero guardado
+    mReadLine tableroEnJuego, 116, 1
+
+    mReadLine yaHabiaGuardado, 1, 1
+    mReadLine turnoDe, 1, 1
+
+    mReadLine movimientosOfic1, 8, 1
+    mReadLine movimientosOfic2, 8, 1
+
+    mReadLine movOfic1Adelante, 8, 1
+    mReadLine movOfic1Derecha, 8, 1
+    mReadLine movOfic1Izquierda, 8, 1
+    mReadLine movOfic1Atras, 8, 1
+    mReadLine movOfic1Diagonal, 8, 1
+    mReadLine movOfic1DiagArribaDer, 8, 1
+    mReadLine movOfic1DiagArribaIzq, 8, 1
+    mReadLine movOfic1DiagAbajoDer, 8, 1
+    mReadLine movOfic1DiagAbajoIzq, 8, 1
+
+    mReadLine movOfic2Adelante, 8, 1
+    mReadLine movOfic2Derecha, 8, 1
+    mReadLine movOfic2Izquierda, 8, 1
+    mReadLine movOfic2Atras, 8, 1
+    mReadLine movOfic2Diagonal, 8, 1
+    mReadLine movOfic2DiagArribaDer, 8, 1
+    mReadLine movOfic2DiagArribaIzq, 8, 1
+    mReadLine movOfic2DiagAbajoDer, 8, 1
+    mReadLine movOfic2DiagAbajoIzq, 8, 1
+
+    mReadLine cantSoldCapturados, 8, 1
+    mReadLine cantOficInvalidados, 8, 1
+
+    mReadLine casillaOfic1, 8, 1
+    mReadLine casillaOfic1+8, 8, 1
+
+    mReadLine casillaOfic2, 8, 1
+    mReadLine casillaOfic2+8, 8, 1
+
+    mReadLine cantCapturasOfic1, 8, 1
+    mReadLine cantCapturasOfic2, 8, 1
 
     ret
