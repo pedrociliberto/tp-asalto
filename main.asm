@@ -481,61 +481,71 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
     ret
 
-; --------------------------------------------------------------------------------------------
+;; --------------------------------------------------------------------------------------------
 ; VERIFICACIONES DE PIEZAS ORIGINALES A MOVER PARA SOLDADOS Y OFICIALES
 ; --------------------------------------------------------------------------------------------
 
 verificarFichaSold:
     mov al, byte[soldadoElegido] ; Numero de fila
     
+    ; Compromabos que el caracter ingresado sea un número entre 1 y 7
     cmp al, '1'
     jl errorInputSold
     cmp al, '7'
     jg errorInputSold
 
+    ; Parseamos el número de fila de string a int
     mov qword[fila], 0
     mSscanf byte[soldadoElegido], formatoAtoi, fila
-
     cmp rax, 1
     jl errorInputSold
 
+    ; Comprobamos que el caracter siguiente sea un guión para que cumpla con el formato establecido
     mov al, byte[soldadoElegido+1] ; Caracter '-'
     cmp al, '-'
     jne errorInputSold
     
+    ; Comprobamos que el número de columna sea un número entre 1 y 7
     mov al, byte[soldadoElegido+2] ; Numero de columna
     cmp al, '1'
     jl errorInputSold
     cmp al, '7'
     jg errorInputSold
 
+    ; Parseamos el número de columna de string a int
     mov qword[columna], 0
     mSscanf byte[soldadoElegido+2], formatoAtoi, columna
-
     cmp rax, 1
     jl errorInputSold
 
+    ; El ultimo caracter del string ingresado debe ser un caracter nulo
     mov al, byte[soldadoElegido+3] ; Caracter nulo
     cmp al, 0
     jne errorInputSold
 
-    ; Calculamos desplazamiento en tablero
+    ; Calculamos desplazamiento en el tablero
+    ;  mCalcDesplaz calcula el desplazamiento en el tablero en base a la fila y columna y lo almacena en desplazCasOrig usando una formula
     mCalcDesplaz [fila], [columna], qword[desplazCasOrig]
     mov rbx, qword[desplazCasOrig]
     
+    ; Limpio los registros
     mov rax,0
     mov rdx, 0
 
+    ; Cargo en dl el caracter de la casilla en el tablero y en al el simbolo de los soldados
     mov dl, byte[tableroEnJuego+rbx]
     mov al, [simboloSoldados]
 
+    ; Comparo los caracteres, deben ser iguales para que el movimiento no sea invalido
     cmp dl, al
     jne errorCasillaInvalidaSold
     
+    ; Si no hubo errores, limpio el mensaje de error y sigo con la ejecucion
     mov rax, 0
     mov [msgErrorEspecificoSold], rax
     jmp casillaAMoverseSold
 
+    ; Errores
     errorInputSold:
         mov rax, [msgErrorInputSold]
         mMov msgErrorEspecificoSold, msgErrorInputSold, 62
@@ -554,54 +564,64 @@ verificarFichaSold:
 verificarFichaOfic:
     mov cl, byte[oficialElegido] ; Numero de fila
     
+    ; Compromabos que el caracter ingresado para la fila sea un número entre 1 y 7
     cmp cl, '1'
     jl errorInputOfic
     cmp cl, '7'
     jg errorInputOfic
     
+    ; Parseamos el número de fila de string a int
     mov qword[fila], 0
     mSscanf byte[oficialElegido], formatoAtoi, fila
-
     cmp rax, 1
     jl errorInputOfic
 
+    ; Comprobamos que el caracter siguiente sea un guión para que cumpla con el formato establecido
     mov cl, byte[oficialElegido+1] ; Caracter '-'
     cmp cl, '-'
     jne errorInputOfic
     
+    ; Comprobamos que el número de columna sea un número entre 1 y 7
     mov cl, byte[oficialElegido+2] ; Numero de columna
     cmp cl, '1'
     jl errorInputOfic
     cmp cl, '7'
     jg errorInputOfic
 
+    ; Parseamos el número de columna de string a int
     mov qword[columna], 0
     mSscanf byte[oficialElegido+2], formatoAtoi, columna
-
     cmp rax, 1
     jl errorInputOfic
 
+    ; El ultimo caracter del string ingresado debe ser un caracter nulo
     mov cl, byte[oficialElegido+3] ; Caracter nulo
     cmp cl, 0
     jne errorInputOfic
 
     ; Calculamos desplazamiento en tablero
+    ; mCalcDesplaz calcula el desplazamiento en el tablero en base a la fila y columna y lo almacena en desplazCasOrig usando una formula
     mCalcDesplaz [fila], [columna], qword[desplazCasOrig]
     mov rbx, qword[desplazCasOrig]
     
+    ; Limpio los registros
     mov rax, 0
     mov rdx, 0
 
+    ; Cargo en dl el caracter de la casilla en el tablero y en cl el simbolo de los oficiales
     mov dl, byte[tableroEnJuego+rbx]
     mov cl, [simboloOficiales]
 
+    ; Comparo los caracteres, deben ser iguales para que el movimiento no sea invalido
     cmp dl, cl
     jne errorCasillaInvalidaOfic
-    
+
+    ; Si no hubo errores, limpio el mensaje de error y sigo con la ejecucion
     mov rax, 0
     mov [msgErrorEspecificoOfic], rax
     jmp casillaAMoverseOfic
 
+    ; Errores
     errorInputOfic:
         mov rax, [msgErrorInputOfic]
         mMov msgErrorEspecificoOfic, msgErrorInputOfic, 62
@@ -623,33 +643,37 @@ verificarFichaOfic:
 verificarMovimientoSold:
     mov al, byte[casillaMovSold] ; Numero de fila
     
+    ; Compromabos que el caracter ingresado sea un número entre 1 y 7
     cmp al, '1'
     jl errorInputSoldMov
     cmp al, '7'
     jg errorInputSoldMov
 
+    ; Parseamos el número de fila de string a int
     mov qword[filaAMover], 0
     mSscanf byte[casillaMovSold], formatoAtoi, filaAMover
-
     cmp rax, 1
     jl errorInputSoldMov
 
+    ; Comprobamos que el caracter siguiente sea un guión para que cumpla con el formato establecido
     mov al, byte[casillaMovSold+1] ; Caracter '-'
     cmp al, '-'
     jne errorInputSoldMov
     
+    ; Comprobamos que el número de columna sea un número entre 1 y 7
     mov al, byte[casillaMovSold+2] ; Numero de columna
     cmp al, '1'
     jl errorInputSoldMov
     cmp al, '7'
     jg errorInputSoldMov
-
+    
+    ; Parseamos el número de columna de string a int
     mov qword[columnaAMover], 0
     mSscanf byte[casillaMovSold+2], formatoAtoi, columnaAMover
-
     cmp rax, 1
     jl errorInputSoldMov
 
+    ; El ultimo caracter del string ingresado debe ser un caracter nulo
     mov al, byte[casillaMovSold+3] ; Caracter nulo
     cmp al, 0
     jne errorInputSoldMov
@@ -670,7 +694,7 @@ verificarMovimientoSold:
         jmp moverSoldado
 
     lugaresComunesSold:
-        ; Comparamos la fila a mover con la fila actual
+        ; Comparamos la fila a mover con la fila actual, la fila a mover debe ser igual a la fila actual + 1
         mMov filaAux, fila, 1
         inc qword[filaAux]
         mCmp [filaAux], [filaAMover], 1
@@ -701,7 +725,7 @@ verificarMovimientoSold:
         
         jmp moverSoldado 
 
-
+    ; Errores
     errorInputSoldMov:
         mov rax, [msgErrorInputSold]
         mMov msgErrorEspecificoSold, msgErrorInputSold, 62
@@ -716,14 +740,15 @@ verificarMovimientoSold:
         mPuts msgErrorEspecificoSold
         jmp turnoSoldados
 
+    ; Si la casilla original es una casilla especial, solo podemos movernos a la derecha o a la izquierda
     soloDerechaSold:
         mov r8, 1 ; Suponemos que el movimiento es inválido
 
-        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
-        mEstaVacia qword[desplazCasAMover]
-        cmp rax, 1 
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover] ; Calculamos el desplazamiento de la casilla a mover
+        mEstaVacia qword[desplazCasAMover] ; Verificamos si la casilla a mover está vacía
+        cmp rax, 1 ; Si recibimos 1, la casilla a mover está ocupada (o está fuera del tablero)
         je casillaEspecialAMover
-
+        
         mCmp [fila], [filaAMover], 1 ; Las filas deben ser iguales (el movimiento especial es para el costado)
         jne casillaEspecialAMover
 
