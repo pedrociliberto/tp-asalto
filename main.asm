@@ -168,44 +168,9 @@ section .data
                         db "7"," "," ","|","O"," "," ","|"," "," ",10 
                         db " "," "," ","-","-","-","-","-"," "," ",10,0
 
-    tableroInv          db " "," ","1","2","3","4","5","6","7"," ",10
-                        db " "," "," "," ","_","_","_"," "," "," ",10 
-                        db "1"," "," ","|","O"," "," ","|"," "," ",10
-                        db "2"," ","_","|"," "," ","O","|","_"," ",10
-                        db "3","|","X","X"," "," "," ","X","X","|",10 
-                        db "4","|","X","X","X","X","X","X","X","|",10 
-                        db "5","|","X","X","X","X","X","X","X","|",10 
-                        db "6"," ","-","|","X","X","X","|","-"," ",10 
-                        db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","-","-","-"," "," "," ",10,0
-
-    tableroDer          db " "," ","1","2","3","4","5","6","7"," ",10
-                        db " "," "," "," ","_","_","_"," "," "," ",10 
-                        db "1"," "," ","|","X","X","X","|"," "," ",10
-                        db "2"," ","_","|","X","X","X","|","_"," ",10
-                        db "3","|","X","X","X","X"," "," ","O","|",10 
-                        db "4","|","X","X","X","X"," "," "," ","|",10 
-                        db "5","|","X","X","X","X"," ","O"," ","|",10 
-                        db "6"," ","-","|","X","X","X","|","-"," ",10 
-                        db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","-","-","-"," "," "," ",10,0
-
-    tableroIzq          db " "," ","1","2","3","4","5","6","7"," ",10
-                        db " "," "," "," ","_","_","_"," "," "," ",10 
-                        db "1"," "," ","|","X","X","X","|"," "," ",10
-                        db "2"," ","_","|","X","X","X","|","_"," ",10
-                        db "3","|","O"," "," ","X","X","X","X","|",10 
-                        db "4","|"," "," "," ","X","X","X","X","|",10 
-                        db "5","|"," ","O"," ","X","X","X","X","|",10 
-                        db "6"," ","-","|","X","X","X","|","-"," ",10 
-                        db "7"," "," ","|","X","X","X","|"," "," ",10 
-                        db " "," "," "," ","-","-","-"," "," "," ",10,0
-
     ; Mensajes
 
     msgBienvenida           db "¡Bienvenido al juego El Asalto! ('#' para salir)", 0
-
-    msgPersonalizarTablero  db "¿Desea personalizar el tablero? (s/n): ", 0 
 
     msgOpcionInvalida       db "Opción inválida. Intente de nuevo.", 0
     
@@ -216,16 +181,6 @@ section .data
     msgCasillaInvalidaOfic  db "Casilla inválida: no hay un oficial en esa casilla. Intente de nuevo.", 0
     msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
     msgCasillaInvMovOfic    db "No se puede mover el oficial a esa casilla. Intente de nuevo.", 0
-
-    msgPregRotacion         db "¡Se puede rotar el tablero! Elija una de las opciones (1-4):", 0
-    msgRotacionesPosibles   db "1. Rotar a la izquierda", 10
-                            db "2. Rotar a la derecha", 10
-                            db "3. Invertir el tablero", 10
-                            db "4. No rotar", 0
-    
-    msgPersonalizarSimb     db "¡Elijamos los símbolos para cada personaje! Escriba UN (1) solo caracter para cada uno.", 0
-    msgSimboloOficiales     db "Símbolo para los oficiales:", 0
-    msgSimboloSoldados      db "Símbolo para los soldados:", 0
 
     msgQuienInicia          db "¿Quién inicia el juego: oficiales o soldados? (o/s): ", 0
 
@@ -347,38 +302,7 @@ section .data
 
     nombreArchivo           db "partidaGuardada.dat", 0
 
-    ; CONTADORES EN FORMATO DE CADENA
-
-    movimientosOfic1Str        db ' ', 0
-    movimientosOfic2Str        db ' ', 0
-    movOfic1AdelanteStr        db ' ', 0
-    movOfic1DerechaStr         db ' ', 0
-    movOfic1IzquierdaStr       db ' ', 0
-    movOfic1AtrasStr           db ' ', 0
-    movOfic1DiagonalStr        db ' ', 0
-    movOfic1DiagArribaDerStr   db ' ', 0
-    movOfic1DiagArribaIzqStr   db ' ', 0
-    movOfic1DiagAbajoDerStr    db ' ', 0
-    movOfic1DiagAbajoIzqStr    db ' ', 0
-    movOfic2AdelanteStr        db ' ', 0
-    movOfic2DerechaStr         db ' ', 0
-    movOfic2IzquierdaStr       db ' ', 0
-    movOfic2AtrasStr           db ' ', 0
-    movOfic2DiagonalStr        db ' ', 0
-    movOfic2DiagArribaDerStr   db ' ', 0
-    movOfic2DiagArribaIzqStr   db ' ', 0
-    movOfic2DiagAbajoDerStr    db ' ', 0
-    movOfic2DiagAbajoIzqStr    db ' ', 0
-    cantSoldCapturadosStr      db ' ', 0 
-    cantOficInvalidadosStr     db ' ', 0 
-
 section .bss
-
-    eleccionRotar       resd 1  ; Variable pivote para la elección de rotar el tablero
-    rotacionElegida     resd 1  ; Variable pivote para la rotación del tablero
-
-    simbOficElegido     resb 2  ; Variable pivote para el símbolo de los oficiales
-    simbSoldElegido     resb 2  ; Variable pivote para el símbolo de los soldados
 
     piezaIniElegida     resd 1  ; Variable pivote para la pieza que inicia
 
@@ -429,59 +353,8 @@ main:
 
     bienvenida:
         mPuts msgBienvenida
-
-    ; Espacio de personalización del tablero
-    personalizar:
-        mov dword[eleccionRotar], ''    ; vaciar variable
-        mPuts msgPersonalizarTablero
-        mGets eleccionRotar
-
-        cmp dword[eleccionRotar], 'n' 
-        je dejarTableroOrig
-        cmp dword[eleccionRotar], 's'
-        je personalizarRotacion
-
-        cmp dword[eleccionRotar], '#'
-        je salirSinGuardar
-
-        mErrorJump msgOpcionInvalida, personalizar
-
-    ; En caso de querer personalizar, se debe elegir la rotación
-    personalizarRotacion:
-        mPuts msgPregRotacion
-        mPuts msgRotacionesPosibles
-
-        mov dword[rotacionElegida], '' ; limpiar variable
-        mGets rotacionElegida
-
-        cmp dword[rotacionElegida], '#'
-        je salirSinGuardar
-
-        mMov orientacionTablero, rotacionElegida, 1
         
-        cmp dword[rotacionElegida], '1'
-        jl invalidaRotacion
-        cmp dword[rotacionElegida], '4'
-        jg invalidaRotacion
-
-        jmp rotarTablero
-
-    invalidaRotacion:
-        mErrorJump msgOpcionInvalida, personalizarRotacion
-
-    ; Luego de elegir la rotación, se debe personalizar los símbolos
-    personalizarSimbolos:
-        mPuts msgPersonalizarSimb
-
-        call setearSimbSoldados
-        cmp rax, 0
-        je salirSinGuardar
-        
-        call setearSimbOficiales
-        cmp rax, 0
-        je salirSinGuardar
-        
-    ; Luego de personalizar los símbolos, se debe elegir quién inicia la partida
+    ; Se debe elegir quién inicia la partida
     personalizarQuienInicia:
         mov dword[piezaIniElegida], ''    ; vaciar variable
         mPuts msgQuienInicia
@@ -502,48 +375,17 @@ main:
             jmp comenzarPorInicio
 
 ; --------------------------------------------------------------------------------------------
-; RUTINA PARA ROTAR EL TABLERO EN BASE A LA ELECCIÓN DEL USUARIO
-; --------------------------------------------------------------------------------------------
-
-rotarTablero:
-    ; Se debe mostrar el tablero (en la orientacion indicada y con los simbolos indicados), 
-    ; y se debe mostrar el mensaje de turno en base a lo que haya personalizado el usuario.
-        cmp byte[orientacionTablero], '1'
-        je rotarIzquierda
-        cmp byte[orientacionTablero], '2'
-        je rotarDerecha
-        cmp byte[orientacionTablero], '3'
-        je rotarInvertir
-
-        mMov tableroEnJuego, tableroOrig, 116
-        jmp personalizarSimbolos
-
-    rotarIzquierda:
-        mMov tableroEnJuego, tableroIzq, 116
-        jmp personalizarSimbolos
-    
-    rotarDerecha:
-        mMov tableroEnJuego, tableroDer, 116
-        jmp personalizarSimbolos
-
-    rotarInvertir:
-        mMov tableroEnJuego, tableroInv, 116
-        jmp personalizarSimbolos
-
-; --------------------------------------------------------------------------------------------
 ; RUTINA PARA COMENZAR EL JUEGO -> Se comienza desde el jugador elegido (o el default)
 ; --------------------------------------------------------------------------------------------
 
 comenzarPorInicio:
+    mMov tableroEnJuego, tableroOrig, 116
+
     cmp byte[piezaDeInicio], 's'
     je loopMovimientos
     cmp byte[piezaDeInicio], 'o'
     je turnoOficiales
 
-
-; En caso de no haber personalizado el tablero, se debe dejar el tablero original
-dejarTableroOrig:
-    mMov tableroEnJuego, tableroOrig, 116
 
 ; COMIENZA EL JUEGO
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
@@ -638,63 +480,6 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
                 jmp loopMovimientos
 
     ret
-    ; Aquí termina el main !!!
-
-
-; --------------------------------------------------------------------------------------------
-; RUTINAS PARA SETEAR LOS SÍMBOLOS PERSONALIZADOS DE SOLDADOS Y OFICIALES
-; --------------------------------------------------------------------------------------------
-
-setearSimbSoldados:
-    mPuts msgSimboloSoldados
-    mGets simbSoldElegido
-
-    cmp byte[simbSoldElegido], ' '
-    je errSeteoSoldado
-    cmp byte[simbSoldElegido], ''
-    je errSeteoSoldado
-
-    mov al, byte[simbSoldElegido+1]
-    cmp al, 0
-    jne errSeteoSoldado
-
-    cmp byte[simbSoldElegido], '#'
-    je salirSinGuardar
-
-    mMov simboloSoldados, simbSoldElegido, 1
-
-    call cambiarTableroSoldNuevo
-
-    ret
-
-    errSeteoSoldado:
-        mErrorJump msgOpcionInvalida, setearSimbSoldados
-
-setearSimbOficiales:
-    mPuts msgSimboloOficiales
-    mGets simbOficElegido
-
-    cmp byte[simbOficElegido], ' '
-    je errSeteoOficial
-    cmp byte[simbOficElegido], ''
-    je errSeteoOficial
-
-    mov al, byte[simbOficElegido+1]
-    cmp al, 0
-    jne errSeteoOficial
-
-    cmp byte[simbOficElegido], '#'
-    je salirSinGuardar
-
-    mMov simboloOficiales, simbOficElegido, 1
-
-    call cambiarTableroOficNuevo
-
-    ret
-
-    errSeteoOficial:
-        mPuts msgOpcionInvalida
-        jmp setearSimbOficiales
 
 ; --------------------------------------------------------------------------------------------
 ; VERIFICACIONES DE PIEZAS ORIGINALES A MOVER PARA SOLDADOS Y OFICIALES
@@ -753,7 +538,7 @@ verificarFichaSold:
 
     errorInputSold:
         mov rax, [msgErrorInputSold]
-        mMov msgErrorEspecificoSold, msgErrorInputSold, 61
+        mMov msgErrorEspecificoSold, msgErrorInputSold, 62
         jmp turnoSoldados
 
     errorCasillaInvalidaSold:
@@ -819,11 +604,11 @@ verificarFichaOfic:
 
     errorInputOfic:
         mov rax, [msgErrorInputOfic]
-        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 61
+        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 62
         jmp turnoOficiales
 
     errorCasillaInvalidaOfic:
-        mov rax, [msgErrorInputOfic]
+        mov rax, [msgCasillaInvalidaOfic]
         mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 71
         jmp turnoOficiales
 
@@ -919,12 +704,12 @@ verificarMovimientoSold:
 
     errorInputSoldMov:
         mov rax, [msgErrorInputSold]
-        mMov msgErrorEspecificoSold, msgErrorInputSold, 61
+        mMov msgErrorEspecificoSold, msgErrorInputSold, 62
         jmp turnoSoldados
 
     errorCasillaInvalidaSoldMov:
         mov rax, [msgCasillaInvMovSold]
-        mMov msgErrorEspecificoSold, msgCasillaInvMovSold, 61
+        mMov msgErrorEspecificoSold, msgCasillaInvMovSold, 62
         jmp turnoSoldados
 
     imprimirErrorSoldMov:
@@ -1058,12 +843,12 @@ verificarMovimientoOfic:
 
     errorInputOficMov:
         mov rax, [msgErrorInputOfic]
-        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 61
+        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 62
         jmp turnoOficiales
 
     errorCasillaInvalidaOficMov:
         mov rax, [msgCasillaInvMovOfic]
-        mMov msgErrorEspecificoOfic, msgCasillaInvMovOfic, 61
+        mMov msgErrorEspecificoOfic, msgCasillaInvMovOfic, 62
         jmp turnoOficiales
 
     imprimirErrorOficMov:
