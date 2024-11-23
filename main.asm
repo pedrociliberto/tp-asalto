@@ -940,7 +940,7 @@ verificarMovimientoSold:
         
         jmp moverSoldado 
 
-
+    ; Errores
     errorInputSoldMov:
         mov rax, [msgErrorInputSold]
         mMov msgErrorEspecificoSold, msgErrorInputSold, 61
@@ -955,14 +955,15 @@ verificarMovimientoSold:
         mPuts msgErrorEspecificoSold
         jmp turnoSoldados
 
+    ; Si la casilla original es una casilla especial, solo podemos movernos a la derecha o a la izquierda
     soloDerechaSold:
         mov r8, 1 ; Suponemos que el movimiento es inválido
 
-        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover]
-        mEstaVacia qword[desplazCasAMover]
-        cmp rax, 1 
+        mCalcDesplaz [filaAMover], [columnaAMover], qword[desplazCasAMover] ; Calculamos el desplazamiento de la casilla a mover
+        mEstaVacia qword[desplazCasAMover] ; Verificamos si la casilla a mover está vacía
+        cmp rax, 1 ; Si recibimos 1, la casilla a mover está ocupada (o está fuera del tablero)
         je casillaEspecialAMover
-
+        
         mCmp [fila], [filaAMover], 1 ; Las filas deben ser iguales (el movimiento especial es para el costado)
         jne casillaEspecialAMover
 
