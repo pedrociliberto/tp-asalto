@@ -182,9 +182,10 @@ section .data
     msgErrorInputOfic       db "Error en el formato de entrada del oficial. Intente de nuevo.", 0
     msgCasillaInvMovOfic    db "No se puede mover el oficial a esa casilla. Intente de nuevo.", 0
 
+    msgCapturaSold          db "Un oficial ha capturado a un soldado.", 0
+    msgOficialRetirado      db "Se ha retirado a un oficial! No ha capturado a un soldado.", 0
+    
     msgQuienInicia          db "¿Quién inicia el juego: oficiales o soldados? (o/s): ", 0
-
-    msgOficialRetirado      db "¡Un oficial ha sido retirado del juego! Se ha olvidado de atrapar a un soldado.", 0
 
     msgEstadisticas         db "Estadísticas de los oficiales:", 10, 0
 
@@ -241,9 +242,6 @@ section .data
     msgTurnoOficiales       db "Es turno de los oficiales. Decida a qué oficial desea mover: (<numFila>-<numColumna>)", 0
     msgTurnoMovSold         db "¿A qué casilla desea mover el soldado? (<numFila>-<numColumna>)", 0
     msgTurnoMovOfic         db "¿A qué casilla desea mover el oficial? (<numFila>-<numColumna>)", 0
-
-    msgCapturaSold          db "Un oficial ha capturado a un soldado.", 0
-    msgInvalidOfic          db "¡Un oficial ha sido invalidado! No ha capturado a un soldado regalado.", 0
     
     ; Contadores
 
@@ -390,6 +388,7 @@ comenzarPorInicio:
 ; COMIENZA EL JUEGO
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
     mov byte[msgErrorEspecificoSold], 0
+    mov byte[msgErrorEspecificoOficMov], 0
     turnoSoldados:
         mov byte[turnoDe], 's'
         mov byte [soldadoElegido], '0'
@@ -401,7 +400,11 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         cmp byte[msgErrorEspecificoSold], 0
         jne imprimirErrorSold
 
+        cmp byte[msgErrorEspecificoOficMov+1], 0
+        jne imprimirOficInvalidado
+
         todoOkSold:
+            mov byte[msgErrorEspecificoOficMov], 0
 
             mPuts msgTurnoSoldados      ; Muestra el mensaje de seleccionar ficha a mover
             mGets soldadoElegido        ; Obtiene la ficha a mover
@@ -441,6 +444,7 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         jne imprimirErrorOfic
 
         todoOkOfic:
+            mov byte[msgErrorEspecificoOfic], 0
 
             mPuts msgTurnoOficiales ; Muestra el mensaje de seleccionar ficha a mover
             mGets oficialElegido    ; Obtiene la ficha a mover
@@ -467,7 +471,7 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
                     cmp rax, 0
                     je finDeJuego
                     
-                    jmp loopMovimientos
+                    jmp turnoSoldados
                 
                 capturar:
                     call capturarSoldado ; Captura soldado
@@ -477,7 +481,7 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
                     je finDeJuego
                     
                 ; Repetir en loop
-                jmp loopMovimientos
+                jmp turnoSoldados
 
     ret
 
@@ -553,7 +557,7 @@ verificarFichaSold:
 
     errorCasillaInvalidaSold:
         mov rax, [msgCasillaInvalidaSold]
-        mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 71
+        mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 70
         jmp turnoSoldados
 
     imprimirErrorSold:
@@ -629,7 +633,7 @@ verificarFichaOfic:
 
     errorCasillaInvalidaOfic:
         mov rax, [msgCasillaInvalidaOfic]
-        mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 71
+        mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 70
         jmp turnoOficiales
 
     imprimirErrorOfic:
@@ -728,16 +732,16 @@ verificarMovimientoSold:
     ; Errores
     errorInputSoldMov:
         mov rax, [msgErrorInputSold]
-        mMov msgErrorEspecificoSold, msgErrorInputSold, 62
+        mMov msgErrorEspecificoSoldMov, msgErrorInputSold, 62
         jmp turnoSoldados
 
     errorCasillaInvalidaSoldMov:
         mov rax, [msgCasillaInvMovSold]
-        mMov msgErrorEspecificoSold, msgCasillaInvMovSold, 62
+        mMov msgErrorEspecificoSoldMov, msgCasillaInvMovSold, 62
         jmp turnoSoldados
 
     imprimirErrorSoldMov:
-        mPuts msgErrorEspecificoSold
+        mPuts msgErrorEspecificoSoldMov
         jmp turnoSoldados
 
     ; Si la casilla original es una casilla especial, solo podemos movernos a la derecha o a la izquierda
@@ -868,16 +872,16 @@ verificarMovimientoOfic:
 
     errorInputOficMov:
         mov rax, [msgErrorInputOfic]
-        mMov msgErrorEspecificoOfic, msgErrorInputOfic, 62
+        mMov msgErrorEspecificoOficMov, msgErrorInputOfic, 62
         jmp turnoOficiales
 
     errorCasillaInvalidaOficMov:
         mov rax, [msgCasillaInvMovOfic]
-        mMov msgErrorEspecificoOfic, msgCasillaInvMovOfic, 62
+        mMov msgErrorEspecificoOficMov, msgCasillaInvMovOfic, 62
         jmp turnoOficiales
 
     imprimirErrorOficMov:
-        mPuts msgErrorEspecificoOfic
+        mPuts msgErrorEspecificoOficMov
         jmp turnoOficiales
 
 ; --------------------------------------------------------------------------------------------
@@ -936,6 +940,10 @@ realizarMovimientoOfic:
 
     jmp noPodianCapturar
 
+    imprimirOficInvalidado:
+        mPuts msgErrorEspecificoOficMov
+        jmp todoOkSold
+
     quitarOficial:
         call verQueOficialEs
         cmp rax, 1 ; Si recibimos 1, el oficial 1 es el que se mueve
@@ -943,15 +951,18 @@ realizarMovimientoOfic:
 
         mCalcDesplaz [casillaOfic2], [casillaOfic2+8], qword[desplazAux]
         call desentenderOficial
+        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
         ret
 
     quitarOfic1:
         mCalcDesplaz [casillaOfic1], [casillaOfic1+8], qword[desplazAux]
         call desentenderOficial
+        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
         ret
     
     quitarOtroOficial:
         call desentenderOtroOficial
+        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
         ret
 
     ; Si llegamos acá, el oficial no podía capturar un soldado -> OK!
@@ -1176,12 +1187,18 @@ capturarSoldado:
     inc qword[cantCapturasOfic2]
     call actualizarContadoresOfic2
     call refrescarCasActOficLuegoCaptura
+    mMov msgErrorEspecificoOficMov, msgCapturaSold, 38
     ret
+
+    imprimirCapturaSoldado:
+        mPuts msgErrorEspecificoOficMov
+        jmp todoOkSold
 
     movOfic1Captura:
         inc qword[cantCapturasOfic1]
         call actualizarContadoresOfic1
         call refrescarCasActOficLuegoCaptura
+        mMov msgErrorEspecificoOficMov, msgCapturaSold, 38
 
     ret
 
