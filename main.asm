@@ -114,8 +114,6 @@
     sub rsp, 8
     call fopen
     add rsp, 8
-
-    cmp rax, 0
     mov qword[idArchGuardado], rax ; Guardamos el ID del archivo
 %endmacro
 
@@ -333,6 +331,9 @@ section .bss
     msgErrorEspecificoSoldMov   resb 71 ; Máximo largo de mensaje de error para movimientos de soldados
     msgErrorEspecificoOficMov   resb 71 ; Máximo largo de mensaje de error para movimientos de oficiales
 
+    msgCapturaSoldado       resb 38 ; Si se capturó un soldado
+    msgOficialRet           resb 59 ; Si se retiró un oficial
+
 section .text
     global main
 
@@ -387,8 +388,14 @@ comenzarPorInicio:
 
 ; COMIENZA EL JUEGO
 loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFinJuego
+    ; Limpiamos los mensajes de error
     mov byte[msgErrorEspecificoSold], 0
+    mov byte[msgErrorEspecificoSoldMov], 0
+    mov byte[msgErrorEspecificoOfic], 0
     mov byte[msgErrorEspecificoOficMov], 0
+    mov byte[msgCapturaSoldado], 0
+    mov byte[msgOficialRet], 0
+
     turnoSoldados:
         mov byte[turnoDe], 's'
         mov byte [soldadoElegido], '0'
@@ -400,11 +407,25 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         cmp byte[msgErrorEspecificoSold], 0
         jne imprimirErrorSold
 
-        cmp byte[msgErrorEspecificoOficMov+1], 0
+        cmp byte[msgErrorEspecificoSoldMov], 0
+        jne imprimirErrorSoldMov
+
+        cmp byte[msgErrorEspecificoOficMov], 0
         jne imprimirOficInvalidado
 
+        cmp byte[msgOficialRet], 0
+        jne imprimirOficRetirado
+
+        cmp byte[msgCapturaSoldado], 0
+        jne imprimirCapturaSoldado
+
         todoOkSold:
+            ; Limpiamos los mensajes de error
+            mov byte[msgErrorEspecificoSold], 0
+            mov byte[msgErrorEspecificoSoldMov], 0
             mov byte[msgErrorEspecificoOficMov], 0
+            mov byte[msgCapturaSoldado], 0
+            mov byte[msgOficialRet], 0
 
             mPuts msgTurnoSoldados      ; Muestra el mensaje de seleccionar ficha a mover
             mGets soldadoElegido        ; Obtiene la ficha a mover
@@ -443,8 +464,13 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
         cmp byte[msgErrorEspecificoOfic], 0
         jne imprimirErrorOfic
 
+        cmp byte[msgErrorEspecificoOficMov], 0
+        jne imprimirOficInvalidado
+
         todoOkOfic:
+            ; Limpiamos los mensajes de error
             mov byte[msgErrorEspecificoOfic], 0
+            mov byte[msgErrorEspecificoOficMov], 0
 
             mPuts msgTurnoOficiales ; Muestra el mensaje de seleccionar ficha a mover
             mGets oficialElegido    ; Obtiene la ficha a mover
@@ -557,7 +583,7 @@ verificarFichaSold:
 
     errorCasillaInvalidaSold:
         mov rax, [msgCasillaInvalidaSold]
-        mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 70
+        mMov msgErrorEspecificoSold, msgCasillaInvalidaSold, 71
         jmp turnoSoldados
 
     imprimirErrorSold:
@@ -633,7 +659,7 @@ verificarFichaOfic:
 
     errorCasillaInvalidaOfic:
         mov rax, [msgCasillaInvalidaOfic]
-        mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 70
+        mMov msgErrorEspecificoOfic, msgCasillaInvalidaOfic, 71
         jmp turnoOficiales
 
     imprimirErrorOfic:
@@ -742,7 +768,7 @@ verificarMovimientoSold:
 
     imprimirErrorSoldMov:
         mPuts msgErrorEspecificoSoldMov
-        jmp turnoSoldados
+        jmp todoOkSold
 
     ; Si la casilla original es una casilla especial, solo podemos movernos a la derecha o a la izquierda
     soloDerechaSold:
@@ -867,8 +893,8 @@ verificarMovimientoOfic:
         cmp rax, 1
         je errorCasillaInvalidaOficMov ; Si recibimos 1, el oficial no puede saltar sobre el soldado -> movimiento inválido
 
+        mMov msgCapturaSoldado, msgCapturaSold, 38
         jmp capturar
-
 
     errorInputOficMov:
         mov rax, [msgErrorInputOfic]
@@ -882,7 +908,7 @@ verificarMovimientoOfic:
 
     imprimirErrorOficMov:
         mPuts msgErrorEspecificoOficMov
-        jmp turnoOficiales
+        jmp todoOkOfic
 
 ; --------------------------------------------------------------------------------------------
 ; RUTINA PARA VERIFICAR SI UNA CASILLA ESTÁ VACÍA
@@ -942,6 +968,10 @@ realizarMovimientoOfic:
 
     imprimirOficInvalidado:
         mPuts msgErrorEspecificoOficMov
+        jmp todoOkOfic
+
+    imprimirOficRetirado:
+        mPuts msgOficialRet
         jmp todoOkSold
 
     quitarOficial:
@@ -951,18 +981,18 @@ realizarMovimientoOfic:
 
         mCalcDesplaz [casillaOfic2], [casillaOfic2+8], qword[desplazAux]
         call desentenderOficial
-        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
+        mMov msgOficialRet, msgOficialRetirado, 59
         ret
 
     quitarOfic1:
         mCalcDesplaz [casillaOfic1], [casillaOfic1+8], qword[desplazAux]
         call desentenderOficial
-        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
+        mMov msgOficialRet, msgOficialRetirado, 59
         ret
     
     quitarOtroOficial:
         call desentenderOtroOficial
-        mMov msgErrorEspecificoOficMov, msgOficialRetirado, 59
+        mMov msgOficialRet, msgOficialRetirado, 59
         ret
 
     ; Si llegamos acá, el oficial no podía capturar un soldado -> OK!
@@ -1117,11 +1147,13 @@ sePuedeSaltarSoldado:
         je seguirSaltoArriba ; Si las columnas son iguales, el salto es hacia arriba y en línea recta
         jg haciaArribaIzq ; Si la columna original es mayor que la columna destino, el salto es hacia la izquierda
 
-        inc qword[columnaAux] ; Salto hacia arriba y a la derecha
+        ; Salto hacia arriba y a la derecha
+        inc qword[columnaAux] 
         jmp seguirSaltoArriba
 
+        ; Salto hacia arriba y a la izquierda
         haciaArribaIzq:
-            dec qword[columnaAux] ; Salto hacia arriba y a la izquierda
+            dec qword[columnaAux] 
 
         seguirSaltoArriba:
             mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
@@ -1141,11 +1173,13 @@ sePuedeSaltarSoldado:
         je seguirSaltoAbajo ; Si las columnas son iguales, el salto es hacia abajo y en línea recta
         jg haciaAbajoIzq ; Si la columna original es mayor que la columna destino, el salto es hacia la izquierda
 
-        inc qword[columnaAux] ; Salto hacia abajo y a la derecha
+        ; Salto hacia abajo y a la derecha
+        inc qword[columnaAux] 
         jmp seguirSaltoAbajo
 
+        ; Salto hacia abajo y a la izquierda
         haciaAbajoIzq:
-            dec qword[columnaAux] ; Salto hacia abajo y a la izquierda
+            dec qword[columnaAux] 
 
         seguirSaltoAbajo:
             mCalcDesplaz [filaAux], [columnaAux], qword[desplazAux]
@@ -1187,18 +1221,18 @@ capturarSoldado:
     inc qword[cantCapturasOfic2]
     call actualizarContadoresOfic2
     call refrescarCasActOficLuegoCaptura
-    mMov msgErrorEspecificoOficMov, msgCapturaSold, 38
+    mMov msgCapturaSoldado, msgCapturaSold, 38
     ret
 
     imprimirCapturaSoldado:
-        mPuts msgErrorEspecificoOficMov
+        mPuts msgCapturaSoldado 
         jmp todoOkSold
 
     movOfic1Captura:
         inc qword[cantCapturasOfic1]
         call actualizarContadoresOfic1
         call refrescarCasActOficLuegoCaptura
-        mMov msgErrorEspecificoOficMov, msgCapturaSold, 38
+        mMov msgCapturaSoldado, msgCapturaSold, 38
 
     ret
 
@@ -1521,8 +1555,10 @@ podiaCapturarSoldado:
     ret
 
 podiaComerPieza:
-    cmp rsi, 0
+    cmp rsi, 0 ; 0 para sumar, 1 para restar
     je sumarDesplaz 
+
+    ; Si llegamos acá, debemos restar
     sub qword[desplazAux], rdi
     jmp verSiEspacioEstaLibre
 
@@ -1763,7 +1799,7 @@ verSiOficialRodeado:
     je okPuedeMoverse
 
     ; Casilla arriba
-    verEspacioArr:
+    verEspacioArr: 
         mMov desplazAux, desplazAux2, 1
         sub qword[desplazAux], 11
         mEstaVacia qword[desplazAux]
@@ -1937,6 +1973,7 @@ finDeJuego:
 
 
 mostrarEstadisticas:
+    mCommand cmdLimpiarPantalla
     mPuts msgEstadisticas
 
     mPrint msgCantTotalCapturas, qword[cantSoldCapturados]
@@ -2003,11 +2040,11 @@ salirDelJuego:
 
     removerArchivo:
         cmp byte[yaHabiaGuardado], 's' ; Si ya había guardado la partida, la borramos
-        jne salirSinGuardar
+        jne mostrarEstadisticas
         
         mCommand cmdBorrarArchivoPartida
         mov byte[yaHabiaGuardado], 'n' ; Para la próxima vez que se quiera salir, no se borra nada
-        jmp salirSinGuardar
+        jmp mostrarEstadisticas
 
 
 guardarPartida:
