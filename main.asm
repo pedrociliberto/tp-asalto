@@ -1973,7 +1973,6 @@ finDeJuego:
 
 
 mostrarEstadisticas:
-    mCommand cmdLimpiarPantalla
     mPuts msgEstadisticas
 
     mPrint msgCantTotalCapturas, qword[cantSoldCapturados]
@@ -2039,6 +2038,8 @@ salirDelJuego:
         jmp recibirOpcionGuardado
 
     removerArchivo:
+        mCommand cmdLimpiarPantalla
+
         cmp byte[yaHabiaGuardado], 's' ; Si ya había guardado la partida, la borramos
         jne mostrarEstadisticas
         

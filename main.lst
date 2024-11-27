@@ -588,7 +588,7 @@
     20 00000095 4883C408            <1>  add rsp, 8
    361                                  
    362 00000099 833C25[00000000]23              cmp dword[piezaIniElegida], '#'
-   363 000000A1 0F84D6220000                    je salirSinGuardar
+   363 000000A1 0F84BF220000                    je salirSinGuardar
    364                                  
    365 000000A7 833C25[00000000]6F              cmp dword[piezaIniElegida], 'o' 
    366 000000AF 7423                            je setearPiezaInicio
@@ -694,7 +694,7 @@
     20 00000222 4883C408            <1>  add rsp, 8
    432                                  
    433 00000226 803C25[78000000]23                  cmp byte[soldadoElegido], '#'
-   434 0000022E 0F844F210000                        je salirDelJuego
+   434 0000022E 0F8438210000                        je salirDelJuego
    435                                              
    436 00000234 E97C010000                          jmp verificarFichaSold ; Verifica si la ficha elegida es valida
    437                                  
@@ -714,7 +714,7 @@
     20 00000263 4883C408            <1>  add rsp, 8
    442                                  
    443 00000267 803C25[7C000000]23                      cmp byte[casillaMovSold], '#'
-   444 0000026F 0F840E210000                            je salirDelJuego
+   444 0000026F 0F84F7200000                            je salirDelJuego
    445                                  
    446 00000275 E931040000                              jmp verificarMovimientoSold ; Verifica si el movimiento es valido
    447                                  
@@ -769,7 +769,7 @@
     20 0000032A 4883C408            <1>  add rsp, 8
    477                                  
    478 0000032E 803C25[80000000]23                  cmp byte[oficialElegido], '#'
-   479 00000336 0F8447200000                        je salirDelJuego
+   479 00000336 0F8430200000                        je salirDelJuego
    480                                  
    481 0000033C E9EC010000                          jmp verificarFichaOfic ; Verifica si la ficha elegida es valida
    482                                  
@@ -789,7 +789,7 @@
     20 0000036B 4883C408            <1>  add rsp, 8
    487                                  
    488 0000036F 803C25[84000000]23                      cmp byte[casillaMovOfic], '#'
-   489 00000377 0F8406200000                            je salirDelJuego
+   489 00000377 0F84EF1F0000                            je salirDelJuego
    490                                                  
    491 0000037D E9C3060000                              jmp verificarMovimientoOfic ; Verifica si el movimiento es valido
    492                                  
@@ -3050,271 +3050,272 @@
   1973                                  
   1974                                  
   1975                                  mostrarEstadisticas:
-  1976                                      mCommand cmdLimpiarPantalla
-    24 00002056 48BF-               <1>  mov rdi, %1
-    24 00002058 [A808000000000000]  <1>
-    25 00002060 4883EC08            <1>  sub rsp, 8
-    26 00002064 E8(00000000)        <1>  call system
-    27 00002069 4883C408            <1>  add rsp, 8
-  1977                                      mPuts msgEstadisticas
-     2 0000206D 48BF-               <1>  mov rdi, %1
-     2 0000206F [E502000000000000]  <1>
-     3 00002077 4883EC08            <1>  sub rsp, 8
-     4 0000207B E8(00000000)        <1>  call puts
-     5 00002080 4883C408            <1>  add rsp, 8
-  1978                                  
-  1979                                      mPrint msgCantTotalCapturas, qword[cantSoldCapturados]
-     9 00002084 48BF-               <1>  mov rdi, %1
-     9 00002086 [0603000000000000]  <1>
-    10 0000208E 488B3425[62080000]  <1>  mov rsi, %2
-    11 00002096 4883EC08            <1>  sub rsp, 8
-    12 0000209A E8(00000000)        <1>  call printf
-    13 0000209F 4883C408            <1>  add rsp, 8
-  1980                                  
-  1981                                      ; Estadísticas del oficial 1
-  1982                                      mPuts msgOficial1
-     2 000020A3 48BF-               <1>  mov rdi, %1
-     2 000020A5 [2703000000000000]  <1>
-     3 000020AD 4883EC08            <1>  sub rsp, 8
-     4 000020B1 E8(00000000)        <1>  call puts
-     5 000020B6 4883C408            <1>  add rsp, 8
-  1983                                      mPrint msgCantMovimientos, qword[movimientosOfic1]
-     9 000020BA 48BF-               <1>  mov rdi, %1
-     9 000020BC [3F03000000000000]  <1>
-    10 000020C4 488B3425[C2070000]  <1>  mov rsi, %2
-    11 000020CC 4883EC08            <1>  sub rsp, 8
-    12 000020D0 E8(00000000)        <1>  call printf
-    13 000020D5 4883C408            <1>  add rsp, 8
-  1984                                      mPrint msgCantAdelante, qword[movOfic1Adelante]
-     9 000020D9 48BF-               <1>  mov rdi, %1
-     9 000020DB [5803000000000000]  <1>
-    10 000020E3 488B3425[D2070000]  <1>  mov rsi, %2
-    11 000020EB 4883EC08            <1>  sub rsp, 8
-    12 000020EF E8(00000000)        <1>  call printf
-    13 000020F4 4883C408            <1>  add rsp, 8
-  1985                                      mPrint msgCantDerecha, qword[movOfic1Derecha]
-     9 000020F8 48BF-               <1>  mov rdi, %1
-     9 000020FA [6E03000000000000]  <1>
-    10 00002102 488B3425[DA070000]  <1>  mov rsi, %2
-    11 0000210A 4883EC08            <1>  sub rsp, 8
-    12 0000210E E8(00000000)        <1>  call printf
-    13 00002113 4883C408            <1>  add rsp, 8
-  1986                                      mPrint msgCantIzquierda, qword[movOfic1Izquierda]
-     9 00002117 48BF-               <1>  mov rdi, %1
-     9 00002119 [8603000000000000]  <1>
-    10 00002121 488B3425[E2070000]  <1>  mov rsi, %2
-    11 00002129 4883EC08            <1>  sub rsp, 8
-    12 0000212D E8(00000000)        <1>  call printf
-    13 00002132 4883C408            <1>  add rsp, 8
-  1987                                      mPrint msgCantAtras, qword[movOfic1Atras]
-     9 00002136 48BF-               <1>  mov rdi, %1
-     9 00002138 [A003000000000000]  <1>
-    10 00002140 488B3425[EA070000]  <1>  mov rsi, %2
-    11 00002148 4883EC08            <1>  sub rsp, 8
-    12 0000214C E8(00000000)        <1>  call printf
-    13 00002151 4883C408            <1>  add rsp, 8
-  1988                                      mPrint msgCantDiagonal, qword[movOfic1Diagonal]
-     9 00002155 48BF-               <1>  mov rdi, %1
-     9 00002157 [B403000000000000]  <1>
-    10 0000215F 488B3425[F2070000]  <1>  mov rsi, %2
-    11 00002167 4883EC08            <1>  sub rsp, 8
-    12 0000216B E8(00000000)        <1>  call printf
-    13 00002170 4883C408            <1>  add rsp, 8
-  1989                                      mPrint msgCantDiagArribaDer, qword[movOfic1DiagArribaDer]
-     9 00002174 48BF-               <1>  mov rdi, %1
-     9 00002176 [C703000000000000]  <1>
-    10 0000217E 488B3425[FA070000]  <1>  mov rsi, %2
-    11 00002186 4883EC08            <1>  sub rsp, 8
-    12 0000218A E8(00000000)        <1>  call printf
-    13 0000218F 4883C408            <1>  add rsp, 8
-  1990                                      mPrint msgCantDiagArribaIzq, qword[movOfic1DiagArribaIzq]
-     9 00002193 48BF-               <1>  mov rdi, %1
-     9 00002195 [E103000000000000]  <1>
-    10 0000219D 488B3425[02080000]  <1>  mov rsi, %2
-    11 000021A5 4883EC08            <1>  sub rsp, 8
-    12 000021A9 E8(00000000)        <1>  call printf
-    13 000021AE 4883C408            <1>  add rsp, 8
-  1991                                      mPrint msgCantDiagAbajoDer, qword[movOfic1DiagAbajoDer]
-     9 000021B2 48BF-               <1>  mov rdi, %1
-     9 000021B4 [FD03000000000000]  <1>
-    10 000021BC 488B3425[0A080000]  <1>  mov rsi, %2
-    11 000021C4 4883EC08            <1>  sub rsp, 8
-    12 000021C8 E8(00000000)        <1>  call printf
-    13 000021CD 4883C408            <1>  add rsp, 8
-  1992                                      mPrint msgCantDiagAbajoIzq, qword[movOfic1DiagAbajoIzq]
-     9 000021D1 48BF-               <1>  mov rdi, %1
-     9 000021D3 [1504000000000000]  <1>
-    10 000021DB 488B3425[12080000]  <1>  mov rsi, %2
-    11 000021E3 4883EC08            <1>  sub rsp, 8
-    12 000021E7 E8(00000000)        <1>  call printf
-    13 000021EC 4883C408            <1>  add rsp, 8
-  1993                                      mPrint msgCantSoldadosCapt, qword[cantCapturasOfic1]
-     9 000021F0 48BF-               <1>  mov rdi, %1
-     9 000021F2 [2F04000000000000]  <1>
-    10 000021FA 488B3425[92080000]  <1>  mov rsi, %2
-    11 00002202 4883EC08            <1>  sub rsp, 8
-    12 00002206 E8(00000000)        <1>  call printf
-    13 0000220B 4883C408            <1>  add rsp, 8
-  1994                                  
-  1995                                      ; Estadísticas del oficial 2
-  1996                                      mPuts msgOficial2
-     2 0000220F 48BF-               <1>  mov rdi, %1
-     2 00002211 [3303000000000000]  <1>
-     3 00002219 4883EC08            <1>  sub rsp, 8
-     4 0000221D E8(00000000)        <1>  call puts
-     5 00002222 4883C408            <1>  add rsp, 8
-  1997                                      mPrint msgCantMovimientos, qword[movimientosOfic2]
-     9 00002226 48BF-               <1>  mov rdi, %1
-     9 00002228 [3F03000000000000]  <1>
-    10 00002230 488B3425[CA070000]  <1>  mov rsi, %2
-    11 00002238 4883EC08            <1>  sub rsp, 8
-    12 0000223C E8(00000000)        <1>  call printf
-    13 00002241 4883C408            <1>  add rsp, 8
-  1998                                      mPrint msgCantAdelante, qword[movOfic2Adelante]
-     9 00002245 48BF-               <1>  mov rdi, %1
-     9 00002247 [5803000000000000]  <1>
-    10 0000224F 488B3425[1A080000]  <1>  mov rsi, %2
-    11 00002257 4883EC08            <1>  sub rsp, 8
-    12 0000225B E8(00000000)        <1>  call printf
-    13 00002260 4883C408            <1>  add rsp, 8
-  1999                                      mPrint msgCantDerecha, qword[movOfic2Derecha]
-     9 00002264 48BF-               <1>  mov rdi, %1
-     9 00002266 [6E03000000000000]  <1>
-    10 0000226E 488B3425[22080000]  <1>  mov rsi, %2
-    11 00002276 4883EC08            <1>  sub rsp, 8
-    12 0000227A E8(00000000)        <1>  call printf
-    13 0000227F 4883C408            <1>  add rsp, 8
-  2000                                      mPrint msgCantIzquierda, qword[movOfic2Izquierda]
-     9 00002283 48BF-               <1>  mov rdi, %1
-     9 00002285 [8603000000000000]  <1>
-    10 0000228D 488B3425[2A080000]  <1>  mov rsi, %2
-    11 00002295 4883EC08            <1>  sub rsp, 8
-    12 00002299 E8(00000000)        <1>  call printf
-    13 0000229E 4883C408            <1>  add rsp, 8
-  2001                                      mPrint msgCantAtras, qword[movOfic2Atras]
-     9 000022A2 48BF-               <1>  mov rdi, %1
-     9 000022A4 [A003000000000000]  <1>
-    10 000022AC 488B3425[32080000]  <1>  mov rsi, %2
-    11 000022B4 4883EC08            <1>  sub rsp, 8
-    12 000022B8 E8(00000000)        <1>  call printf
-    13 000022BD 4883C408            <1>  add rsp, 8
-  2002                                      mPrint msgCantDiagonal, qword[movOfic2Diagonal]
-     9 000022C1 48BF-               <1>  mov rdi, %1
-     9 000022C3 [B403000000000000]  <1>
-    10 000022CB 488B3425[3A080000]  <1>  mov rsi, %2
-    11 000022D3 4883EC08            <1>  sub rsp, 8
-    12 000022D7 E8(00000000)        <1>  call printf
-    13 000022DC 4883C408            <1>  add rsp, 8
-  2003                                      mPrint msgCantDiagArribaDer, qword[movOfic2DiagArribaDer]
-     9 000022E0 48BF-               <1>  mov rdi, %1
-     9 000022E2 [C703000000000000]  <1>
-    10 000022EA 488B3425[42080000]  <1>  mov rsi, %2
-    11 000022F2 4883EC08            <1>  sub rsp, 8
-    12 000022F6 E8(00000000)        <1>  call printf
-    13 000022FB 4883C408            <1>  add rsp, 8
-  2004                                      mPrint msgCantDiagArribaIzq, qword[movOfic2DiagArribaIzq]
-     9 000022FF 48BF-               <1>  mov rdi, %1
-     9 00002301 [E103000000000000]  <1>
-    10 00002309 488B3425[4A080000]  <1>  mov rsi, %2
-    11 00002311 4883EC08            <1>  sub rsp, 8
-    12 00002315 E8(00000000)        <1>  call printf
-    13 0000231A 4883C408            <1>  add rsp, 8
-  2005                                      mPrint msgCantDiagAbajoDer, qword[movOfic2DiagAbajoDer]
-     9 0000231E 48BF-               <1>  mov rdi, %1
-     9 00002320 [FD03000000000000]  <1>
-    10 00002328 488B3425[52080000]  <1>  mov rsi, %2
-    11 00002330 4883EC08            <1>  sub rsp, 8
-    12 00002334 E8(00000000)        <1>  call printf
-    13 00002339 4883C408            <1>  add rsp, 8
-  2006                                      mPrint msgCantDiagAbajoIzq, qword[movOfic2DiagAbajoIzq]
-     9 0000233D 48BF-               <1>  mov rdi, %1
-     9 0000233F [1504000000000000]  <1>
-    10 00002347 488B3425[5A080000]  <1>  mov rsi, %2
-    11 0000234F 4883EC08            <1>  sub rsp, 8
-    12 00002353 E8(00000000)        <1>  call printf
-    13 00002358 4883C408            <1>  add rsp, 8
-  2007                                      mPrint msgCantSoldadosCapt, qword[cantCapturasOfic2]
-     9 0000235C 48BF-               <1>  mov rdi, %1
-     9 0000235E [2F04000000000000]  <1>
-    10 00002366 488B3425[9A080000]  <1>  mov rsi, %2
-    11 0000236E 4883EC08            <1>  sub rsp, 8
-    12 00002372 E8(00000000)        <1>  call printf
-    13 00002377 4883C408            <1>  add rsp, 8
-  2008                                  
-  2009 0000237B EB00                        jmp salirSinGuardar
-  2010                                  
-  2011                                  ; --------------------------------------------------------------------------------------------
-  2012                                  ; RUTINAS PARA SALIR DEL JUEGO (guardando o no la partida)
-  2013                                  ; --------------------------------------------------------------------------------------------
-  2014                                  
-  2015                                  salirSinGuardar:
-  2016 0000237D B800000000                  mov rax, 0
-  2017 00002382 C3                          ret
-  2018                                  
-  2019                                  salirDelJuego:
-  2020                                      mCommand cmdLimpiarPantalla
-    24 00002383 48BF-               <1>  mov rdi, %1
-    24 00002385 [A808000000000000]  <1>
-    25 0000238D 4883EC08            <1>  sub rsp, 8
-    26 00002391 E8(00000000)        <1>  call system
-    27 00002396 4883C408            <1>  add rsp, 8
-  2021                                  
-  2022                                      mPuts msgSalidaPartida
+  1976                                      mPuts msgEstadisticas
+     2 00002056 48BF-               <1>  mov rdi, %1
+     2 00002058 [E502000000000000]  <1>
+     3 00002060 4883EC08            <1>  sub rsp, 8
+     4 00002064 E8(00000000)        <1>  call puts
+     5 00002069 4883C408            <1>  add rsp, 8
+  1977                                  
+  1978                                      mPrint msgCantTotalCapturas, qword[cantSoldCapturados]
+     9 0000206D 48BF-               <1>  mov rdi, %1
+     9 0000206F [0603000000000000]  <1>
+    10 00002077 488B3425[62080000]  <1>  mov rsi, %2
+    11 0000207F 4883EC08            <1>  sub rsp, 8
+    12 00002083 E8(00000000)        <1>  call printf
+    13 00002088 4883C408            <1>  add rsp, 8
+  1979                                  
+  1980                                      ; Estadísticas del oficial 1
+  1981                                      mPuts msgOficial1
+     2 0000208C 48BF-               <1>  mov rdi, %1
+     2 0000208E [2703000000000000]  <1>
+     3 00002096 4883EC08            <1>  sub rsp, 8
+     4 0000209A E8(00000000)        <1>  call puts
+     5 0000209F 4883C408            <1>  add rsp, 8
+  1982                                      mPrint msgCantMovimientos, qword[movimientosOfic1]
+     9 000020A3 48BF-               <1>  mov rdi, %1
+     9 000020A5 [3F03000000000000]  <1>
+    10 000020AD 488B3425[C2070000]  <1>  mov rsi, %2
+    11 000020B5 4883EC08            <1>  sub rsp, 8
+    12 000020B9 E8(00000000)        <1>  call printf
+    13 000020BE 4883C408            <1>  add rsp, 8
+  1983                                      mPrint msgCantAdelante, qword[movOfic1Adelante]
+     9 000020C2 48BF-               <1>  mov rdi, %1
+     9 000020C4 [5803000000000000]  <1>
+    10 000020CC 488B3425[D2070000]  <1>  mov rsi, %2
+    11 000020D4 4883EC08            <1>  sub rsp, 8
+    12 000020D8 E8(00000000)        <1>  call printf
+    13 000020DD 4883C408            <1>  add rsp, 8
+  1984                                      mPrint msgCantDerecha, qword[movOfic1Derecha]
+     9 000020E1 48BF-               <1>  mov rdi, %1
+     9 000020E3 [6E03000000000000]  <1>
+    10 000020EB 488B3425[DA070000]  <1>  mov rsi, %2
+    11 000020F3 4883EC08            <1>  sub rsp, 8
+    12 000020F7 E8(00000000)        <1>  call printf
+    13 000020FC 4883C408            <1>  add rsp, 8
+  1985                                      mPrint msgCantIzquierda, qword[movOfic1Izquierda]
+     9 00002100 48BF-               <1>  mov rdi, %1
+     9 00002102 [8603000000000000]  <1>
+    10 0000210A 488B3425[E2070000]  <1>  mov rsi, %2
+    11 00002112 4883EC08            <1>  sub rsp, 8
+    12 00002116 E8(00000000)        <1>  call printf
+    13 0000211B 4883C408            <1>  add rsp, 8
+  1986                                      mPrint msgCantAtras, qword[movOfic1Atras]
+     9 0000211F 48BF-               <1>  mov rdi, %1
+     9 00002121 [A003000000000000]  <1>
+    10 00002129 488B3425[EA070000]  <1>  mov rsi, %2
+    11 00002131 4883EC08            <1>  sub rsp, 8
+    12 00002135 E8(00000000)        <1>  call printf
+    13 0000213A 4883C408            <1>  add rsp, 8
+  1987                                      mPrint msgCantDiagonal, qword[movOfic1Diagonal]
+     9 0000213E 48BF-               <1>  mov rdi, %1
+     9 00002140 [B403000000000000]  <1>
+    10 00002148 488B3425[F2070000]  <1>  mov rsi, %2
+    11 00002150 4883EC08            <1>  sub rsp, 8
+    12 00002154 E8(00000000)        <1>  call printf
+    13 00002159 4883C408            <1>  add rsp, 8
+  1988                                      mPrint msgCantDiagArribaDer, qword[movOfic1DiagArribaDer]
+     9 0000215D 48BF-               <1>  mov rdi, %1
+     9 0000215F [C703000000000000]  <1>
+    10 00002167 488B3425[FA070000]  <1>  mov rsi, %2
+    11 0000216F 4883EC08            <1>  sub rsp, 8
+    12 00002173 E8(00000000)        <1>  call printf
+    13 00002178 4883C408            <1>  add rsp, 8
+  1989                                      mPrint msgCantDiagArribaIzq, qword[movOfic1DiagArribaIzq]
+     9 0000217C 48BF-               <1>  mov rdi, %1
+     9 0000217E [E103000000000000]  <1>
+    10 00002186 488B3425[02080000]  <1>  mov rsi, %2
+    11 0000218E 4883EC08            <1>  sub rsp, 8
+    12 00002192 E8(00000000)        <1>  call printf
+    13 00002197 4883C408            <1>  add rsp, 8
+  1990                                      mPrint msgCantDiagAbajoDer, qword[movOfic1DiagAbajoDer]
+     9 0000219B 48BF-               <1>  mov rdi, %1
+     9 0000219D [FD03000000000000]  <1>
+    10 000021A5 488B3425[0A080000]  <1>  mov rsi, %2
+    11 000021AD 4883EC08            <1>  sub rsp, 8
+    12 000021B1 E8(00000000)        <1>  call printf
+    13 000021B6 4883C408            <1>  add rsp, 8
+  1991                                      mPrint msgCantDiagAbajoIzq, qword[movOfic1DiagAbajoIzq]
+     9 000021BA 48BF-               <1>  mov rdi, %1
+     9 000021BC [1504000000000000]  <1>
+    10 000021C4 488B3425[12080000]  <1>  mov rsi, %2
+    11 000021CC 4883EC08            <1>  sub rsp, 8
+    12 000021D0 E8(00000000)        <1>  call printf
+    13 000021D5 4883C408            <1>  add rsp, 8
+  1992                                      mPrint msgCantSoldadosCapt, qword[cantCapturasOfic1]
+     9 000021D9 48BF-               <1>  mov rdi, %1
+     9 000021DB [2F04000000000000]  <1>
+    10 000021E3 488B3425[92080000]  <1>  mov rsi, %2
+    11 000021EB 4883EC08            <1>  sub rsp, 8
+    12 000021EF E8(00000000)        <1>  call printf
+    13 000021F4 4883C408            <1>  add rsp, 8
+  1993                                  
+  1994                                      ; Estadísticas del oficial 2
+  1995                                      mPuts msgOficial2
+     2 000021F8 48BF-               <1>  mov rdi, %1
+     2 000021FA [3303000000000000]  <1>
+     3 00002202 4883EC08            <1>  sub rsp, 8
+     4 00002206 E8(00000000)        <1>  call puts
+     5 0000220B 4883C408            <1>  add rsp, 8
+  1996                                      mPrint msgCantMovimientos, qword[movimientosOfic2]
+     9 0000220F 48BF-               <1>  mov rdi, %1
+     9 00002211 [3F03000000000000]  <1>
+    10 00002219 488B3425[CA070000]  <1>  mov rsi, %2
+    11 00002221 4883EC08            <1>  sub rsp, 8
+    12 00002225 E8(00000000)        <1>  call printf
+    13 0000222A 4883C408            <1>  add rsp, 8
+  1997                                      mPrint msgCantAdelante, qword[movOfic2Adelante]
+     9 0000222E 48BF-               <1>  mov rdi, %1
+     9 00002230 [5803000000000000]  <1>
+    10 00002238 488B3425[1A080000]  <1>  mov rsi, %2
+    11 00002240 4883EC08            <1>  sub rsp, 8
+    12 00002244 E8(00000000)        <1>  call printf
+    13 00002249 4883C408            <1>  add rsp, 8
+  1998                                      mPrint msgCantDerecha, qword[movOfic2Derecha]
+     9 0000224D 48BF-               <1>  mov rdi, %1
+     9 0000224F [6E03000000000000]  <1>
+    10 00002257 488B3425[22080000]  <1>  mov rsi, %2
+    11 0000225F 4883EC08            <1>  sub rsp, 8
+    12 00002263 E8(00000000)        <1>  call printf
+    13 00002268 4883C408            <1>  add rsp, 8
+  1999                                      mPrint msgCantIzquierda, qword[movOfic2Izquierda]
+     9 0000226C 48BF-               <1>  mov rdi, %1
+     9 0000226E [8603000000000000]  <1>
+    10 00002276 488B3425[2A080000]  <1>  mov rsi, %2
+    11 0000227E 4883EC08            <1>  sub rsp, 8
+    12 00002282 E8(00000000)        <1>  call printf
+    13 00002287 4883C408            <1>  add rsp, 8
+  2000                                      mPrint msgCantAtras, qword[movOfic2Atras]
+     9 0000228B 48BF-               <1>  mov rdi, %1
+     9 0000228D [A003000000000000]  <1>
+    10 00002295 488B3425[32080000]  <1>  mov rsi, %2
+    11 0000229D 4883EC08            <1>  sub rsp, 8
+    12 000022A1 E8(00000000)        <1>  call printf
+    13 000022A6 4883C408            <1>  add rsp, 8
+  2001                                      mPrint msgCantDiagonal, qword[movOfic2Diagonal]
+     9 000022AA 48BF-               <1>  mov rdi, %1
+     9 000022AC [B403000000000000]  <1>
+    10 000022B4 488B3425[3A080000]  <1>  mov rsi, %2
+    11 000022BC 4883EC08            <1>  sub rsp, 8
+    12 000022C0 E8(00000000)        <1>  call printf
+    13 000022C5 4883C408            <1>  add rsp, 8
+  2002                                      mPrint msgCantDiagArribaDer, qword[movOfic2DiagArribaDer]
+     9 000022C9 48BF-               <1>  mov rdi, %1
+     9 000022CB [C703000000000000]  <1>
+    10 000022D3 488B3425[42080000]  <1>  mov rsi, %2
+    11 000022DB 4883EC08            <1>  sub rsp, 8
+    12 000022DF E8(00000000)        <1>  call printf
+    13 000022E4 4883C408            <1>  add rsp, 8
+  2003                                      mPrint msgCantDiagArribaIzq, qword[movOfic2DiagArribaIzq]
+     9 000022E8 48BF-               <1>  mov rdi, %1
+     9 000022EA [E103000000000000]  <1>
+    10 000022F2 488B3425[4A080000]  <1>  mov rsi, %2
+    11 000022FA 4883EC08            <1>  sub rsp, 8
+    12 000022FE E8(00000000)        <1>  call printf
+    13 00002303 4883C408            <1>  add rsp, 8
+  2004                                      mPrint msgCantDiagAbajoDer, qword[movOfic2DiagAbajoDer]
+     9 00002307 48BF-               <1>  mov rdi, %1
+     9 00002309 [FD03000000000000]  <1>
+    10 00002311 488B3425[52080000]  <1>  mov rsi, %2
+    11 00002319 4883EC08            <1>  sub rsp, 8
+    12 0000231D E8(00000000)        <1>  call printf
+    13 00002322 4883C408            <1>  add rsp, 8
+  2005                                      mPrint msgCantDiagAbajoIzq, qword[movOfic2DiagAbajoIzq]
+     9 00002326 48BF-               <1>  mov rdi, %1
+     9 00002328 [1504000000000000]  <1>
+    10 00002330 488B3425[5A080000]  <1>  mov rsi, %2
+    11 00002338 4883EC08            <1>  sub rsp, 8
+    12 0000233C E8(00000000)        <1>  call printf
+    13 00002341 4883C408            <1>  add rsp, 8
+  2006                                      mPrint msgCantSoldadosCapt, qword[cantCapturasOfic2]
+     9 00002345 48BF-               <1>  mov rdi, %1
+     9 00002347 [2F04000000000000]  <1>
+    10 0000234F 488B3425[9A080000]  <1>  mov rsi, %2
+    11 00002357 4883EC08            <1>  sub rsp, 8
+    12 0000235B E8(00000000)        <1>  call printf
+    13 00002360 4883C408            <1>  add rsp, 8
+  2007                                  
+  2008 00002364 EB00                        jmp salirSinGuardar
+  2009                                  
+  2010                                  ; --------------------------------------------------------------------------------------------
+  2011                                  ; RUTINAS PARA SALIR DEL JUEGO (guardando o no la partida)
+  2012                                  ; --------------------------------------------------------------------------------------------
+  2013                                  
+  2014                                  salirSinGuardar:
+  2015 00002366 B800000000                  mov rax, 0
+  2016 0000236B C3                          ret
+  2017                                  
+  2018                                  salirDelJuego:
+  2019                                      mCommand cmdLimpiarPantalla
+    24 0000236C 48BF-               <1>  mov rdi, %1
+    24 0000236E [A808000000000000]  <1>
+    25 00002376 4883EC08            <1>  sub rsp, 8
+    26 0000237A E8(00000000)        <1>  call system
+    27 0000237F 4883C408            <1>  add rsp, 8
+  2020                                  
+  2021                                      mPuts msgSalidaPartida
+     2 00002383 48BF-               <1>  mov rdi, %1
+     2 00002385 [B904000000000000]  <1>
+     3 0000238D 4883EC08            <1>  sub rsp, 8
+     4 00002391 E8(00000000)        <1>  call puts
+     5 00002396 4883C408            <1>  add rsp, 8
+  2022                                      mPuts msgAclaracionSalida
      2 0000239A 48BF-               <1>  mov rdi, %1
-     2 0000239C [B904000000000000]  <1>
+     2 0000239C [F604000000000000]  <1>
      3 000023A4 4883EC08            <1>  sub rsp, 8
      4 000023A8 E8(00000000)        <1>  call puts
      5 000023AD 4883C408            <1>  add rsp, 8
-  2023                                      mPuts msgAclaracionSalida
-     2 000023B1 48BF-               <1>  mov rdi, %1
-     2 000023B3 [F604000000000000]  <1>
-     3 000023BB 4883EC08            <1>  sub rsp, 8
-     4 000023BF E8(00000000)        <1>  call puts
-     5 000023C4 4883C408            <1>  add rsp, 8
-  2024                                  
-  2025                                      recibirOpcionGuardado:
-  2026                                          mGets guardadoPartida
-    17 000023C8 48BF-               <1>  mov rdi, %1
-    17 000023CA [8D05000000000000]  <1>
-    18 000023D2 4883EC08            <1>  sub rsp, 8
-    19 000023D6 E8(00000000)        <1>  call gets
-    20 000023DB 4883C408            <1>  add rsp, 8
-  2027                                  
-  2028 000023DF 803C25[8E050000]00          cmp byte[guardadoPartida+1], 0
-  2029 000023E7 7514                        jne guardadoInvalido
-  2030                                  
-  2031 000023E9 803C25[8D050000]73          cmp byte[guardadoPartida], 's'
-  2032 000023F1 7455                        je guardarPartida
-  2033                                  
-  2034 000023F3 803C25[8D050000]6E          cmp byte[guardadoPartida], 'n'
-  2035 000023FB 7419                        je removerArchivo
-  2036                                  
-  2037                                      guardadoInvalido:
-  2038                                          mPuts msgOpcionInvalida
-     2 000023FD 48BF-               <1>  mov rdi, %1
-     2 000023FF [A100000000000000]  <1>
-     3 00002407 4883EC08            <1>  sub rsp, 8
-     4 0000240B E8(00000000)        <1>  call puts
-     5 00002410 4883C408            <1>  add rsp, 8
-  2039 00002414 EBB2                            jmp recibirOpcionGuardado
-  2040                                  
-  2041                                      removerArchivo:
-  2042 00002416 803C25[8F050000]73              cmp byte[yaHabiaGuardado], 's' ; Si ya había guardado la partida, la borramos
-  2043 0000241E 0F8532FCFFFF                    jne mostrarEstadisticas
-  2044                                          
-  2045                                          mCommand cmdBorrarArchivoPartida
+  2023                                  
+  2024                                      recibirOpcionGuardado:
+  2025                                          mGets guardadoPartida
+    17 000023B1 48BF-               <1>  mov rdi, %1
+    17 000023B3 [8D05000000000000]  <1>
+    18 000023BB 4883EC08            <1>  sub rsp, 8
+    19 000023BF E8(00000000)        <1>  call gets
+    20 000023C4 4883C408            <1>  add rsp, 8
+  2026                                  
+  2027 000023C8 803C25[8E050000]00          cmp byte[guardadoPartida+1], 0
+  2028 000023D0 7514                        jne guardadoInvalido
+  2029                                  
+  2030 000023D2 803C25[8D050000]73          cmp byte[guardadoPartida], 's'
+  2031 000023DA 746C                        je guardarPartida
+  2032                                  
+  2033 000023DC 803C25[8D050000]6E          cmp byte[guardadoPartida], 'n'
+  2034 000023E4 7419                        je removerArchivo
+  2035                                  
+  2036                                      guardadoInvalido:
+  2037                                          mPuts msgOpcionInvalida
+     2 000023E6 48BF-               <1>  mov rdi, %1
+     2 000023E8 [A100000000000000]  <1>
+     3 000023F0 4883EC08            <1>  sub rsp, 8
+     4 000023F4 E8(00000000)        <1>  call puts
+     5 000023F9 4883C408            <1>  add rsp, 8
+  2038 000023FD EBB2                            jmp recibirOpcionGuardado
+  2039                                  
+  2040                                      removerArchivo:
+  2041                                          mCommand cmdLimpiarPantalla
+    24 000023FF 48BF-               <1>  mov rdi, %1
+    24 00002401 [A808000000000000]  <1>
+    25 00002409 4883EC08            <1>  sub rsp, 8
+    26 0000240D E8(00000000)        <1>  call system
+    27 00002412 4883C408            <1>  add rsp, 8
+  2042                                  
+  2043 00002416 803C25[8F050000]73              cmp byte[yaHabiaGuardado], 's' ; Si ya había guardado la partida, la borramos
+  2044 0000241E 0F8532FCFFFF                    jne mostrarEstadisticas
+  2045                                          
+  2046                                          mCommand cmdBorrarArchivoPartida
     24 00002424 48BF-               <1>  mov rdi, %1
     24 00002426 [C808000000000000]  <1>
     25 0000242E 4883EC08            <1>  sub rsp, 8
     26 00002432 E8(00000000)        <1>  call system
     27 00002437 4883C408            <1>  add rsp, 8
-  2046 0000243B C60425[8F050000]6E              mov byte[yaHabiaGuardado], 'n' ; Para la próxima vez que se quiera salir, no se borra nada
-  2047 00002443 E90EFCFFFF                      jmp mostrarEstadisticas
-  2048                                  
+  2047 0000243B C60425[8F050000]6E              mov byte[yaHabiaGuardado], 'n' ; Para la próxima vez que se quiera salir, no se borra nada
+  2048 00002443 E90EFCFFFF                      jmp mostrarEstadisticas
   2049                                  
-  2050                                  guardarPartida:
-  2051 00002448 C60425[8F050000]73          mov byte[yaHabiaGuardado], 's'
-  2052                                      mOpenFile nombreArchivo, modoEscritura
+  2050                                  
+  2051                                  guardarPartida:
+  2052 00002448 C60425[8F050000]73          mov byte[yaHabiaGuardado], 's'
+  2053                                      mOpenFile nombreArchivo, modoEscritura
    112 00002450 48BF-               <1>  mov rdi, %1
    112 00002452 [0C09000000000000]  <1>
    113 0000245A 48BE-               <1>  mov rsi, %2
@@ -3323,23 +3324,23 @@
    115 00002468 E8(00000000)        <1>  call fopen
    116 0000246D 4883C408            <1>  add rsp, 8
    117 00002471 48890425[D8000000]  <1>  mov qword[idArchGuardado], rax
-  2053 00002479 E82D000000                  call agregarDatosPartida
-  2054                                      mCloseFile idArchGuardado
+  2054 00002479 E82D000000                  call agregarDatosPartida
+  2055                                      mCloseFile idArchGuardado
    121 0000247E 488B3C25[D8000000]  <1>  mov rdi, [%1]
    122 00002486 4883EC08            <1>  sub rsp, 8
    123 0000248A E8(00000000)        <1>  call fclose
    124 0000248F 4883C408            <1>  add rsp, 8
-  2055                                  
-  2056                                      mPuts msgPartidaGuardada
+  2056                                  
+  2057                                      mPuts msgPartidaGuardada
      2 00002493 48BF-               <1>  mov rdi, %1
      2 00002495 [9305000000000000]  <1>
      3 0000249D 4883EC08            <1>  sub rsp, 8
      4 000024A1 E8(00000000)        <1>  call puts
      5 000024A6 4883C408            <1>  add rsp, 8
-  2057 000024AA C3                          ret    
-  2058                                  
-  2059                                  agregarDatosPartida:
-  2060                                      mWriteLine tableroEnJuego, 116, 1
+  2058 000024AA C3                          ret    
+  2059                                  
+  2060                                  agregarDatosPartida:
+  2061                                      mWriteLine tableroEnJuego, 116, 1
    138 000024AB 48BF-               <1>  mov rdi, %1
    138 000024AD [0400000000000000]  <1>
    139 000024B5 BE74000000          <1>  mov rsi, %2
@@ -3348,8 +3349,8 @@
    142 000024C7 4883EC08            <1>  sub rsp, 8
    143 000024CB E8(00000000)        <1>  call fwrite
    144 000024D0 4883C408            <1>  add rsp, 8
-  2061                                  
-  2062                                      mWriteLine yaHabiaGuardado, 1, 1 ; Guardamos si ya había guardado la partida
+  2062                                  
+  2063                                      mWriteLine yaHabiaGuardado, 1, 1 ; Guardamos si ya había guardado la partida
    138 000024D4 48BF-               <1>  mov rdi, %1
    138 000024D6 [8F05000000000000]  <1>
    139 000024DE BE01000000          <1>  mov rsi, %2
@@ -3358,8 +3359,8 @@
    142 000024F0 4883EC08            <1>  sub rsp, 8
    143 000024F4 E8(00000000)        <1>  call fwrite
    144 000024F9 4883C408            <1>  add rsp, 8
-  2063                                  
-  2064                                      mWriteLine turnoDe, 1, 1 ; Guardamos el turno actual
+  2064                                  
+  2065                                      mWriteLine turnoDe, 1, 1 ; Guardamos el turno actual
    138 000024FD 48BF-               <1>  mov rdi, %1
    138 000024FF [9105000000000000]  <1>
    139 00002507 BE01000000          <1>  mov rsi, %2
@@ -3368,8 +3369,8 @@
    142 00002519 4883EC08            <1>  sub rsp, 8
    143 0000251D E8(00000000)        <1>  call fwrite
    144 00002522 4883C408            <1>  add rsp, 8
-  2065                                  
-  2066                                      mWriteLine movimientosOfic1, 8, 1
+  2066                                  
+  2067                                      mWriteLine movimientosOfic1, 8, 1
    138 00002526 48BF-               <1>  mov rdi, %1
    138 00002528 [C207000000000000]  <1>
    139 00002530 BE08000000          <1>  mov rsi, %2
@@ -3378,7 +3379,7 @@
    142 00002542 4883EC08            <1>  sub rsp, 8
    143 00002546 E8(00000000)        <1>  call fwrite
    144 0000254B 4883C408            <1>  add rsp, 8
-  2067                                      mWriteLine movimientosOfic2, 8, 1
+  2068                                      mWriteLine movimientosOfic2, 8, 1
    138 0000254F 48BF-               <1>  mov rdi, %1
    138 00002551 [CA07000000000000]  <1>
    139 00002559 BE08000000          <1>  mov rsi, %2
@@ -3387,8 +3388,8 @@
    142 0000256B 4883EC08            <1>  sub rsp, 8
    143 0000256F E8(00000000)        <1>  call fwrite
    144 00002574 4883C408            <1>  add rsp, 8
-  2068                                  
-  2069                                      mWriteLine movOfic1Adelante, 8, 1
+  2069                                  
+  2070                                      mWriteLine movOfic1Adelante, 8, 1
    138 00002578 48BF-               <1>  mov rdi, %1
    138 0000257A [D207000000000000]  <1>
    139 00002582 BE08000000          <1>  mov rsi, %2
@@ -3397,7 +3398,7 @@
    142 00002594 4883EC08            <1>  sub rsp, 8
    143 00002598 E8(00000000)        <1>  call fwrite
    144 0000259D 4883C408            <1>  add rsp, 8
-  2070                                      mWriteLine movOfic1Derecha, 8, 1
+  2071                                      mWriteLine movOfic1Derecha, 8, 1
    138 000025A1 48BF-               <1>  mov rdi, %1
    138 000025A3 [DA07000000000000]  <1>
    139 000025AB BE08000000          <1>  mov rsi, %2
@@ -3406,7 +3407,7 @@
    142 000025BD 4883EC08            <1>  sub rsp, 8
    143 000025C1 E8(00000000)        <1>  call fwrite
    144 000025C6 4883C408            <1>  add rsp, 8
-  2071                                      mWriteLine movOfic1Izquierda, 8, 1
+  2072                                      mWriteLine movOfic1Izquierda, 8, 1
    138 000025CA 48BF-               <1>  mov rdi, %1
    138 000025CC [E207000000000000]  <1>
    139 000025D4 BE08000000          <1>  mov rsi, %2
@@ -3415,7 +3416,7 @@
    142 000025E6 4883EC08            <1>  sub rsp, 8
    143 000025EA E8(00000000)        <1>  call fwrite
    144 000025EF 4883C408            <1>  add rsp, 8
-  2072                                      mWriteLine movOfic1Atras, 8, 1
+  2073                                      mWriteLine movOfic1Atras, 8, 1
    138 000025F3 48BF-               <1>  mov rdi, %1
    138 000025F5 [EA07000000000000]  <1>
    139 000025FD BE08000000          <1>  mov rsi, %2
@@ -3424,7 +3425,7 @@
    142 0000260F 4883EC08            <1>  sub rsp, 8
    143 00002613 E8(00000000)        <1>  call fwrite
    144 00002618 4883C408            <1>  add rsp, 8
-  2073                                      mWriteLine movOfic1Diagonal, 8, 1
+  2074                                      mWriteLine movOfic1Diagonal, 8, 1
    138 0000261C 48BF-               <1>  mov rdi, %1
    138 0000261E [F207000000000000]  <1>
    139 00002626 BE08000000          <1>  mov rsi, %2
@@ -3433,7 +3434,7 @@
    142 00002638 4883EC08            <1>  sub rsp, 8
    143 0000263C E8(00000000)        <1>  call fwrite
    144 00002641 4883C408            <1>  add rsp, 8
-  2074                                      mWriteLine movOfic1DiagArribaDer, 8, 1
+  2075                                      mWriteLine movOfic1DiagArribaDer, 8, 1
    138 00002645 48BF-               <1>  mov rdi, %1
    138 00002647 [FA07000000000000]  <1>
    139 0000264F BE08000000          <1>  mov rsi, %2
@@ -3442,7 +3443,7 @@
    142 00002661 4883EC08            <1>  sub rsp, 8
    143 00002665 E8(00000000)        <1>  call fwrite
    144 0000266A 4883C408            <1>  add rsp, 8
-  2075                                      mWriteLine movOfic1DiagArribaIzq, 8, 1
+  2076                                      mWriteLine movOfic1DiagArribaIzq, 8, 1
    138 0000266E 48BF-               <1>  mov rdi, %1
    138 00002670 [0208000000000000]  <1>
    139 00002678 BE08000000          <1>  mov rsi, %2
@@ -3451,7 +3452,7 @@
    142 0000268A 4883EC08            <1>  sub rsp, 8
    143 0000268E E8(00000000)        <1>  call fwrite
    144 00002693 4883C408            <1>  add rsp, 8
-  2076                                      mWriteLine movOfic1DiagAbajoDer, 8, 1
+  2077                                      mWriteLine movOfic1DiagAbajoDer, 8, 1
    138 00002697 48BF-               <1>  mov rdi, %1
    138 00002699 [0A08000000000000]  <1>
    139 000026A1 BE08000000          <1>  mov rsi, %2
@@ -3460,7 +3461,7 @@
    142 000026B3 4883EC08            <1>  sub rsp, 8
    143 000026B7 E8(00000000)        <1>  call fwrite
    144 000026BC 4883C408            <1>  add rsp, 8
-  2077                                      mWriteLine movOfic1DiagAbajoIzq, 8, 1
+  2078                                      mWriteLine movOfic1DiagAbajoIzq, 8, 1
    138 000026C0 48BF-               <1>  mov rdi, %1
    138 000026C2 [1208000000000000]  <1>
    139 000026CA BE08000000          <1>  mov rsi, %2
@@ -3469,8 +3470,8 @@
    142 000026DC 4883EC08            <1>  sub rsp, 8
    143 000026E0 E8(00000000)        <1>  call fwrite
    144 000026E5 4883C408            <1>  add rsp, 8
-  2078                                  
-  2079                                      mWriteLine movOfic2Adelante, 8, 1
+  2079                                  
+  2080                                      mWriteLine movOfic2Adelante, 8, 1
    138 000026E9 48BF-               <1>  mov rdi, %1
    138 000026EB [1A08000000000000]  <1>
    139 000026F3 BE08000000          <1>  mov rsi, %2
@@ -3479,7 +3480,7 @@
    142 00002705 4883EC08            <1>  sub rsp, 8
    143 00002709 E8(00000000)        <1>  call fwrite
    144 0000270E 4883C408            <1>  add rsp, 8
-  2080                                      mWriteLine movOfic2Derecha, 8, 1
+  2081                                      mWriteLine movOfic2Derecha, 8, 1
    138 00002712 48BF-               <1>  mov rdi, %1
    138 00002714 [2208000000000000]  <1>
    139 0000271C BE08000000          <1>  mov rsi, %2
@@ -3488,7 +3489,7 @@
    142 0000272E 4883EC08            <1>  sub rsp, 8
    143 00002732 E8(00000000)        <1>  call fwrite
    144 00002737 4883C408            <1>  add rsp, 8
-  2081                                      mWriteLine movOfic2Izquierda, 8, 1
+  2082                                      mWriteLine movOfic2Izquierda, 8, 1
    138 0000273B 48BF-               <1>  mov rdi, %1
    138 0000273D [2A08000000000000]  <1>
    139 00002745 BE08000000          <1>  mov rsi, %2
@@ -3497,7 +3498,7 @@
    142 00002757 4883EC08            <1>  sub rsp, 8
    143 0000275B E8(00000000)        <1>  call fwrite
    144 00002760 4883C408            <1>  add rsp, 8
-  2082                                      mWriteLine movOfic2Atras, 8, 1
+  2083                                      mWriteLine movOfic2Atras, 8, 1
    138 00002764 48BF-               <1>  mov rdi, %1
    138 00002766 [3208000000000000]  <1>
    139 0000276E BE08000000          <1>  mov rsi, %2
@@ -3506,7 +3507,7 @@
    142 00002780 4883EC08            <1>  sub rsp, 8
    143 00002784 E8(00000000)        <1>  call fwrite
    144 00002789 4883C408            <1>  add rsp, 8
-  2083                                      mWriteLine movOfic2Diagonal, 8, 1
+  2084                                      mWriteLine movOfic2Diagonal, 8, 1
    138 0000278D 48BF-               <1>  mov rdi, %1
    138 0000278F [3A08000000000000]  <1>
    139 00002797 BE08000000          <1>  mov rsi, %2
@@ -3515,7 +3516,7 @@
    142 000027A9 4883EC08            <1>  sub rsp, 8
    143 000027AD E8(00000000)        <1>  call fwrite
    144 000027B2 4883C408            <1>  add rsp, 8
-  2084                                      mWriteLine movOfic2DiagArribaDer, 8, 1
+  2085                                      mWriteLine movOfic2DiagArribaDer, 8, 1
    138 000027B6 48BF-               <1>  mov rdi, %1
    138 000027B8 [4208000000000000]  <1>
    139 000027C0 BE08000000          <1>  mov rsi, %2
@@ -3524,7 +3525,7 @@
    142 000027D2 4883EC08            <1>  sub rsp, 8
    143 000027D6 E8(00000000)        <1>  call fwrite
    144 000027DB 4883C408            <1>  add rsp, 8
-  2085                                      mWriteLine movOfic2DiagArribaIzq, 8, 1
+  2086                                      mWriteLine movOfic2DiagArribaIzq, 8, 1
    138 000027DF 48BF-               <1>  mov rdi, %1
    138 000027E1 [4A08000000000000]  <1>
    139 000027E9 BE08000000          <1>  mov rsi, %2
@@ -3533,7 +3534,7 @@
    142 000027FB 4883EC08            <1>  sub rsp, 8
    143 000027FF E8(00000000)        <1>  call fwrite
    144 00002804 4883C408            <1>  add rsp, 8
-  2086                                      mWriteLine movOfic2DiagAbajoDer, 8, 1
+  2087                                      mWriteLine movOfic2DiagAbajoDer, 8, 1
    138 00002808 48BF-               <1>  mov rdi, %1
    138 0000280A [5208000000000000]  <1>
    139 00002812 BE08000000          <1>  mov rsi, %2
@@ -3542,7 +3543,7 @@
    142 00002824 4883EC08            <1>  sub rsp, 8
    143 00002828 E8(00000000)        <1>  call fwrite
    144 0000282D 4883C408            <1>  add rsp, 8
-  2087                                      mWriteLine movOfic2DiagAbajoIzq, 8, 1
+  2088                                      mWriteLine movOfic2DiagAbajoIzq, 8, 1
    138 00002831 48BF-               <1>  mov rdi, %1
    138 00002833 [5A08000000000000]  <1>
    139 0000283B BE08000000          <1>  mov rsi, %2
@@ -3551,8 +3552,8 @@
    142 0000284D 4883EC08            <1>  sub rsp, 8
    143 00002851 E8(00000000)        <1>  call fwrite
    144 00002856 4883C408            <1>  add rsp, 8
-  2088                                  
-  2089                                      mWriteLine cantSoldCapturados, 8, 1
+  2089                                  
+  2090                                      mWriteLine cantSoldCapturados, 8, 1
    138 0000285A 48BF-               <1>  mov rdi, %1
    138 0000285C [6208000000000000]  <1>
    139 00002864 BE08000000          <1>  mov rsi, %2
@@ -3561,7 +3562,7 @@
    142 00002876 4883EC08            <1>  sub rsp, 8
    143 0000287A E8(00000000)        <1>  call fwrite
    144 0000287F 4883C408            <1>  add rsp, 8
-  2090                                      mWriteLine cantOficInvalidados, 8, 1
+  2091                                      mWriteLine cantOficInvalidados, 8, 1
    138 00002883 48BF-               <1>  mov rdi, %1
    138 00002885 [6A08000000000000]  <1>
    139 0000288D BE08000000          <1>  mov rsi, %2
@@ -3570,8 +3571,8 @@
    142 0000289F 4883EC08            <1>  sub rsp, 8
    143 000028A3 E8(00000000)        <1>  call fwrite
    144 000028A8 4883C408            <1>  add rsp, 8
-  2091                                  
-  2092                                      mWriteLine casillaOfic1, 8, 1
+  2092                                  
+  2093                                      mWriteLine casillaOfic1, 8, 1
    138 000028AC 48BF-               <1>  mov rdi, %1
    138 000028AE [7208000000000000]  <1>
    139 000028B6 BE08000000          <1>  mov rsi, %2
@@ -3580,7 +3581,7 @@
    142 000028C8 4883EC08            <1>  sub rsp, 8
    143 000028CC E8(00000000)        <1>  call fwrite
    144 000028D1 4883C408            <1>  add rsp, 8
-  2093                                      mWriteLine casillaOfic1+8, 8, 1
+  2094                                      mWriteLine casillaOfic1+8, 8, 1
    138 000028D5 48BF-               <1>  mov rdi, %1
    138 000028D7 [7A08000000000000]  <1>
    139 000028DF BE08000000          <1>  mov rsi, %2
@@ -3589,8 +3590,8 @@
    142 000028F1 4883EC08            <1>  sub rsp, 8
    143 000028F5 E8(00000000)        <1>  call fwrite
    144 000028FA 4883C408            <1>  add rsp, 8
-  2094                                  
-  2095                                      mWriteLine casillaOfic2, 8, 1
+  2095                                  
+  2096                                      mWriteLine casillaOfic2, 8, 1
    138 000028FE 48BF-               <1>  mov rdi, %1
    138 00002900 [8208000000000000]  <1>
    139 00002908 BE08000000          <1>  mov rsi, %2
@@ -3599,7 +3600,7 @@
    142 0000291A 4883EC08            <1>  sub rsp, 8
    143 0000291E E8(00000000)        <1>  call fwrite
    144 00002923 4883C408            <1>  add rsp, 8
-  2096                                      mWriteLine casillaOfic2+8, 8, 1
+  2097                                      mWriteLine casillaOfic2+8, 8, 1
    138 00002927 48BF-               <1>  mov rdi, %1
    138 00002929 [8A08000000000000]  <1>
    139 00002931 BE08000000          <1>  mov rsi, %2
@@ -3608,8 +3609,8 @@
    142 00002943 4883EC08            <1>  sub rsp, 8
    143 00002947 E8(00000000)        <1>  call fwrite
    144 0000294C 4883C408            <1>  add rsp, 8
-  2097                                  
-  2098                                      mWriteLine cantCapturasOfic1, 8, 1
+  2098                                  
+  2099                                      mWriteLine cantCapturasOfic1, 8, 1
    138 00002950 48BF-               <1>  mov rdi, %1
    138 00002952 [9208000000000000]  <1>
    139 0000295A BE08000000          <1>  mov rsi, %2
@@ -3618,7 +3619,7 @@
    142 0000296C 4883EC08            <1>  sub rsp, 8
    143 00002970 E8(00000000)        <1>  call fwrite
    144 00002975 4883C408            <1>  add rsp, 8
-  2099                                      mWriteLine cantCapturasOfic2, 8, 1
+  2100                                      mWriteLine cantCapturasOfic2, 8, 1
    138 00002979 48BF-               <1>  mov rdi, %1
    138 0000297B [9A08000000000000]  <1>
    139 00002983 BE08000000          <1>  mov rsi, %2
@@ -3627,16 +3628,16 @@
    142 00002995 4883EC08            <1>  sub rsp, 8
    143 00002999 E8(00000000)        <1>  call fwrite
    144 0000299E 4883C408            <1>  add rsp, 8
-  2100                                  
-  2101 000029A2 C3                          ret
-  2102                                  
-  2103                                  ; --------------------------------------------------------------------------------------------
-  2104                                  ; RUTINA PARA OBTENER LOS DATOS DE UNA PARTIDA GUARDADA
-  2105                                  ; --------------------------------------------------------------------------------------------
-  2106                                  
-  2107                                  abrirPartidaGuardada:
-  2108                                      ; Recreamos el tablero guardado
-  2109                                      mReadLine tableroEnJuego, 116, 1
+  2101                                  
+  2102 000029A2 C3                          ret
+  2103                                  
+  2104                                  ; --------------------------------------------------------------------------------------------
+  2105                                  ; RUTINA PARA OBTENER LOS DATOS DE UNA PARTIDA GUARDADA
+  2106                                  ; --------------------------------------------------------------------------------------------
+  2107                                  
+  2108                                  abrirPartidaGuardada:
+  2109                                      ; Recreamos el tablero guardado
+  2110                                      mReadLine tableroEnJuego, 116, 1
    128 000029A3 48BF-               <1>  mov rdi, %1
    128 000029A5 [0400000000000000]  <1>
    129 000029AD BE74000000          <1>  mov rsi, %2
@@ -3645,8 +3646,8 @@
    132 000029BF 4883EC08            <1>  sub rsp, 8
    133 000029C3 E8(00000000)        <1>  call fread
    134 000029C8 4883C408            <1>  add rsp, 8
-  2110                                  
-  2111                                      mReadLine yaHabiaGuardado, 1, 1
+  2111                                  
+  2112                                      mReadLine yaHabiaGuardado, 1, 1
    128 000029CC 48BF-               <1>  mov rdi, %1
    128 000029CE [8F05000000000000]  <1>
    129 000029D6 BE01000000          <1>  mov rsi, %2
@@ -3655,7 +3656,7 @@
    132 000029E8 4883EC08            <1>  sub rsp, 8
    133 000029EC E8(00000000)        <1>  call fread
    134 000029F1 4883C408            <1>  add rsp, 8
-  2112                                      mReadLine turnoDe, 1, 1
+  2113                                      mReadLine turnoDe, 1, 1
    128 000029F5 48BF-               <1>  mov rdi, %1
    128 000029F7 [9105000000000000]  <1>
    129 000029FF BE01000000          <1>  mov rsi, %2
@@ -3664,8 +3665,8 @@
    132 00002A11 4883EC08            <1>  sub rsp, 8
    133 00002A15 E8(00000000)        <1>  call fread
    134 00002A1A 4883C408            <1>  add rsp, 8
-  2113                                  
-  2114                                      mReadLine movimientosOfic1, 8, 1
+  2114                                  
+  2115                                      mReadLine movimientosOfic1, 8, 1
    128 00002A1E 48BF-               <1>  mov rdi, %1
    128 00002A20 [C207000000000000]  <1>
    129 00002A28 BE08000000          <1>  mov rsi, %2
@@ -3674,7 +3675,7 @@
    132 00002A3A 4883EC08            <1>  sub rsp, 8
    133 00002A3E E8(00000000)        <1>  call fread
    134 00002A43 4883C408            <1>  add rsp, 8
-  2115                                      mReadLine movimientosOfic2, 8, 1
+  2116                                      mReadLine movimientosOfic2, 8, 1
    128 00002A47 48BF-               <1>  mov rdi, %1
    128 00002A49 [CA07000000000000]  <1>
    129 00002A51 BE08000000          <1>  mov rsi, %2
@@ -3683,8 +3684,8 @@
    132 00002A63 4883EC08            <1>  sub rsp, 8
    133 00002A67 E8(00000000)        <1>  call fread
    134 00002A6C 4883C408            <1>  add rsp, 8
-  2116                                  
-  2117                                      mReadLine movOfic1Adelante, 8, 1
+  2117                                  
+  2118                                      mReadLine movOfic1Adelante, 8, 1
    128 00002A70 48BF-               <1>  mov rdi, %1
    128 00002A72 [D207000000000000]  <1>
    129 00002A7A BE08000000          <1>  mov rsi, %2
@@ -3693,7 +3694,7 @@
    132 00002A8C 4883EC08            <1>  sub rsp, 8
    133 00002A90 E8(00000000)        <1>  call fread
    134 00002A95 4883C408            <1>  add rsp, 8
-  2118                                      mReadLine movOfic1Derecha, 8, 1
+  2119                                      mReadLine movOfic1Derecha, 8, 1
    128 00002A99 48BF-               <1>  mov rdi, %1
    128 00002A9B [DA07000000000000]  <1>
    129 00002AA3 BE08000000          <1>  mov rsi, %2
@@ -3702,7 +3703,7 @@
    132 00002AB5 4883EC08            <1>  sub rsp, 8
    133 00002AB9 E8(00000000)        <1>  call fread
    134 00002ABE 4883C408            <1>  add rsp, 8
-  2119                                      mReadLine movOfic1Izquierda, 8, 1
+  2120                                      mReadLine movOfic1Izquierda, 8, 1
    128 00002AC2 48BF-               <1>  mov rdi, %1
    128 00002AC4 [E207000000000000]  <1>
    129 00002ACC BE08000000          <1>  mov rsi, %2
@@ -3711,7 +3712,7 @@
    132 00002ADE 4883EC08            <1>  sub rsp, 8
    133 00002AE2 E8(00000000)        <1>  call fread
    134 00002AE7 4883C408            <1>  add rsp, 8
-  2120                                      mReadLine movOfic1Atras, 8, 1
+  2121                                      mReadLine movOfic1Atras, 8, 1
    128 00002AEB 48BF-               <1>  mov rdi, %1
    128 00002AED [EA07000000000000]  <1>
    129 00002AF5 BE08000000          <1>  mov rsi, %2
@@ -3720,7 +3721,7 @@
    132 00002B07 4883EC08            <1>  sub rsp, 8
    133 00002B0B E8(00000000)        <1>  call fread
    134 00002B10 4883C408            <1>  add rsp, 8
-  2121                                      mReadLine movOfic1Diagonal, 8, 1
+  2122                                      mReadLine movOfic1Diagonal, 8, 1
    128 00002B14 48BF-               <1>  mov rdi, %1
    128 00002B16 [F207000000000000]  <1>
    129 00002B1E BE08000000          <1>  mov rsi, %2
@@ -3729,7 +3730,7 @@
    132 00002B30 4883EC08            <1>  sub rsp, 8
    133 00002B34 E8(00000000)        <1>  call fread
    134 00002B39 4883C408            <1>  add rsp, 8
-  2122                                      mReadLine movOfic1DiagArribaDer, 8, 1
+  2123                                      mReadLine movOfic1DiagArribaDer, 8, 1
    128 00002B3D 48BF-               <1>  mov rdi, %1
    128 00002B3F [FA07000000000000]  <1>
    129 00002B47 BE08000000          <1>  mov rsi, %2
@@ -3738,7 +3739,7 @@
    132 00002B59 4883EC08            <1>  sub rsp, 8
    133 00002B5D E8(00000000)        <1>  call fread
    134 00002B62 4883C408            <1>  add rsp, 8
-  2123                                      mReadLine movOfic1DiagArribaIzq, 8, 1
+  2124                                      mReadLine movOfic1DiagArribaIzq, 8, 1
    128 00002B66 48BF-               <1>  mov rdi, %1
    128 00002B68 [0208000000000000]  <1>
    129 00002B70 BE08000000          <1>  mov rsi, %2
@@ -3747,7 +3748,7 @@
    132 00002B82 4883EC08            <1>  sub rsp, 8
    133 00002B86 E8(00000000)        <1>  call fread
    134 00002B8B 4883C408            <1>  add rsp, 8
-  2124                                      mReadLine movOfic1DiagAbajoDer, 8, 1
+  2125                                      mReadLine movOfic1DiagAbajoDer, 8, 1
    128 00002B8F 48BF-               <1>  mov rdi, %1
    128 00002B91 [0A08000000000000]  <1>
    129 00002B99 BE08000000          <1>  mov rsi, %2
@@ -3756,7 +3757,7 @@
    132 00002BAB 4883EC08            <1>  sub rsp, 8
    133 00002BAF E8(00000000)        <1>  call fread
    134 00002BB4 4883C408            <1>  add rsp, 8
-  2125                                      mReadLine movOfic1DiagAbajoIzq, 8, 1
+  2126                                      mReadLine movOfic1DiagAbajoIzq, 8, 1
    128 00002BB8 48BF-               <1>  mov rdi, %1
    128 00002BBA [1208000000000000]  <1>
    129 00002BC2 BE08000000          <1>  mov rsi, %2
@@ -3765,8 +3766,8 @@
    132 00002BD4 4883EC08            <1>  sub rsp, 8
    133 00002BD8 E8(00000000)        <1>  call fread
    134 00002BDD 4883C408            <1>  add rsp, 8
-  2126                                  
-  2127                                      mReadLine movOfic2Adelante, 8, 1
+  2127                                  
+  2128                                      mReadLine movOfic2Adelante, 8, 1
    128 00002BE1 48BF-               <1>  mov rdi, %1
    128 00002BE3 [1A08000000000000]  <1>
    129 00002BEB BE08000000          <1>  mov rsi, %2
@@ -3775,7 +3776,7 @@
    132 00002BFD 4883EC08            <1>  sub rsp, 8
    133 00002C01 E8(00000000)        <1>  call fread
    134 00002C06 4883C408            <1>  add rsp, 8
-  2128                                      mReadLine movOfic2Derecha, 8, 1
+  2129                                      mReadLine movOfic2Derecha, 8, 1
    128 00002C0A 48BF-               <1>  mov rdi, %1
    128 00002C0C [2208000000000000]  <1>
    129 00002C14 BE08000000          <1>  mov rsi, %2
@@ -3784,7 +3785,7 @@
    132 00002C26 4883EC08            <1>  sub rsp, 8
    133 00002C2A E8(00000000)        <1>  call fread
    134 00002C2F 4883C408            <1>  add rsp, 8
-  2129                                      mReadLine movOfic2Izquierda, 8, 1
+  2130                                      mReadLine movOfic2Izquierda, 8, 1
    128 00002C33 48BF-               <1>  mov rdi, %1
    128 00002C35 [2A08000000000000]  <1>
    129 00002C3D BE08000000          <1>  mov rsi, %2
@@ -3793,7 +3794,7 @@
    132 00002C4F 4883EC08            <1>  sub rsp, 8
    133 00002C53 E8(00000000)        <1>  call fread
    134 00002C58 4883C408            <1>  add rsp, 8
-  2130                                      mReadLine movOfic2Atras, 8, 1
+  2131                                      mReadLine movOfic2Atras, 8, 1
    128 00002C5C 48BF-               <1>  mov rdi, %1
    128 00002C5E [3208000000000000]  <1>
    129 00002C66 BE08000000          <1>  mov rsi, %2
@@ -3802,7 +3803,7 @@
    132 00002C78 4883EC08            <1>  sub rsp, 8
    133 00002C7C E8(00000000)        <1>  call fread
    134 00002C81 4883C408            <1>  add rsp, 8
-  2131                                      mReadLine movOfic2Diagonal, 8, 1
+  2132                                      mReadLine movOfic2Diagonal, 8, 1
    128 00002C85 48BF-               <1>  mov rdi, %1
    128 00002C87 [3A08000000000000]  <1>
    129 00002C8F BE08000000          <1>  mov rsi, %2
@@ -3811,7 +3812,7 @@
    132 00002CA1 4883EC08            <1>  sub rsp, 8
    133 00002CA5 E8(00000000)        <1>  call fread
    134 00002CAA 4883C408            <1>  add rsp, 8
-  2132                                      mReadLine movOfic2DiagArribaDer, 8, 1
+  2133                                      mReadLine movOfic2DiagArribaDer, 8, 1
    128 00002CAE 48BF-               <1>  mov rdi, %1
    128 00002CB0 [4208000000000000]  <1>
    129 00002CB8 BE08000000          <1>  mov rsi, %2
@@ -3820,7 +3821,7 @@
    132 00002CCA 4883EC08            <1>  sub rsp, 8
    133 00002CCE E8(00000000)        <1>  call fread
    134 00002CD3 4883C408            <1>  add rsp, 8
-  2133                                      mReadLine movOfic2DiagArribaIzq, 8, 1
+  2134                                      mReadLine movOfic2DiagArribaIzq, 8, 1
    128 00002CD7 48BF-               <1>  mov rdi, %1
    128 00002CD9 [4A08000000000000]  <1>
    129 00002CE1 BE08000000          <1>  mov rsi, %2
@@ -3829,7 +3830,7 @@
    132 00002CF3 4883EC08            <1>  sub rsp, 8
    133 00002CF7 E8(00000000)        <1>  call fread
    134 00002CFC 4883C408            <1>  add rsp, 8
-  2134                                      mReadLine movOfic2DiagAbajoDer, 8, 1
+  2135                                      mReadLine movOfic2DiagAbajoDer, 8, 1
    128 00002D00 48BF-               <1>  mov rdi, %1
    128 00002D02 [5208000000000000]  <1>
    129 00002D0A BE08000000          <1>  mov rsi, %2
@@ -3838,7 +3839,7 @@
    132 00002D1C 4883EC08            <1>  sub rsp, 8
    133 00002D20 E8(00000000)        <1>  call fread
    134 00002D25 4883C408            <1>  add rsp, 8
-  2135                                      mReadLine movOfic2DiagAbajoIzq, 8, 1
+  2136                                      mReadLine movOfic2DiagAbajoIzq, 8, 1
    128 00002D29 48BF-               <1>  mov rdi, %1
    128 00002D2B [5A08000000000000]  <1>
    129 00002D33 BE08000000          <1>  mov rsi, %2
@@ -3847,8 +3848,8 @@
    132 00002D45 4883EC08            <1>  sub rsp, 8
    133 00002D49 E8(00000000)        <1>  call fread
    134 00002D4E 4883C408            <1>  add rsp, 8
-  2136                                  
-  2137                                      mReadLine cantSoldCapturados, 8, 1
+  2137                                  
+  2138                                      mReadLine cantSoldCapturados, 8, 1
    128 00002D52 48BF-               <1>  mov rdi, %1
    128 00002D54 [6208000000000000]  <1>
    129 00002D5C BE08000000          <1>  mov rsi, %2
@@ -3857,7 +3858,7 @@
    132 00002D6E 4883EC08            <1>  sub rsp, 8
    133 00002D72 E8(00000000)        <1>  call fread
    134 00002D77 4883C408            <1>  add rsp, 8
-  2138                                      mReadLine cantOficInvalidados, 8, 1
+  2139                                      mReadLine cantOficInvalidados, 8, 1
    128 00002D7B 48BF-               <1>  mov rdi, %1
    128 00002D7D [6A08000000000000]  <1>
    129 00002D85 BE08000000          <1>  mov rsi, %2
@@ -3866,8 +3867,8 @@
    132 00002D97 4883EC08            <1>  sub rsp, 8
    133 00002D9B E8(00000000)        <1>  call fread
    134 00002DA0 4883C408            <1>  add rsp, 8
-  2139                                  
-  2140                                      mReadLine casillaOfic1, 8, 1
+  2140                                  
+  2141                                      mReadLine casillaOfic1, 8, 1
    128 00002DA4 48BF-               <1>  mov rdi, %1
    128 00002DA6 [7208000000000000]  <1>
    129 00002DAE BE08000000          <1>  mov rsi, %2
@@ -3876,7 +3877,7 @@
    132 00002DC0 4883EC08            <1>  sub rsp, 8
    133 00002DC4 E8(00000000)        <1>  call fread
    134 00002DC9 4883C408            <1>  add rsp, 8
-  2141                                      mReadLine casillaOfic1+8, 8, 1
+  2142                                      mReadLine casillaOfic1+8, 8, 1
    128 00002DCD 48BF-               <1>  mov rdi, %1
    128 00002DCF [7A08000000000000]  <1>
    129 00002DD7 BE08000000          <1>  mov rsi, %2
@@ -3885,8 +3886,8 @@
    132 00002DE9 4883EC08            <1>  sub rsp, 8
    133 00002DED E8(00000000)        <1>  call fread
    134 00002DF2 4883C408            <1>  add rsp, 8
-  2142                                  
-  2143                                      mReadLine casillaOfic2, 8, 1
+  2143                                  
+  2144                                      mReadLine casillaOfic2, 8, 1
    128 00002DF6 48BF-               <1>  mov rdi, %1
    128 00002DF8 [8208000000000000]  <1>
    129 00002E00 BE08000000          <1>  mov rsi, %2
@@ -3895,7 +3896,7 @@
    132 00002E12 4883EC08            <1>  sub rsp, 8
    133 00002E16 E8(00000000)        <1>  call fread
    134 00002E1B 4883C408            <1>  add rsp, 8
-  2144                                      mReadLine casillaOfic2+8, 8, 1
+  2145                                      mReadLine casillaOfic2+8, 8, 1
    128 00002E1F 48BF-               <1>  mov rdi, %1
    128 00002E21 [8A08000000000000]  <1>
    129 00002E29 BE08000000          <1>  mov rsi, %2
@@ -3904,8 +3905,8 @@
    132 00002E3B 4883EC08            <1>  sub rsp, 8
    133 00002E3F E8(00000000)        <1>  call fread
    134 00002E44 4883C408            <1>  add rsp, 8
-  2145                                  
-  2146                                      mReadLine cantCapturasOfic1, 8, 1
+  2146                                  
+  2147                                      mReadLine cantCapturasOfic1, 8, 1
    128 00002E48 48BF-               <1>  mov rdi, %1
    128 00002E4A [9208000000000000]  <1>
    129 00002E52 BE08000000          <1>  mov rsi, %2
@@ -3914,7 +3915,7 @@
    132 00002E64 4883EC08            <1>  sub rsp, 8
    133 00002E68 E8(00000000)        <1>  call fread
    134 00002E6D 4883C408            <1>  add rsp, 8
-  2147                                      mReadLine cantCapturasOfic2, 8, 1
+  2148                                      mReadLine cantCapturasOfic2, 8, 1
    128 00002E71 48BF-               <1>  mov rdi, %1
    128 00002E73 [9A08000000000000]  <1>
    129 00002E7B BE08000000          <1>  mov rsi, %2
@@ -3923,5 +3924,5 @@
    132 00002E8D 4883EC08            <1>  sub rsp, 8
    133 00002E91 E8(00000000)        <1>  call fread
    134 00002E96 4883C408            <1>  add rsp, 8
-  2148                                  
-  2149 00002E9A C3                          ret
+  2149                                  
+  2150 00002E9A C3                          ret
