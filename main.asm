@@ -228,7 +228,7 @@ section .data
     msgErrorOpenFile        db "Error al abrir el archivo.", 0
 
     ; Razones de victoria de soldados
-    msgSoldadosFortaleza    db "los soldados han ocupado todos los puntos de la fortaleza.", 0
+    msgSoldadosFortaleza    db "los soldados han ocupado todos las casillas de la fortaleza.", 0
     msgSoldadosRodean       db "los soldados han rodeado a los oficiales.", 0
     msgSoldadosInvalidar    db "ambos oficiales han sido invalidados.", 0
 
@@ -511,7 +511,7 @@ loopMovimientos:; mostrarTablero, mostrarTurno, realizarMovimiento, verificarFin
 
     ret
 
-;; --------------------------------------------------------------------------------------------
+; --------------------------------------------------------------------------------------------
 ; VERIFICACIONES DE PIEZAS ORIGINALES A MOVER PARA SOLDADOS Y OFICIALES
 ; --------------------------------------------------------------------------------------------
 
@@ -926,6 +926,22 @@ estaVacia:
         ret
 
 ; --------------------------------------------------------------------------------------------
+; RUTINA PARA VERIFICAR SI HAY UN SOLDADO EN LA CASILLA DESTINO
+; --------------------------------------------------------------------------------------------
+
+haySoldado:
+    ; Calculamos desplazamiento en tablero
+    mCmp byte[tableroEnJuego+rdi], [simboloSoldados], 1
+    je okSoldado
+
+    mov rax, 1
+    ret
+
+    okSoldado:
+        mov rax, 0
+        ret
+
+; --------------------------------------------------------------------------------------------
 ; RUTINA PARA CALCULAR EL DESPLAZAMIENTO DE UNA CASILLA EN EL TABLERO
 ; --------------------------------------------------------------------------------------------
 
@@ -939,9 +955,9 @@ calcularDesplazamiento:
 
     ret
 
-; --------------------------------------------------------------------------------------------
+; --------------------------------------------------------------------------------------------------
 ; RUTINAS PARA REALIZAR MOVIMIENTOS SIMPLES DE SOLDADOS Y OFICIALES (los que no requieren capturas)
-; --------------------------------------------------------------------------------------------
+; --------------------------------------------------------------------------------------------------
 
 realizarMovimientoSold:
     mov rax, qword[desplazCasOrig]
@@ -979,16 +995,17 @@ realizarMovimientoOfic:
         cmp rax, 1 ; Si recibimos 1, el oficial 1 es el que se mueve
         je quitarOfic1
 
+        ; Si llegamos acá, el oficial 2 es el que se mueve
         mCalcDesplaz [casillaOfic2], [casillaOfic2+8], qword[desplazAux]
         call desentenderOficial
         mMov msgOficialRet, msgOficialRetirado, 59
         ret
 
-    quitarOfic1:
-        mCalcDesplaz [casillaOfic1], [casillaOfic1+8], qword[desplazAux]
-        call desentenderOficial
-        mMov msgOficialRet, msgOficialRetirado, 59
-        ret
+        quitarOfic1:
+            mCalcDesplaz [casillaOfic1], [casillaOfic1+8], qword[desplazAux]
+            call desentenderOficial
+            mMov msgOficialRet, msgOficialRetirado, 59
+            ret
     
     quitarOtroOficial:
         call desentenderOtroOficial
@@ -1008,7 +1025,7 @@ realizarMovimientoOfic:
         ; Incrementamos la cantidad de movimientos del oficial correspondiente
         cmp rax, 1 ; Si recibimos 1, el oficial 1 es el que se mueve
         je movOfic1
-        
+            
         ; Si llegamos acá, el oficial 2 es el que se mueve
         call actualizarContadoresOfic2
         call refrescarCasActOfic2
@@ -1018,30 +1035,6 @@ realizarMovimientoOfic:
         call actualizarContadoresOfic1
         call refrescarCasActOfic1
 
-    ret
-    
-; --------------------------------------------------------------------------------------------
-; RUTINAS PARA CAMBIAR EL TABLERO CON LOS SIMBOLOS PERSONALIZADOS
-; --------------------------------------------------------------------------------------------
-
-cambiarTableroSoldNuevo:
-    mov rbx, 26 ; Desplazamiento de la primera casilla en donde puede haber piezas
-
-    cicloCambiarSoldados:
-        cmp byte[tableroEnJuego+rbx], 'X'
-        jne noCambiarSoldado
-        mMov tableroEnJuego+rbx, simboloSoldados, 1 ; Cambio el simbolo de los soldados
-
-        noCambiarSoldado:
-            inc rbx
-            cmp rbx, 75 ; Desplazamiento de la última casilla en donde puede haber piezas
-            jl cicloCambiarSoldados
-
-    ret
-
-cambiarTableroOficNuevo:
-    mMov tableroEnJuego+83, simboloOficiales, 1 ; Primer oficial (desplazamiento)
-    mMov tableroEnJuego+92, simboloOficiales, 1 ; Segundo oficial (desplazamiento)
     ret
 
 ; --------------------------------------------------------------------------------------------
@@ -1075,22 +1068,6 @@ chequearSoldPosEspeciales:
     
     esLugarEspecialADer:
         mov rax, 1
-        ret
-
-; --------------------------------------------------------------------------------------------
-; RUTINA PARA VERIFICAR SI HAY UN SOLDADO EN LA CASILLA DESTINO
-; --------------------------------------------------------------------------------------------
-
-haySoldado:
-    ; Calculamos desplazamiento en tablero
-    mCmp byte[tableroEnJuego+rdi], [simboloSoldados], 1
-    je okSoldado
-
-    mov rax, 1
-    ret
-
-    okSoldado:
-        mov rax, 0
         ret
 
 ; --------------------------------------------------------------------------------------------
@@ -1442,8 +1419,6 @@ refrescarCasActOficLuegoCaptura:
 
     ret
 
-
-
 ; --------------------------------------------------------------------------------------------
 ; RUTINA PARA VERIFICAR SI UN OFICIAL PODÍA CAPTURAR UN SOLDADO Y NO LO HIZO
 ; --------------------------------------------------------------------------------------------
@@ -1577,33 +1552,6 @@ podiaComerPieza:
         mov rax, 0
         ret
 
-; --------------------------------------------------------------------------------------------
-; RUTINA PARA QUITAR AL OFICIAL QUE SE DESPREOCUPÓ DE CAPTURAR SOLDADOS
-; --------------------------------------------------------------------------------------------
-
-desentenderOficial:
-    mov rbx, qword[desplazAux]
-    mov rdx, ' '
-    mov byte[tableroEnJuego+rbx], dl
-
-    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
-
-    cmp rax, 1
-    je desentenderOfic1
-
-    desentenderOfic2:
-        mov qword[casillaOfic2], 0
-        mov qword[casillaOfic2+8], 0
-        jmp agregarOficDesentendido
-
-    desentenderOfic1:
-        mov qword[casillaOfic1], 0
-        mov qword[casillaOfic1+8], 0
-
-    agregarOficDesentendido:
-        inc qword[cantOficInvalidados]
-    
-    ret
     
 ; --------------------------------------------------------------------------------------------
 ; RUTINA PARA VERIFICAR SI EL OTRO OFICIAL PODÍA CAPTURAR UN SOLDADO Y NO LO HIZO
@@ -1638,7 +1586,35 @@ podiaCapturarSoldadoOtroOficial:
     ret
 
 ; --------------------------------------------------------------------------------------------
-; RUTINA PARA INVALIDAR AL OTRO OFICIAL QUE NO SE MOVIÓ (el cual podía capturar un soldado)
+; RUTINA PARA QUITAR AL OFICIAL QUE SE MOVIÓ Y NO CAPTURÓ UN SOLDADO
+; --------------------------------------------------------------------------------------------
+
+desentenderOficial:
+    mov rbx, qword[desplazAux]
+    mov rdx, ' '
+    mov byte[tableroEnJuego+rbx], dl
+
+    call verQueOficialEs ; Verificamos qué oficial es el que se quiere mover
+
+    cmp rax, 1
+    je desentenderOfic1
+
+    desentenderOfic2:
+        mov qword[casillaOfic2], 0
+        mov qword[casillaOfic2+8], 0
+        jmp agregarOficDesentendido
+
+    desentenderOfic1:
+        mov qword[casillaOfic1], 0
+        mov qword[casillaOfic1+8], 0
+
+    agregarOficDesentendido:
+        inc qword[cantOficInvalidados]
+    
+    ret
+
+; --------------------------------------------------------------------------------------------
+; RUTINA PARA QUITAR AL OTRO OFICIAL QUE NO CAPTURÓ UN SOLDADO
 ; --------------------------------------------------------------------------------------------
 
 desentenderOtroOficial:
@@ -1649,14 +1625,33 @@ desentenderOtroOficial:
 
     otroEsOfic1:
         mCalcDesplaz qword[casillaOfic1], qword[casillaOfic1+8], qword[desplazAux]
-        call desentenderOficial
+
+        ; Vacía la casilla del oficial 1
+        mov rbx, qword[desplazAux]
+        mov rdx, ' '
+        mov byte[tableroEnJuego+rbx], dl
+
+        ; Actualiza las variables del oficial 1
+        mov qword[casillaOfic1], 0
+        mov qword[casillaOfic1+8], 0
+
+        call agregarOficDesentendido
         ret
 
     otroEsOfic2:
         mCalcDesplaz qword[casillaOfic2], qword[casillaOfic2+8], qword[desplazAux]
-        call desentenderOficial
+        
+        ; Vacía la casilla del oficial 2
+        mov rbx, qword[desplazAux]
+        mov rdx, ' '
+        mov byte[tableroEnJuego+rbx], dl
+
+        ; Actualiza las variables del oficial 2
+        mov qword[casillaOfic2], 0
+        mov qword[casillaOfic2+8], 0
     
-    ret
+        call agregarOficDesentendido
+        ret
 
 ; --------------------------------------------------------------------------------------------
 ; RUTINA PARA VER SI EL MOVIMIENTO DE UN OFICIAL RESULTA EN EL FIN DEL JUEGO
@@ -1971,7 +1966,6 @@ finDeJuego:
         mPrint msgRazonGanador, msgOficialesGanan
         jmp mostrarEstadisticas
 
-
 mostrarEstadisticas:
     mPuts msgEstadisticas
 
@@ -2046,7 +2040,6 @@ salirDelJuego:
         mCommand cmdBorrarArchivoPartida
         mov byte[yaHabiaGuardado], 'n' ; Para la próxima vez que se quiera salir, no se borra nada
         jmp mostrarEstadisticas
-
 
 guardarPartida:
     mov byte[yaHabiaGuardado], 's'
@@ -2148,3 +2141,7 @@ abrirPartidaGuardada:
     mReadLine cantCapturasOfic2, 8, 1
 
     ret
+
+; --------------------------------------------------------------------------------------------
+; FIN DE LAS SUBRUTINAS
+; --------------------------------------------------------------------------------------------
