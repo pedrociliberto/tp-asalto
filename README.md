@@ -1,5 +1,6 @@
-# tp-asalto
-Trabajo práctico "El Asalto" de la materia "Organización del Computador" - 2° cuatrimestre de 2024. FIUBA.
+# TP Final - El Asalto
+Trabajo práctico "El Asalto" de la materia "Organización del Computador" - 2° cuatrimestre de 2024. Cátedra Benitez. FIUBA.
+Realizado en conjunto con Mateo Ledovith y Nicolás Scarfiello
 
 ## Ejecución del programa
 
